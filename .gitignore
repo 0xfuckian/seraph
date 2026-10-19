@@ -1,0 +1,40 @@
+# Dependencies
+node_modules/
+target/
+dist/
+build/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Coverage
+coverage/
+.nyc_output/
+
+# Logs
+*.log
+logs/
+
+# Environment
+.env
+.env.local
+
+# Foundry
+.cache/
+out/
+
+# Next.js
+.next/
