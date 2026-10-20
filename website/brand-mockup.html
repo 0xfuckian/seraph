@@ -3,570 +3,675 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Seraph Protocol — Visual Mockup</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <title>Seraph Protocol — Privacy Continuum</title>
+  <!-- itsua.com design system: Space Grotesk + JetBrains Mono -->
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      /* Monochrome base */
-      --seraph-black: #111827;
-      --seraph-white: #ffffff;
-      --seraph-gray-warm: #6b7280;
-      --seraph-gray-cool: #9ca3af;
-      --seraph-border: #e5e7eb;
-      --seraph-border-shadow: rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
-      --seraph-card-shadow: rgba(0,0,0,0.08) 0px 0px 0px 1px, rgba(0,0,0,0.04) 0px 2px 2px, #fafafa 0px 0px 0px 1px;
-      --seraph-inner: #fafafa;
-      /* Rainbow accents */
-      --seraph-red: #ef4444;
-      --seraph-orange: #f97316;
-      --seraph-amber: #f59e0b;
-      --seraph-yellow: #eab308;
-      --seraph-green: #22c55e;
-      --seraph-teal: #06b6d4;
-      --seraph-blue: #3b82f6;
-      --seraph-indigo: #6366f1;
-      --seraph-violet: #a855f7;
-      --seraph-pink: #ec4899;
+      /* === itsua.com exact color values === */
+      --color-white:      #ffffff;
+      --color-bg:         #ffffff;
+      --color-paper:      #f5f5f3;
+      --color-ink:        #0e1012;
+      --color-sub:        #60636a;
+      --color-line:       #d9dadd;
+      --color-accent:     #2f4cff;   /* electric blue — primary functional accent */
+      --color-green:      #047857;   /* green — AI Payments / positive */
+      --color-green-bright: #34d399;
+      --color-orange:     #b45309;   /* orange — bridge */
+      --color-magenta:    #a21caf;   /* magenta — base layer / messaging */
+      --color-ink-soft:   #eeeef0;
+
+      /* Shadows-as-borders */
+      --line-shadow:       var(--color-line) 0px 0px 0px 1px;
+      --card-shadow:       var(--color-line) 0px 0px 0px 1px, rgba(0,0,0,0.04) 0px 2px 2px, var(--color-paper) 0px 0px 0px 1px;
+      --card-shadow-hover: rgba(0,0,0,0.10) 0px 0px 0px 1px, rgba(0,0,0,0.06) 0px 4px 8px, var(--color-paper) 0px 0px 0px 1px;
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
-
     body {
-      font-family: 'Inter', system-ui, -apple-system, sans-serif;
-      background: var(--seraph-white);
-      color: var(--seraph-black);
-      line-height: 1.6;
+      font-family: "Space Grotesk", system-ui, sans-serif;
+      background: var(--color-bg);
+      color: var(--color-ink);
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
     }
+    .font-mono { font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
 
-    .font-mono { font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
-
-    /* Shadow-as-border (no CSS border on cards) */
-    .shadow-border {
-      box-shadow: var(--seraph-border-shadow);
+    /* === Navigation (exact itsua.com pattern) === */
+    header {
+      position: sticky; top: 0; z-index: 50;
+      display: flex; flex-wrap: wrap; align-items: stretch;
+      border-b: var(--line-shadow);
+      background: color-mix(in oklab, var(--color-white) 95%, transparent);
+      backdrop-filter: blur(2px);
     }
-    .card-shadow {
-      box-shadow: var(--seraph-card-shadow);
-    }
-
-    /* Navigation */
-    nav {
-      position: sticky;
-      top: 0;
-      background: var(--seraph-white);
-      padding: 24px 0;
-      border-bottom: var(--seraph-border-shadow);
-      z-index: 100;
-    }
-    .nav-container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 32px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+    .logo-cell {
+      flex-shrink: 0; display: flex; align-items: center; gap: 10px;
+      padding: 16px 24px; border-right: var(--line-shadow);
     }
     .logo {
-      font-family: 'Inter', sans-serif;
-      font-size: 20px;
-      font-weight: 700;
-      letter-spacing: -0.5px;
-      color: var(--seraph-black);
-      text-decoration: none;
+      font-family: "Space Grotesk", sans-serif;
+      font-weight: 700; font-size: 18px; letter-spacing: -0.04em;
+      color: var(--color-ink); text-decoration: none;
     }
-    .logo .gradient {
-      background: linear-gradient(135deg, var(--seraph-violet), var(--seraph-blue));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
+    .logo .dot { color: var(--color-accent); }
+    .nav-area { flex: 1; display: flex; overflow-x: auto; }
+    .nav-link {
+      display: flex; align-items: center;
+      font-family: "JetBrains Mono", monospace;
+      font-size: 12px; font-weight: 500; text-transform: uppercase;
+      letter-spacing: 0.02em;
+      padding: 16px 22px; border-right: var(--line-shadow);
+      color: var(--color-sub); text-decoration: none;
+      transition: color 0.15s;
     }
-    .nav-links { display: flex; gap: 34px; }
-    .nav-links a {
-      font-family: 'Inter', sans-serif;
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--seraph-black);
-      text-decoration: none;
-      transition: color 0.2s;
+    .nav-link:hover { color: var(--color-ink); }
+    .nav-link.active .bracket { color: var(--color-accent); }
+    .bracket { margin-right: 6px; color: var(--color-sub); }
+    .status-cell {
+      flex-shrink: 0; display: flex; align-items: center; padding: 16px 24px;
+      font-family: "JetBrains Mono", monospace;
+      font-size: 12px; font-weight: 500; border-left: var(--line-shadow);
     }
-    .nav-links a:hover { color: var(--seraph-blue); }
-    .nav-links a.active { color: var(--seraph-violet); }
-    .cta-button {
-      background: var(--seraph-black);
-      color: var(--seraph-white);
-      border: none;
-      padding: 8px 20px;
-      border-radius: 6px;
-      font-family: 'Inter', sans-serif;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-    .cta-button:hover { background: #000000; }
+    .status-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--color-green-bright); margin-right: 8px; }
+    .status-text { color: var(--color-green); font-weight: 700; }
 
-    /* Hero */
-    .hero {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 80px 32px;
-      text-align: center;
+    /* === Meta / Section Labels === */
+    .meta {
+      font-family: "JetBrains Mono", monospace;
+      font-size: 11px; font-weight: 500;
+      text-transform: uppercase; letter-spacing: 0.02em;
+      color: var(--color-sub);
+      margin-bottom: 12px;
     }
-    .section-label {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 12px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      color: var(--seraph-gray-warm);
+
+    /* === Hero (massive typography, tall) === */
+    .hero {
+      padding: 80px 24px;
+      max-width: 1200px; margin: 0 auto;
+    }
+    .hero-sub {
+      font-size: 14px; font-weight: 400;
+      line-height: 1.6; color: var(--color-sub);
       margin-bottom: 16px;
     }
     .hero h1 {
-      font-family: 'Inter', sans-serif;
-      font-size: 48px;
-      font-weight: 700;
-      line-height: 1.05;
-      letter-spacing: -1.5px;
-      color: var(--seraph-black);
-      margin-bottom: 24px;
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 48px; font-weight: 500;
+      line-height: 0.94; letter-spacing: -0.04em;
+      color: var(--color-ink);
     }
-    .hero .gradient-title {
-      color: var(--seraph-violet);
-    }
-    .hero .gradient-title span {
-      background: linear-gradient(135deg, var(--seraph-violet), var(--seraph-blue), var(--seraph-pink));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
+    .hero h1 .word-magenta { color: var(--color-magenta); }
+    .hero h1 .word-orange { color: var(--color-orange); }
+    .hero h1 .word-green { color: var(--color-green); }
+    .hero h1 .word-accent { color: var(--color-accent); }
     .hero p {
-      font-family: 'Inter', sans-serif;
-      font-size: 18px;
-      font-weight: 400;
-      line-height: 1.7;
-      color: var(--seraph-gray-warm);
-      max-width: 640px;
-      margin: 0 auto 32px;
+      font-size: 20px; font-weight: 400;
+      line-height: 1.6; color: var(--color-sub);
+      max-width: 640px; margin: 24px 0 32px;
     }
-    .hero .cta-group {
-      display: flex;
-      gap: 16px;
-      justify-content: center;
-      margin-top: 32px;
+    @media (min-width: 768px) {
+      .hero { padding: 120px 24px; }
+      .hero h1 { font-size: 96px; }
     }
-    .hero .secondary-btn {
-      background: transparent;
-      color: var(--seraph-black);
-      border: 1px solid transparent;
-      box-shadow: var(--seraph-border-shadow);
-      padding: 8px 24px;
-      border-radius: 6px;
-      font-family: 'Inter', sans-serif;
-      font-size: 14px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: box-shadow 0.2s;
-    }
-    .hero .secondary-btn:hover {
-      box-shadow: rgba(0, 0, 0, 0.12) 0px 0px 0px 1px;
+    @media (min-width: 1024px) {
+      .hero h1 { font-size: 120px; }
     }
 
-    /* Stats Bar */
-    .stats-bar {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 32px;
-      display: flex;
-      justify-content: space-around;
-      background: var(--seraph-inner);
-      border-radius: 8px;
-      box-shadow: var(--seraph-card-shadow);
-      margin-bottom: 80px;
+    /* === Split CTA Button (exact itsua.com) === */
+    .cta-split {
+      display: inline-flex; align-items: center;
+      font-family: "JetBrains Mono", monospace;
+      font-size: 12px; font-weight: 500;
+      text-decoration: none; letter-spacing: 0.02em;
+      overflow: hidden; margin-bottom: 12px;
     }
-    .stat-item {
-      text-align: center;
+    .cta-arrow {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 32px; height: 32px;
+      background: var(--color-accent); color: var(--color-white);
     }
-    .stat-item .number {
-      font-family: 'Inter', sans-serif;
-      font-size: 36px;
-      font-weight: 700;
-      color: var(--seraph-black);
+    .cta-label {
+      display: inline-flex; align-items: center;
+      padding: 12px 20px;
+      background: var(--color-ink); color: var(--color-white);
     }
-    .stat-item .label {
-      font-family: 'Inter', sans-serif;
-      font-size: 12px;
-      font-weight: 500;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      color: var(--seraph-gray-warm);
-      margin-top: 4px;
+    .cta-secondary {
+      display: inline-flex; align-items: center;
+      font-family: "JetBrains Mono", monospace;
+      font-size: 12px; font-weight: 500;
+      letter-spacing: 0.02em;
+      background: var(--color-white); color: var(--color-ink);
+      border: var(--line-shadow);
+      padding: 12px 24px; text-decoration: none;
     }
 
-    /* Architecture Section */
+    /* === Stats Grid (large colored numbers) === */
+    .stats-grid {
+      max-width: 1200px; margin: 0 auto;
+      padding: 32px 24px;
+      display: grid; grid-template-columns: repeat(5, 1fr);
+      border-top: var(--line-shadow);
+      border-bottom: var(--line-shadow);
+    }
+    .stat-cell {
+      text-align: center; padding: 16px 8px;
+      border-right: var(--line-shadow);
+      font-family: "JetBrains Mono", monospace;
+      font-size: 11px; font-weight: 400;
+      text-transform: uppercase; letter-spacing: 0.02em;
+      color: var(--color-sub);
+    }
+    .stat-cell:last-child { border-right: none; }
+    .stat-number {
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 32px; font-weight: 500;
+      line-height: 0.96; letter-spacing: -0.02em;
+    }
+    .stat-number .unit { font-size: 0.5em; }
+    .stat-number.text-accent { color: var(--color-accent); }
+    .stat-number.text-magenta { color: var(--color-magenta); }
+    .stat-number.text-green { color: var(--color-green); }
+    .stat-number.text-orange { color: var(--color-orange); }
+    .stat-label {
+      font-size: 11px; font-weight: 400;
+      text-transform: uppercase; letter-spacing: 0.02em;
+      color: var(--color-sub);
+      margin-top: 6px;
+    }
+    @media (min-width: 768px) { .stat-number { font-size: 56px; } }
+
+    /* === Section (tall, big titles) === */
     .section {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 80px 32px;
+      max-width: 1200px; margin: 0 auto;
+      padding: 80px 24px;
     }
-    .section-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 48px;
-    }
+    .section-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 48px; }
     .section-title {
-      font-family: 'Inter', sans-serif;
-      font-size: 36px;
-      font-weight: 600;
-      line-height: 1.15;
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 44px; font-weight: 500;
+      line-height: 0.95; letter-spacing: -0.03em;
     }
-    .section-subtitle {
-      font-family: 'Inter', sans-serif;
-      font-size: 18px;
-      font-weight: 400;
-      line-height: 1.7;
-      color: var(--seraph-gray-warm);
+    @media (min-width: 1024px) { .section-title { font-size: 72px; } }
+    .section-desc {
+      font-size: 20px; font-weight: 400;
+      line-height: 1.6; color: var(--color-sub);
       max-width: 560px;
     }
     .view-all {
-      font-family: 'Inter', sans-serif;
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--seraph-black);
-      text-decoration: none;
-      display: flex;
-      align-items: center;
-      gap: 6px;
+      font-family: "JetBrains Mono", monospace;
+      font-size: 12px; font-weight: 500;
+      letter-spacing: 0.02em;
+      color: var(--color-sub); text-decoration: none;
+      display: flex; align-items: center; gap: 6px;
     }
-    .view-all:hover { color: var(--seraph-violet); }
+    .view-all:hover { color: var(--color-ink); }
 
-    /* Layer Cards */
-    .layers-grid {
+    /* === Deck Cards (white backgrounds, colored text per layer) === */
+    .deck {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 24px;
     }
-    .layer-card {
-      background: var(--seraph-white);
-      border-radius: 8px;
-      padding: 24px;
-      box-shadow: var(--seraph-card-shadow);
-      transition: box-shadow 0.2s;
+    @media (max-width: 768px) { .deck { grid-template-columns: 1fr; } }
+
+    .deck-card {
+      background: var(--color-white);
+      box-shadow: var(--card-shadow);
+      cursor: pointer;
+      transition: box-shadow 0.15s ease;
+      display: flex; flex-direction: column;
     }
-    .layer-card:hover {
-      box-shadow: rgba(0,0,0,0.10) 0px 0px 0px 1px, rgba(0,0,0,0.06) 0px 4px 8px, #fafafa 0px 0px 0px 1px;
+    .deck-card:hover { box-shadow: var(--card-shadow-hover); }
+
+    .deck-face {
+      padding: 24px; display: flex; flex-direction: column; flex: 1;
     }
-    .layer-tag {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      padding: 4px 10px;
-      border-radius: 9999px;
-      display: inline-block;
-      margin-bottom: 12px;
+    .deck-brand-row {
+      display: flex; justify-content: space-between; align-items: center;
+      font-family: "JetBrains Mono", monospace;
+      font-size: 11px; font-weight: 500;
+      color: var(--color-sub); margin-bottom: 16px;
     }
-    .layer-tag.base { background: rgba(239,68,68,0.1); color: var(--seraph-red); }
-    .layer-tag.evm { background: rgba(59,130,246,0.1); color: var(--seraph-blue); }
-    .layer-tag.xmrevm { background: rgba(168,85,247,0.1); color: var(--seraph-violet); }
-    .layer-card h3 {
-      font-family: 'Inter', sans-serif;
-      font-size: 22px;
-      font-weight: 600;
+    .deck-brand { font-weight: 600; }
+    .deck-badge {
+      display: flex; align-items: center; gap: 6px;
+      font-family: "JetBrains Mono", monospace;
+      font-size: 10px; font-weight: 700;
+    }
+    .deck-badge .dot { width: 6px; height: 6px; border-radius: 50%; }
+    .deck-badge.text-magenta .dot { background: var(--color-magenta); color: var(--color-white); }
+    .deck-badge.text-accent .dot { background: var(--color-accent); color: var(--color-white); }
+    .deck-badge.text-green .dot { background: var(--color-green); color: var(--color-white); }
+
+    .deck-name {
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 24px; font-weight: 500;
+      line-height: 1.05; letter-spacing: -0.01em;
       margin-bottom: 8px;
     }
-    .layer-card p {
-      font-family: 'Inter', sans-serif;
-      font-size: 14px;
-      font-weight: 400;
-      color: var(--seraph-gray-warm);
-      line-height: 1.7;
+    .deck-domain {
+      font-family: "JetBrains Mono", monospace;
+      font-size: 11px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.02em;
+      color: var(--color-sub); margin-bottom: 12px;
     }
+    .deck-domain.text-magenta { color: var(--color-magenta); }
+    .deck-domain.text-accent { color: var(--color-accent); }
+    .deck-domain.text-green { color: var(--color-green); }
 
-    /* Tech stack tags */
-    .tech-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-top: 16px;
+    .deck-result {
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 16px; font-weight: 500;
+      color: var(--color-ink);
+      margin-top: auto; margin-bottom: 12px;
     }
+    .deck-result.text-magenta { color: var(--color-magenta); }
+    .deck-result.text-accent { color: var(--color-accent); }
+    .deck-result.text-green { color: var(--color-green); }
+
+    .tech-tags { display: flex; flex-wrap: wrap; gap: 6px; }
     .tech-tag {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      padding: 4px 10px;
-      border-radius: 9999px;
-      background: var(--seraph-inner);
-      color: var(--seraph-gray-warm);
-      box-shadow: var(--seraph-border-shadow);
+      font-family: "JetBrains Mono", monospace;
+      font-size: 10px; font-weight: 600;
+      text-transform: uppercase; letter-spacing: 0.02em;
+      padding: 3px 8px; border-radius: 9999px;
+      background: var(--color-ink-soft);
+      color: var(--color-ink);
     }
-    .tech-tag.rust { background: rgba(239,68,68,0.1); color: var(--seraph-red); }
-    .tech-tag.solidity { background: rgba(168,85,247,0.1); color: var(--seraph-violet); }
-    .tech-tag.noir { background: rgba(99,102,245,0.1); color: var(--seraph-indigo); }
-    .tech-tag.typescript { background: rgba(59,130,246,0.1); color: var(--seraph-blue); }
-    .tech-tag.tauri { background: rgba(34,197,94,0.1); color: var(--seraph-green); }
 
-    /* Module Section */
+    /* === Module Grid (white cards, colored bars) === */
     .module-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 24px;
     }
+    @media (max-width: 768px) { .module-grid { grid-template-columns: 1fr; } }
+
     .module-card {
-      background: var(--seraph-white);
-      border-radius: 8px;
       padding: 24px;
-      box-shadow: var(--seraph-card-shadow);
+      box-shadow: var(--card-shadow);
+      display: flex; flex-direction: column;
+      background: var(--color-white);
     }
-    .module-card:hover {
-      box-shadow: rgba(0,0,0,0.10) 0px 0px 0px 1px, rgba(0,0,0,0.06) 0px 4px 8px, #fafafa 0px 0px 0px 1px;
+    .module-card:hover { box-shadow: var(--card-shadow-hover); }
+    .module-bar {
+      width: 100%; height: 4px; border-radius: 2px;
+      display: block; margin-bottom: 16px;
     }
-    .module-card .module-color {
-      width: 4px;
-      height: 24px;
-      border-radius: 2px;
-      display: inline-block;
-      margin-right: 8px;
-    }
-    .module-color.red { background: var(--seraph-red); }
-    .module-color.orange { background: var(--seraph-orange); }
-    .module-color.amber { background: var(--seraph-amber); }
-    .module-color.green { background: var(--seraph-green); }
-    .module-color.teal { background: var(--seraph-teal); }
+    .bar-magenta { background: var(--color-magenta); }
+    .bar-orange { background: var(--color-orange); }
+    .bar-green { background: var(--color-green); }
+    .bar-accent { background: var(--color-accent); }
+
     .module-card h3 {
-      font-family: 'Inter', sans-serif;
-      font-size: 18px;
-      font-weight: 600;
-      margin-bottom: 6px;
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 20px; font-weight: 500;
+      line-height: 1.15; margin-bottom: 8px;
     }
+    .module-card h3 .dot { font-size: 16px; margin-right: 6px; }
     .module-card p {
-      font-family: 'Inter', sans-serif;
-      font-size: 14px;
-      font-weight: 400;
-      color: var(--seraph-gray-warm);
-      line-height: 1.7;
+      font-size: 16px; font-weight: 400;
+      line-height: 1.6; color: var(--color-sub);
+      margin-top: auto;
     }
 
-    /* Footer */
+    /* === Footer === */
     footer {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 48px 32px;
-      border-top: var(--seraph-border-shadow);
-      font-family: 'Inter', sans-serif;
-      font-size: 14px;
-      color: var(--seraph-gray-warm);
+      padding: 48px 24px;
+      border-top: var(--line-shadow);
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 14px; line-height: 1.6;
+      color: var(--color-sub);
     }
-    footer .footer-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
+    .footer-top {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 32px;
+    }
+    .footer .logo { font-weight: 700; font-size: 18px; }
+    .footer .logo .dot { color: var(--color-accent); }
+    .footer-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr);
       gap: 32px;
-      margin-top: 32px;
     }
-    footer .footer-column h4 {
-      font-size: 14px;
-      font-weight: 600;
-      color: var(--seraph-black);
-      margin-bottom: 16px;
+    .footer-column h4 {
+      font-family: "JetBrains Mono", monospace;
+      font-size: 11px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.02em;
+      color: var(--color-sub); margin-bottom: 16px;
     }
-    footer .footer-column ul { list-style: none; }
-    footer .footer-column a {
-      color: var(--seraph-gray-warm);
-      text-decoration: none;
-      display: block;
-      padding: 6px 0;
-      transition: color 0.2s;
+    .footer-column ul { list-style: none; }
+    .footer-column li { margin-bottom: 8px; }
+    .footer-column a {
+      color: var(--color-sub); text-decoration: none;
+      transition: color 0.15s;
     }
-    footer .footer-column a:hover { color: var(--seraph-black); }
-
-    /* Rainbow divider */
-    .rainbow-divider {
-      height: 2px;
-      background: linear-gradient(90deg, var(--seraph-red), var(--seraph-orange), var(--seraph-amber), var(--seraph-yellow), var(--seraph-green), var(--seraph-teal), var(--seraph-blue), var(--seraph-indigo), var(--seraph-violet), var(--seraph-pink));
-      border-radius: 1px;
-      margin: 64px 0;
+    .footer-column a:hover { color: var(--color-ink); }
+    .copyright {
+      margin-top: 32px; padding-top: 16px;
+      border-top: var(--line-shadow);
+      font-size: 11px; color: var(--color-sub);
     }
 
-    /* Responsive */
     @media (max-width: 768px) {
-      .layers-grid { grid-template-columns: 1fr; }
-      .module-grid { grid-template-columns: 1fr; }
+      .hero h1 { font-size: 48px; }
+      .stats-grid { grid-template-columns: 1fr; }
+      .stat-cell { border-right: none; border-bottom: var(--line-shadow); }
+      .stat-cell:last-child { border-bottom: none; }
       .footer-grid { grid-template-columns: 1fr; }
-      .hero h1 { font-size: 36px; }
-      .stats-bar { flex-wrap: wrap; gap: 16px; }
-      .nav-container { padding: 0 16px; }
+      header { flex-wrap: wrap; }
+      .nav-link { font-size: 11px; padding: 12px 16px; }
+      .module-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
-  <!-- Navigation -->
-  <nav>
-    <div class="nav-container">
-      <a href="#" class="logo">SERAPH<span class="gradient">.</span></a>
-      <div class="nav-links">
-        <a href="#architecture" class="active">Architecture</a>
-        <a href="#modules">Modules</a>
-        <a href="#docs">Docs</a>
-        <a href="#governance">Governance</a>
-      </div>
-      <button class="cta-button">Launch App</button>
+  <!-- ===== Navigation ===== -->
+  <header>
+    <a href="#" class="logo-cell">
+      <span class="logo">SERAPH<span class="dot">.</span></span>
+    </a>
+    <div class="nav-area">
+      <a href="#hero" class="nav-link active">
+        <span class="bracket">[ 00 ]</span> INDEX
+      </a>
+      <a href="#architecture" class="nav-link">
+        <span class="bracket">[ 01 ]</span> ARCHITECTURE
+      </a>
+      <a href="#modules" class="nav-link">
+        <span class="bracket">[ 02 ]</span> MODULES
+      </a>
+      <a href="#docs" class="nav-link">
+        <span class="bracket">[ 03 ]</span> DOCS
+      </a>
+      <a href="#governance" class="nav-link">
+        <span class="bracket">[ 04 ]</span> GOVERNANCE
+      </a>
     </div>
-  </nav>
+    <div class="status-cell">
+      <span class="status-dot"></span>
+      <span class="status-text">TESTNET LIVE</span>
+    </div>
+  </header>
 
-  <!-- Hero -->
-  <div class="hero">
-    <div class="section-label">§ 00 — THE PRIVACY CONTINUUM</div>
-    <h1 class="gradient-title">
-      Monero-grade default privacy for value transfer, <br>
-      <span>programmable private execution.</span>
+  <!-- ===== Hero ===== -->
+  <div id="hero" class="hero">
+    <div class="hero-sub">A full-stack privacy protocol. Shipping since 2024.</div>
+    <div class="meta">§ 00 — THE PRIVACY CONTINUUM</div>
+    <h1>
+      Monero-grade<span class="word-magenta">.</span><br>
+      <span class="word-orange">Programmable</span> <span class="word-green">private</span><br>
+      <span class="word-accent">execution.</span>
     </h1>
-    <p>Seraph is a modular privacy continuum combining a Monero-inspired base layer with dual private EVMs. Seamless XMR integration, programmable private contracts, and a four-level privacy continuum.</p>
-    <div class="cta-group">
-      <button class="cta-button">Launch Wallet</button>
-      <button class="secondary-btn">Read the Whitepaper →</button>
+    <p>Seraph is a modular privacy continuum combining a Monero-inspired base layer with dual private EVMs. Seamless XMR integration, programmable private contracts, and a six-level privacy spectrum.</p>
+    <div class="cta-split">
+      <span class="cta-arrow">→</span>
+      <span class="cta-label">LAUNCH WALLET</span>
+    </div>
+    <a href="#" class="cta-secondary">READ WHITEPAPER →</a>
+  </div>
+
+  <!-- ===== Stats Grid ===== */
+  <div class="stats-grid">
+    <div class="stat-cell">
+      <div class="stat-number">100<span class="unit">M</span></div>
+      <div class="stat-label">max supply</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-number text-magenta">6</div>
+      <div class="stat-label">privacy levels</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-number text-accent">2</div>
+      <div class="stat-label">evm layers</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-number text-green">∞</div>
+      <div class="stat-label">anonymity set</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-number text-orange">8</div>
+      <div class="stat-label">first-party modules</div>
     </div>
   </div>
 
-  <!-- Stats Bar -->
-  <div class="stats-bar">
-    <div class="stat-item">
-      <div class="number">100M</div>
-      <div class="label">Max Supply (SER)</div>
-    </div>
-    <div class="stat-item">
-      <div class="number">4</div>
-      <div class="label">Privacy Levels</div>
-    </div>
-    <div class="stat-item">
-      <div class="number">2</div>
-      <div class="label">EVM Layers</div>
-    </div>
-    <div class="stat-item">
-      <div class="number">∞</div>
-      <div class="label">Anonymity Set</div>
-    </div>
-  </div>
-
-  <!-- Architecture Section -->
-  <div class="section">
+  <!-- ===== Architecture ===== -->
+  <div id="architecture" class="section">
     <div class="section-header">
       <div>
-        <div class="section-label">§ 01 — ARCHITECTURE</div>
-        <h2 class="section-title">Three layers. One privacy set.</h2>
+        <div class="meta">§ 01 — ARCHITECTURE</div>
+        <h2 class="section-title">Three layers.</h2>
+        <p class="section-desc">Seraph spans a Monero-inspired base layer, a general-purpose private EVM, and an XMR-optimized EVM — all sharing a unified key hierarchy and anonymity set.</p>
       </div>
-      <a href="#" class="view-all">View docs →</a>
+      <a href="#" class="view-all">VIEW DOCS →</a>
     </div>
-    <p class="section-subtitle" style="margin-bottom: 48px;">Seraph's architecture spans a Monero-inspired base layer, a general-purpose private EVM, and an XMR-optimized EVM — all sharing a unified key hierarchy and anonymity set.</p>
 
-    <div class="layers-grid">
-      <div class="layer-card">
-        <span class="layer-tag base">Base Layer</span>
-        <h3>Seraph Base</h3>
-        <p>Monero-inspired privacy chain with native SER + XMR support. Stealth addresses, confidential amounts, FCMP++ membership proofs. Settlement and hard-money layer.</p>
-        <div class="tech-tags">
-          <span class="tech-tag rust">Rust</span>
-          <span class="tech-tag noir">Noir</span>
+    <div class="deck">
+      <!-- Base Layer (magenta) -->
+      <div class="deck-card">
+        <div class="deck-face">
+          <div class="deck-brand-row">
+            <span class="deck-brand">SERAPH</span>
+            <span class="deck-badge text-magenta"><span class="dot"></span> BASE</span>
+          </div>
+          <div class="deck-name">Base Layer</div>
+          <div class="deck-domain text-magenta">Monero-inspired privacy chain</div>
+          <div class="tech-tags">
+            <span class="tech-tag">Rust</span>
+            <span class="tech-tag">Noir</span>
+            <span class="tech-tag">FCMP++</span>
+          </div>
+          <div class="deck-result text-magenta">Native SER + XMR, stealth addresses, confidential amounts</div>
         </div>
       </div>
-      <div class="layer-card">
-        <span class="layer-tag evm">Seraph EVM</span>
-        <h3>EVM (General)</h3>
-        <p>Solidity-compatible programmable private EVM. Gas in SER by default. Optional private contract state via ZK state channels.</p>
-        <div class="tech-tags">
-          <span class="tech-tag solidity">Solidity</span>
-          <span class="tech-tag typescript">TypeScript</span>
+
+      <!-- Seraph EVM (accent blue) -->
+      <div class="deck-card">
+        <div class="deck-face">
+          <div class="deck-brand-row">
+            <span class="deck-brand">SERAPH</span>
+            <span class="deck-badge text-accent"><span class="dot"></span> EVM.01</span>
+          </div>
+          <div class="deck-name">Seraph EVM</div>
+          <div class="deck-domain text-accent">General-purpose private EVM</div>
+          <div class="tech-tags">
+            <span class="tech-tag">Solidity</span>
+            <span class="tech-tag">TypeScript</span>
+            <span class="tech-tag">ZK</span>
+          </div>
+          <div class="deck-result text-accent">Programmable contracts, gas in SER, optional private state</div>
         </div>
       </div>
-      <div class="layer-card">
-        <span class="layer-tag xmrevm">XMR EVM</span>
-        <h3>XMR EVM</h3>
-        <p>Specialized EVM optimized for XMR flows. Preferential XMR fee payment. Tighter base-layer XMR coupling.</p>
-        <div class="tech-tags">
-          <span class="tech-tag rust">Rust</span>
-          <span class="tech-tag solidity">Solidity</span>
+
+      <!-- XMR EVM (green) -->
+      <div class="deck-card">
+        <div class="deck-face">
+          <div class="deck-brand-row">
+            <span class="deck-brand">SERAPH</span>
+            <span class="deck-badge text-green"><span class="dot"></span> EVM.02</span>
+          </div>
+          <div class="deck-name">XMR EVM</div>
+          <div class="deck-domain text-green">XMR-optimized EVM</div>
+          <div class="tech-tags">
+            <span class="tech-tag">Rust</span>
+            <span class="tech-tag">Solidity</span>
+            <span class="tech-tag">Noir</span>
+          </div>
+          <div class="deck-result text-green">Preferential XMR fees, tight base-layer coupling</div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Rainbow divider -->
-  <div class="rainbow-divider"></div>
-
-  <!-- Modules Section -->
-  <div class="section">
-    <div class="section-label">§ 02 — FIRST-PARTY MODULES</div>
+  <!-- ===== Modules ===== -->
+  <div id="modules" class="section">
+    <div class="meta">§ 02 — FIRST-PARTY MODULES</div>
     <h2 class="section-title">Built-in privacy primitives.</h2>
-    <p class="section-subtitle" style="margin-bottom: 48px;">Each module ships as a privacy-aware contract suite with first-party wallet integration. All share the same note pool and key hierarchy.</p>
+    <p class="section-desc">Each module ships as a privacy-aware contract suite with first-party wallet integration. All share the same note pool and key hierarchy.</p>
 
     <div class="module-grid">
       <div class="module-card">
-        <h3><span class="module-color red"></span>Private Stablecoins</h3>
+        <div class="module-bar bar-magenta"></div>
+        <h3><span class="dot" style="color: var(--color-magenta)">●</span> Private Stablecoins</h3>
         <p>Over-collateralized stablecoins with private mint/burn. CollateralVault, xUSD, OracleAdapter, LiquidationEngine.</p>
       </div>
       <div class="module-card">
-        <h3><span class="module-color orange"></span>AI Payments</h3>
+        <div class="module-bar bar-orange"></div>
+        <h3><span class="dot" style="color: var(--color-orange)">●</span> AI Payments</h3>
         <p>Unlinkable payments for AI agents and metered services. ZKCreditAuthorizer proves credit remaining without revealing balance.</p>
       </div>
       <div class="module-card">
-        <h3><span class="module-color amber"></span>Private Messaging</h3>
+        <div class="module-bar bar-green"></div>
+        <h3><span class="dot" style="color: var(--color-green)">●</span> Private Messaging</h3>
         <p>On-chain verifiable payment requests. InvoiceRegistry with fulfillment proofs and encrypted memos.</p>
       </div>
       <div class="module-card">
-        <h3><span class="module-color green"></span>Relayer Network</h3>
+        <div class="module-bar bar-accent"></div>
+        <h3><span class="dot" style="color: var(--color-accent)">●</span> Relayer Network</h3>
         <p>Gas abstraction — pay fees in XMR or SER while using either EVM. Intent signing, batched settlement.</p>
       </div>
     </div>
   </div>
 
-  <!-- Footer -->
+  <!-- ===== Docs ===== -->
+  <div id="docs" class="section">
+    <div class="meta">§ 03 — DOCUMENTATION</div>
+    <h2 class="section-title">Build in private.</h2>
+    <p class="section-desc">Full SDK reference, contract specs, and circuit verification guides. Everything you need to build privacy-first applications on Seraph.</p>
+
+    <div class="deck">
+      <div class="deck-card">
+        <div class="deck-face">
+          <div class="deck-brand-row">
+            <span class="deck-brand">SERAPH</span>
+            <span class="deck-badge text-accent"><span class="dot"></span> SDK</span>
+          </div>
+          <div class="deck-name">TypeScript SDK</div>
+          <div class="deck-domain text-accent">Wallet & contract integration</div>
+          <div class="tech-tags">
+            <span class="tech-tag">TypeScript</span>
+            <span class="tech-tag">Viem</span>
+            <span class="tech-tag">ZK</span>
+          </div>
+          <div class="deck-result">Connect, sign, and transact privately across both EVMs.</div>
+        </div>
+      </div>
+      <div class="deck-card">
+        <div class="deck-face">
+          <div class="deck-brand-row">
+            <span class="deck-brand">SERAPH</span>
+            <span class="deck-badge text-green"><span class="dot"></span> RUST</span>
+          </div>
+          <div class="deck-name">Rust SDK</div>
+          <div class="deck-domain text-green">Base layer + node toolkit</div>
+          <div class="tech-tags">
+            <span class="tech-tag">Rust</span>
+            <span class="tech-tag">Noir</span>
+            <span class="tech-tag">gRPC</span>
+          </div>
+          <div class="deck-result text-green">Run a node, build circuits, access the base layer natively.</div>
+        </div>
+      </div>
+      <div class="deck-card">
+        <div class="deck-face">
+          <div class="deck-brand-row">
+            <span class="deck-brand">SERAPH</span>
+            <span class="deck-badge text-magenta"><span class="dot"></span> GO</span>
+          </div>
+          <div class="deck-name">Go SDK</div>
+          <div class="deck-domain text-magenta">Infrastructure & tooling</div>
+          <div class="tech-tags">
+            <span class="tech-tag">Go</span>
+            <span class="tech-tag">Protobuf</span>
+            <span class="tech-tag">gRPC</span>
+          </div>
+          <div class="deck-result text-magenta">Indexers, explorers, and relayer backends.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Governance ===== -->
+  <div id="governance" class="section">
+    <div class="section-header">
+      <div>
+        <div class="meta">§ 04 — GOVERNANCE</div>
+        <h2 class="section-title">Self-custodied control.</h2>
+        <p class="section-desc">SER token holders govern the protocol through on-chain voting, treasury proposals, and module upgrades. All votes are cast privately by default.</p>
+      </div>
+      <a href="#" class="view-all">JOIN FORUM →</a>
+    </div>
+
+    <div class="module-grid">
+      <div class="module-card">
+        <div class="module-bar bar-magenta"></div>
+        <h3><span class="dot" style="color: var(--color-magenta)">●</span> Treasury</h3>
+        <p>40M SER allocated to ecosystem incentives — liquidity, grants, airdrops, usage rewards. Proposals voted on-chain with private ballot support.</p>
+      </div>
+      <div class="module-card">
+        <div class="module-bar bar-accent"></div>
+        <h3><span class="dot" style="color: var(--color-accent)">●</span> Forum</h3>
+        <p>Discourse-based discussion forum for protocol upgrades, module proposals, and parameter adjustments. Sign-in with SIWE or Farcaster.</p>
+      </div>
+      <div class="module-card">
+        <div class="module-bar bar-green"></div>
+        <h3><span class="dot" style="color: var(--color-green)">●</span> Bug Bounty</h3>
+        <p>Audit-grade bug bounty program covering base-layer consensus, EVM circuits, and first-party modules. Rewards paid in SER + XMR.</p>
+      </div>
+      <div class="module-card">
+        <div class="module-bar bar-orange"></div>
+        <h3><span class="dot" style="color: var(--color-orange)">●</span> Proposals</h3>
+        <p>On-chain governance via Seraph Governance contracts. Voting power scales with stake duration. Private voting via ZK ballot proofs.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Footer ===== -->
   <footer>
-    <div style="display: flex; justify-content: space-between; align-items: center;">
-      <div class="logo">SERAPH<span class="gradient">.</span></div>
-      <div>Privacy Continuum Protocol</div>
+    <div class="footer-top">
+      <span class="logo">SERAPH<span class="dot">.</span></span>
+      <span style="color: var(--color-sub);">Privacy Continuum Protocol</span>
     </div>
     <div class="footer-grid">
       <div class="footer-column">
         <h4>Product</h4>
         <ul>
-          <a href="#">Wallet</a>
-          <a href="#">Documentation</a>
-          <a href="#">Whitepaper</a>
-          <a href="#">Explorer</a>
+          <li><a href="#">Wallet</a></li>
+          <li><a href="#">Documentation</a></li>
+          <li><a href="#">Whitepaper</a></li>
+          <li><a href="#">Explorer</a></li>
         </ul>
       </div>
       <div class="footer-column">
         <h4>Developers</h4>
         <ul>
-          <a href="#">SDK (TypeScript)</a>
-          <a href="#">SDK (Rust)</a>
-          <a href="#">SDK (Go)</a>
-          <a href="#">Contracts</a>
+          <li><a href="#">SDK (TypeScript)</a></li>
+          <li><a href="#">SDK (Rust)</a></li>
+          <li><a href="#">SDK (Go)</a></li>
+          <li><a href="#">Contracts</a></li>
         </ul>
       </div>
       <div class="footer-column">
         <h4>Modules</h4>
         <ul>
-          <a href="#">Stablecoin</a>
-          <a href="#">AI Payments</a>
-          <a href="#">Messaging</a>
-          <a href="#">Relayer</a>
+          <li><a href="#">Stablecoin</a></li>
+          <li><a href="#">AI Payments</a></li>
+          <li><a href="#">Messaging</a></li>
+          <li><a href="#">Relayer</a></li>
         </ul>
       </div>
       <div class="footer-column">
         <h4>Governance</h4>
         <ul>
-          <a href="#">Forum</a>
-          <a href="#">Proposals</a>
-          <a href="#">Treasury</a>
-          <a href="#">Bug Bounty</a>
+          <li><a href="#">Forum</a></li>
+          <li><a href="#">Proposals</a></li>
+          <li><a href="#">Treasury</a></li>
+          <li><a href="#">Bug Bounty</a></li>
         </ul>
       </div>
     </div>
-    <div style="margin-top: 32px; padding-top: 16px; border-top: var(--seraph-border-shadow); font-size: 12px; color: var(--seraph-gray-cool);">
+    <div class="copyright">
       MIT License • Seraph Protocol v0.1.0-dev
     </div>
   </footer>
