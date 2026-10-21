@@ -9,8 +9,8 @@ pragma solidity ^0.8.24;
  *
  * Specification: Seraph Protocol — Section 6.4
  */
-import("@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol");
-import("@openzeppelin/contracts/security/ReentrancyGuard.sol");
+import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
+import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 
 interface ISeraphToken {
     function mint(address to, uint256 amount) external;
@@ -91,6 +91,9 @@ contract SeraphPresale is ReentrancyGuard {
     uint256 public feesCollectedUSDC;
     uint256 public feesCollectedETH;
 
+    /* === ETH pricing (assumes ETH/USD price; admin can update) === */
+    uint256 public ethUsdPrice = 2000; // 1 ETH = $2000 (plain USD, no scaling)
+
     /* ── Constructor ───────────────────────────────────────── */
     constructor(
         address _token,
@@ -106,31 +109,33 @@ contract SeraphPresale is ReentrancyGuard {
         tgeTimestamp = _tgeTimestamp;
 
         /* Default tiers (from spec Section 10 roadmap) */
+        // price = USD per token * 1e6 (stablecoin decimals)
+        // $0.02 → 20000, $0.03 → 30000, $0.04 → 40000
         _addTier(
             "Strategic",
-            20000000000,   // $0.02 in 1e9 scaled units (USDT has 6 decimals)
-            10_000_000e18, // 10M SER
-            true,         // KYC required
-            2500,         // 25% TGE, 75% vested
-            365 days,     // 12-month vesting
+            20000,          // $0.02 in 1e6 units
+            10_000_000e18,  // 10M SER
+            true,           // KYC required
+            2500,           // 25% TGE, 75% vested
+            365 days,       // 12-month vesting
             true
         );
         _addTier(
             "Private",
-            30000000000,   // $0.03
-            30_000_000e18, // 30M SER
-            true,         // KYC required
-            2000,         // 20% TGE, 80% vested
-            365 days,     // 12-month vesting
+            30000,          // $0.03
+            30_000_000e18,  // 30M SER
+            true,           // KYC required
+            2000,           // 20% TGE, 80% vested
+            365 days,       // 12-month vesting
             true
         );
         _addTier(
             "Public",
-            40000000000,   // $0.04
-            60_000_000e18, // 60M SER
-            false,        // No KYC
-            10000,        // 100% TGE
-            0,            // no vesting
+            40000,          // $0.04
+            60_000_000e18,  // 60M SER
+            false,          // No KYC
+            10000,          // 100% TGE
+            0,              // no vesting
             true
         );
     }
@@ -162,8 +167,10 @@ contract SeraphPresale is ReentrancyGuard {
     /* ── Whitelist ────────────────────────────────────────── */
     function addToWhitelist(address[] calldata accounts) external /* only Treasury */ {
         for (uint256 i = 0; i < accounts.length; i++) {
-            whitelist[keccak256(abi.encodePacked(accounts[i], Tier.Private))] = true;
-            whitelist[keccak256(abi.encodePacked(accounts[i], Tier.Strategic))] = true;
+            // tierId 1 = Strategic (kycRequired), 2 = Private (kycRequired)
+            // isWhitelisted checks keccak256(abi.encodePacked(account, tierId))
+            whitelist[keccak256(abi.encodePacked(accounts[i], uint256(1)))] = true; // Strategic
+            whitelist[keccak256(abi.encodePacked(accounts[i], uint256(2)))] = true; // Private
         }
     }
 
@@ -224,7 +231,7 @@ contract SeraphPresale is ReentrancyGuard {
         if (currency == usdt) totalRaisedUSDT += netAmount;
         else totalRaisedUSDC += netAmount;
 
-        if (referrer != address(0)) referredBy[msg.sender] = uint256(referrer);
+        if (referrer != address(0)) referredBy[msg.sender] = uint256(uint160(referrer));
 
         emit Purchased(msg.sender, tierId, tokens, netAmount, currency);
     }
@@ -237,11 +244,13 @@ contract SeraphPresale is ReentrancyGuard {
     /**
      * @dev Buy tokens with ETH. Only Public tier accepts ETH.
      *      0.5% fee is sent to treasury, rest used for token calculation.
+     *      Uses ethUsdPrice to convert ETH value to USD-equivalent token price.
      */
     function buyWithETH(uint256 tierId) external payable nonReentrant {
         require(tierId == 3, "Presale: ETH only for Public tier");
         require(tiers[tierId].active, "Presale: tier inactive");
         require(isWhitelisted(msg.sender, tierId), "Presale: not whitelisted");
+        require(ethUsdPrice > 0, "Presale: ethUsdPrice not set");
 
         PresaleTier storage tier = tiers[tierId];
 
@@ -256,7 +265,14 @@ contract SeraphPresale is ReentrancyGuard {
             emit FeeCollected(msg.sender, fee, address(0));
         }
 
-        uint256 tokens = (netValue * 1e18) / tier.price;
+        // Convert netValue (wei) to token amount:
+        // tier.price is in USD * 1e6 (6-decimal stablecoin units)
+        // 1 token costs tier.price / 1e6 USD
+        // 1 token costs (tier.price / 1e6) / ethUsdPrice ETH = (tier.price / 1e6) / ethUsdPrice * 1e18 wei
+        // tokens = netValue / ((tier.price / 1e6) / ethUsdPrice * 1e18)
+        //        = netValue * ethUsdPrice * 1e6 / (tier.price * 1e18)
+        //        = netValue * ethUsdPrice * 1e6 / (tier.price * 1e18)
+        uint256 tokens = (netValue * ethUsdPrice * 1e6) / tier.price;
         require(tier.sold + tokens <= tier.hardCap, "Presale: tier cap exceeded");
 
         _setupVesting(msg.sender, tierId, tokens);
@@ -266,6 +282,10 @@ contract SeraphPresale is ReentrancyGuard {
         totalRaisedETH += netValue;
 
         emit Purchased(msg.sender, tierId, tokens, netValue, address(0));
+    }
+
+    function updateEthUsdPrice(uint256 _ethUsdPrice) external /* onlyOwner */ {
+        ethUsdPrice = _ethUsdPrice;
     }
 
     /* ── Vesting ──────────────────────────────────────────── */
@@ -368,7 +388,7 @@ contract SeraphPresale is ReentrancyGuard {
             feesCollectedUSDT,
             feesCollectedUSDC,
             feesCollectedETH,
-            feesCollectedUSDT + feesCollectedUSDC + (feesCollectedETH * 0)
+            feesCollectedUSDT + feesCollectedUSDC + (feesCollectedETH * ethUsdPrice) / 1e18
         );
     }
 
@@ -401,6 +421,6 @@ contract SeraphPresale is ReentrancyGuard {
 
     /* ── Fallback ─────────────────────────────────────────── */
     receive() external payable {
-        buyWithETH(3); // Public tier default
+        this.buyWithETH{value: msg.value}(3); // Public tier default
     }
 }

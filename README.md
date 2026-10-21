@@ -1,38 +1,66 @@
-# Seraph Protocol
+## Foundry
 
-> **The Privacy Continuum Protocol**
+**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
 
-Seraph is a modular privacy continuum that delivers Monero-grade default privacy for value transfer while adding programmable private execution through dual EVM layers. It maintains a large shared anonymity set, offers deep native-style XMR integration, and ships first-party tools for private messaging, AI-agent payments, private stablecoins, and RWA privacy.
+Foundry consists of:
 
-## Quick Links
+- **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
+- **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
+- **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
+- **Chisel**: Fast, utilitarian, and verbose solidity REPL.
 
-- 📄 [Whitepaper](whitepaper/seraph_whitepaper.md)
-- 📚 [Documentation](docs/intro/what-is-seraph.md)
-- 🛠️ [Developer Guide](docs/developers/sdk-typescript.md)
-- 🗺️ [Roadmap](docs/roadmap.md)
+## Documentation
 
-## Architecture
+https://book.getfoundry.sh/
 
-| Layer | Description |
-|-------|-------------|
-| **Base Layer** | Monero-inspired privacy chain with SERAPH + XMR native support |
-| **Seraph EVM** | General-purpose selective-privacy EVM (Solidity-compatible) |
-| **XMR EVM** | Specialized EVM optimized for XMR flows |
+## Usage
 
-Shared components include a unified key hierarchy, shared anonymity sets, trust-minimized bridges, and a relayer network for gas abstraction.
+### Build
 
-## Token
+```shell
+$ forge build
+```
 
-- **Name:** Seraph
-- **Ticker:** SER
-- **Total Supply:** 100,000,000 SER (fixed, no inflation)
+### Test
 
-See [Tokenomics](docs/intro/what-is-seraph.md) for full allocation.
+```shell
+$ forge test
+```
 
-## Development
+### Format
 
-This project is in early development. See [Build Instructions](docs/intro/quickstart.md) for setup.
+```shell
+$ forge fmt
+```
 
-## License
+### Gas Snapshots
 
-MIT — see [LICENSE](LICENSE)
+```shell
+$ forge snapshot
+```
+
+### Anvil
+
+```shell
+$ anvil
+```
+
+### Deploy
+
+```shell
+$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
+```
+
+### Cast
+
+```shell
+$ cast <subcommand>
+```
+
+### Help
+
+```shell
+$ forge --help
+$ anvil --help
+$ cast --help
+```
