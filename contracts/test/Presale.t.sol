@@ -25,13 +25,7 @@ contract PresaleTest is Test {
         token = new SeraphToken(address(0), treasury, address(0));
 
         // Deploy presale with tge in 1 day
-        presale = new SeraphPresale(
-            address(token),
-            treasury,
-            address(usdt),
-            address(usdc),
-            block.timestamp + 1 days
-        );
+        presale = new SeraphPresale(address(token), treasury, address(usdt), address(usdc), block.timestamp + 1 days);
 
         // Set the presale address on the token so transfers from presale are tax-exempt
         vm.prank(treasury);
@@ -64,7 +58,7 @@ contract PresaleTest is Test {
 
         uint256 netAmount = 995 * 1e6;
         uint256 expectedTokens = (netAmount * 1e18) / 40000;
-        (uint256 total, , ) = presale.getBuyerAllocation(buyer, 3);
+        (uint256 total,,) = presale.getBuyerAllocation(buyer, 3);
         assertEq(total, expectedTokens, "Should receive correct token amount after fee");
     }
 
@@ -93,7 +87,7 @@ contract PresaleTest is Test {
         // Token calc: tokens = (netValue * ethUsdPrice * 1e6) / tier.price
         uint256 netValue = ethAmount - feeTaken;
         uint256 expectedTokens = (netValue * presale.ethUsdPrice() * 1e6) / 40000;
-        (uint256 total, , ) = presale.getBuyerAllocation(buyer, 3);
+        (uint256 total,,) = presale.getBuyerAllocation(buyer, 3);
         assertEq(total, expectedTokens, "ETH token amount should use ethUsdPrice conversion");
 
         // Verify: 1 ETH at $2000 = $2000; $2000 / $0.04 = 50000 tokens
@@ -119,33 +113,38 @@ contract PresaleTest is Test {
         uint256 netAmount = amount - fee;
         uint256 expectedTokens = (netAmount * 1e18) / 40000;
 
-        (uint256 total, , ) = presale.getBuyerAllocation(buyer, 3);
+        (uint256 total,,) = presale.getBuyerAllocation(buyer, 3);
         assertEq(total, expectedTokens);
 
         // 995 USDT / $0.04 = 24875 tokens
         assertEq(total / 1e18, 24875, "1000 USDT should yield 24875 tokens");
     }
 
-    function test_BUG_NoAccessControls() public {
-        // addToWhitelist callable by anyone
+    function test_AccessControls_Enforced() public {
+        // addToWhitelist should revert when called by non-treasury
         vm.prank(stranger);
         address[] memory wl = new address[](1);
         wl[0] = stranger;
+        vm.expectRevert("Presale: caller is not treasury");
         presale.addToWhitelist(wl);
-        assertTrue(presale.isWhitelisted(stranger, 2), "BUG: Anyone can whitelist");
 
-        // executeTGE callable by anyone
-        vm.warp(block.timestamp + 2 days);
+        // executeTGE should revert when called by non-treasury
         vm.prank(stranger);
+        vm.expectRevert("Presale: caller is not treasury");
         presale.executeTGE();
-        assertTrue(presale.tgeExecuted(), "BUG: Anyone can execute TGE");
 
-        // withdrawStable callable by anyone (need to fund presale first)
+        // updateEthUsdPrice should revert when called by non-treasury
+        vm.prank(stranger);
+        vm.expectRevert("Presale: caller is not treasury");
+        presale.updateEthUsdPrice(3000);
+
+        // withdrawStable should revert when called by non-treasury
         vm.startPrank(buyer);
         usdt.approve(address(presale), 1000 * 1e6);
         presale.buyWithStablecoin(3, 1000 * 1e6, address(usdt), address(0));
         vm.stopPrank();
         vm.prank(stranger);
+        vm.expectRevert("Presale: caller is not treasury");
         presale.withdrawStable(50 * 1e6, address(usdt));
     }
 
@@ -155,7 +154,7 @@ contract PresaleTest is Test {
         usdt.approve(address(presale), 1000 * 1e6);
         presale.buyWithStablecoin(3, 1000 * 1e6, address(usdt), address(0));
 
-        (uint256 usdtFees, , , ) = presale.getFeesCollected();
+        (uint256 usdtFees,,,) = presale.getFeesCollected();
         assertEq(usdtFees, 5 * 1e6, "USDT fees tracked");
     }
 
@@ -166,5 +165,41 @@ contract PresaleTest is Test {
 
         (uint256 sold, uint256 cap) = presale.getProgress();
         assertTrue(sold < cap, "Should be within cap");
+    }
+
+    function test_SellTax_AppliedOnTransfer() public {
+        // Mint tokens to buyer (simulating post-TGE claim)
+        vm.startPrank(treasury);
+        token.mint(buyer, 1000e18);
+        vm.stopPrank();
+
+        uint256 supplyBefore = token.totalSupply();
+        uint256 treasuryBefore = token.balanceOf(treasury);
+
+        vm.prank(buyer);
+        token.transfer(stranger, 100e18);
+
+        // Sell tax: 1% on sells, 50% burn, 50% treasury
+        // tax = 1e18 (1 token), burned = 0.5e18, toTreasury = 0.5e18
+        assertEq(token.balanceOf(stranger), 99e18, "Buyer should receive 99 tokens (100 - 1% tax)");
+        assertEq(token.balanceOf(treasury), treasuryBefore + 5e17, "Treasury gets 0.5%");
+        assertEq(token.totalSupply(), supplyBefore - 5e17, "0.5% should be burned");
+    }
+
+    function test_SellTax_Disabled_ByOwner() public {
+        vm.startPrank(treasury);
+        token.setSellTaxEnabled(false);
+        vm.stopPrank();
+
+        vm.startPrank(treasury);
+        token.mint(buyer, 1000e18);
+        vm.stopPrank();
+
+        uint256 initialSupply = token.totalSupply();
+        vm.prank(buyer);
+        token.transfer(stranger, 100e18);
+
+        assertEq(token.balanceOf(stranger), 100e18, "No tax when disabled");
+        assertEq(token.totalSupply(), initialSupply, "No burn when disabled");
     }
 }

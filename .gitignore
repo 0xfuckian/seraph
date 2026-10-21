@@ -35,6 +35,9 @@ logs/
 # Foundry
 .cache/
 out/
+cache/
+broadcast/
+coverage/
 
 # Next.js
 .next/

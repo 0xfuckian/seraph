@@ -20,45 +20,37 @@ contract SeraphPresale is ReentrancyGuard {
     using SafeERC20 for IERC20;
 
     /* ── Events ────────────────────────────────────────────── */
-    event Purchased(
-        address indexed buyer,
-        uint256 tierId,
-        uint256 amount,
-        uint256 cost,
-        address currency
-    );
+    event Purchased(address indexed buyer, uint256 tierId, uint256 amount, uint256 cost, address currency);
     event FeeCollected(address indexed buyer, uint256 amount, address currency);
     event VestingReleased(address indexed beneficiary, uint256 amount);
     event Withdrawal(address indexed to, uint256 amount, address currency);
-    event TierAdded(
-        uint256 indexed tierId,
-        string name,
-        uint256 price,
-        uint256 hardCap,
-        uint256 totalAllocation
-    );
+    event TierAdded(uint256 indexed tierId, string name, uint256 price, uint256 hardCap, uint256 totalAllocation);
 
     /* ── Types ─────────────────────────────────────────────── */
-    enum Tier { Strategic, Private, Public }
+    enum Tier {
+        Strategic,
+        Private,
+        Public
+    }
 
     struct PresaleTier {
         string name;
-        uint256 price;           // price per token (in smallest units of currency)
-        uint256 hardCap;         // max tokens for this tier
-        uint256 sold;            // tokens sold so far
-        bool kycRequired;       // requires whitelist
-        uint256 lockupBps;      // token-free percentage at TGE (basis points)
-        uint256 vestingDuration;  // full vesting period in seconds
+        uint256 price; // price per token (in smallest units of currency)
+        uint256 hardCap; // max tokens for this tier
+        uint256 sold; // tokens sold so far
+        bool kycRequired; // requires whitelist
+        uint256 lockupBps; // token-free percentage at TGE (basis points)
+        uint256 vestingDuration; // full vesting period in seconds
         bool active;
     }
 
     struct Vesting {
-        uint256 total;          // total tokens owed
-        uint256 released;       // already released
-        uint256 startTime;      // vesting start (after TGE cliff)
-        uint256 cliffSeconds;   // cliff period
-        uint256 duration;       // vesting duration
-        bool claimed;           // TGE portion claimed
+        uint256 total; // total tokens owed
+        uint256 released; // already released
+        uint256 startTime; // vesting start (after TGE cliff)
+        uint256 cliffSeconds; // cliff period
+        uint256 duration; // vesting duration
+        bool claimed; // TGE portion claimed
     }
 
     /* ── Config (immutable after deployment) ──────────────── */
@@ -94,14 +86,14 @@ contract SeraphPresale is ReentrancyGuard {
     /* === ETH pricing (assumes ETH/USD price; admin can update) === */
     uint256 public ethUsdPrice = 2000; // 1 ETH = $2000 (plain USD, no scaling)
 
+    /* ── Modifiers ─────────────────────────────────────────── */
+    modifier onlyTreasury() {
+        require(msg.sender == treasury, "Presale: caller is not treasury");
+        _;
+    }
+
     /* ── Constructor ───────────────────────────────────────── */
-    constructor(
-        address _token,
-        address _treasury,
-        address _usdt,
-        address _usdc,
-        uint256 _tgeTimestamp
-    ) {
+    constructor(address _token, address _treasury, address _usdt, address _usdc, uint256 _tgeTimestamp) {
         token = ISeraphToken(_token);
         treasury = _treasury;
         usdt = _usdt;
@@ -113,29 +105,29 @@ contract SeraphPresale is ReentrancyGuard {
         // $0.02 → 20000, $0.03 → 30000, $0.04 → 40000
         _addTier(
             "Strategic",
-            20000,          // $0.02 in 1e6 units
-            10_000_000e18,  // 10M SER
-            true,           // KYC required
-            2500,           // 25% TGE, 75% vested
-            365 days,       // 12-month vesting
+            20000, // $0.02 in 1e6 units
+            10_000_000e18, // 10M SER
+            true, // KYC required
+            2500, // 25% TGE, 75% vested
+            365 days, // 12-month vesting
             true
         );
         _addTier(
             "Private",
-            30000,          // $0.03
-            30_000_000e18,  // 30M SER
-            true,           // KYC required
-            2000,           // 20% TGE, 80% vested
-            365 days,       // 12-month vesting
+            30000, // $0.03
+            30_000_000e18, // 30M SER
+            true, // KYC required
+            2000, // 20% TGE, 80% vested
+            365 days, // 12-month vesting
             true
         );
         _addTier(
             "Public",
-            40000,          // $0.04
-            60_000_000e18,  // 60M SER
-            false,          // No KYC
-            10000,          // 100% TGE
-            0,              // no vesting
+            40000, // $0.04
+            60_000_000e18, // 60M SER
+            false, // No KYC
+            10000, // 100% TGE
+            0, // no vesting
             true
         );
     }
@@ -165,7 +157,7 @@ contract SeraphPresale is ReentrancyGuard {
     }
 
     /* ── Whitelist ────────────────────────────────────────── */
-    function addToWhitelist(address[] calldata accounts) external /* only Treasury */ {
+    function addToWhitelist(address[] calldata accounts) external onlyTreasury {
         for (uint256 i = 0; i < accounts.length; i++) {
             // tierId 1 = Strategic (kycRequired), 2 = Private (kycRequired)
             // isWhitelisted checks keccak256(abi.encodePacked(account, tierId))
@@ -187,18 +179,14 @@ contract SeraphPresale is ReentrancyGuard {
      * @param currency Address of the stablecoin to use (USDT or USDC)
      * @param referrer Referral address (zero for none)
      */
-    function buyWithStablecoin(
-        uint256 tierId,
-        uint256 stablecoinAmount,
-        address currency,
-        address referrer
-    ) external payable nonReentrant {
+    function buyWithStablecoin(uint256 tierId, uint256 stablecoinAmount, address currency, address referrer)
+        external
+        payable
+        nonReentrant
+    {
         require(tiers[tierId].active, "Presale: tier inactive");
         require(isWhitelisted(msg.sender, tierId), "Presale: not whitelisted");
-        require(
-            currency == usdt || currency == usdc,
-            "Presale: invalid currency"
-        );
+        require(currency == usdt || currency == usdc, "Presale: invalid currency");
 
         PresaleTier storage tier = tiers[tierId];
 
@@ -234,11 +222,6 @@ contract SeraphPresale is ReentrancyGuard {
         if (referrer != address(0)) referredBy[msg.sender] = uint256(uint160(referrer));
 
         emit Purchased(msg.sender, tierId, tokens, netAmount, currency);
-    }
-
-    function stablecoinAddress(uint256 tierId) internal view returns (address) {
-        // Legacy helper — kept for backward compat
-        return usdt;
     }
 
     /**
@@ -284,7 +267,7 @@ contract SeraphPresale is ReentrancyGuard {
         emit Purchased(msg.sender, tierId, tokens, netValue, address(0));
     }
 
-    function updateEthUsdPrice(uint256 _ethUsdPrice) external /* onlyOwner */ {
+    function updateEthUsdPrice(uint256 _ethUsdPrice) external onlyTreasury {
         ethUsdPrice = _ethUsdPrice;
     }
 
@@ -302,7 +285,7 @@ contract SeraphPresale is ReentrancyGuard {
         vesting[buyer][tierId] = Vesting({
             total: total,
             released: 0,
-            startTime: 0,  // set on TGE execution
+            startTime: 0, // set on TGE execution
             cliffSeconds: lockupBps == BPS ? 0 : (BPS - lockupBps) * tiers[tierId].vestingDuration / BPS,
             duration: vestedAmount > 0 ? tiers[tierId].vestingDuration : 0,
             claimed: false
@@ -313,7 +296,7 @@ contract SeraphPresale is ReentrancyGuard {
      * @dev Execute TGE — release initial token allocation to all buyers.
      * Only callable after tgeTimestamp + can be called per-buyer.
      */
-    function executeTGE() external {
+    function executeTGE() external onlyTreasury {
         require(block.timestamp >= tgeTimestamp, "Presale: TGE not started");
         tgeExecuted = true;
     }
@@ -360,13 +343,13 @@ contract SeraphPresale is ReentrancyGuard {
     }
 
     /* ── Withdrawals ──────────────────────────────────────── */
-    function withdrawStable(uint256 amount, address currency) external /* only Treasury */ {
+    function withdrawStable(uint256 amount, address currency) external onlyTreasury {
         require(currency == usdt || currency == usdc, "Presale: invalid currency");
         IERC20(currency).safeTransfer(treasury, amount);
         emit Withdrawal(treasury, amount, currency);
     }
 
-    function withdrawETH() external /* only Treasury */ {
+    function withdrawETH() external onlyTreasury {
         uint256 amount = address(this).balance;
         payable(treasury).transfer(amount);
         totalRaisedETH -= amount;
@@ -377,12 +360,7 @@ contract SeraphPresale is ReentrancyGuard {
     function getFeesCollected()
         external
         view
-        returns (
-            uint256 usdtFees,
-            uint256 usdcFees,
-            uint256 ethFees,
-            uint256 totalFeesUSD
-        )
+        returns (uint256 usdtFees, uint256 usdcFees, uint256 ethFees, uint256 totalFeesUSD)
     {
         return (
             feesCollectedUSDT,

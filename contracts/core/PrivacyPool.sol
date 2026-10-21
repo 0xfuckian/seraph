@@ -80,11 +80,9 @@ contract PrivacyPool {
      *   2. Nullifiers are not yet spent
      *   3. Root is updated correctly
      */
-    function privateTransfer(
-        bytes32[] calldata nullifiers,
-        bytes32[] calldata commitments,
-        bytes calldata proof
-    ) external {
+    function privateTransfer(bytes32[] calldata nullifiers, bytes32[] calldata commitments, bytes calldata proof)
+        external
+    {
         // Verify the ZK proof
         // require(_verifyProof(spendVerifier, proof, ...), "PrivacyPool: invalid proof");
 
@@ -113,12 +111,7 @@ contract PrivacyPool {
      * @param recipient Public address receiving the funds.
      * @param proof ZK proof of ownership and balance.
      */
-    function unshield(
-        bytes32 nullifier,
-        uint256 amount,
-        address recipient,
-        bytes calldata proof
-    )
+    function unshield(bytes32 nullifier, uint256 amount, address recipient, bytes calldata proof)
         external
         notNullified(nullifier)
     {
@@ -145,21 +138,21 @@ contract PrivacyPool {
     /**
      * @dev Verify a ZK proof against a verifier contract.
      */
-    function _verifyProof(
-        address verifier,
-        bytes memory proof,
-        bytes32[] memory pubSignals
-    ) internal view returns (bool) {
+    function _verifyProof(address verifier, bytes memory proof, bytes32[] memory pubSignals)
+        internal
+        view
+        returns (bool)
+    {
         // TODO: Call the verifier contract
         return true;
     }
 
     // ─── Admin ─────────────────────────────────────────────────────────
-    function setSpendVerifier(address _verifier) external /* onlyGovernance */ {
+    function setSpendVerifier(address _verifier) external /* onlyGovernance */  {
         spendVerifier = _verifier;
     }
 
-    function setBridgeVerifier(address _verifier) external /* onlyGovernance */ {
+    function setBridgeVerifier(address _verifier) external /* onlyGovernance */  {
         bridgeVerifier = _verifier;
     }
 }
