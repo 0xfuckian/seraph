@@ -4,36 +4,36 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Seraph Protocol — Privacy Continuum</title>
-  <meta name="description" content="Seraph is a modular privacy continuum: a Monero-inspired base layer with two private EVMs. Native SER + XMR, programmable private contracts, and a six-level privacy spectrum.">
+  <meta name="description" content="Seraph is a modular privacy continuum: a Monero-inspired base layer with two private EVMs. A four-level privacy spectrum, native SER + XMR, and programmable private contracts.">
+  <meta property="og:title" content="Seraph Protocol — Privacy Continuum">
+  <meta property="og:description" content="Monero-grade, programmable private execution. A four-level privacy continuum spanning a Monero-inspired base layer and two private EVMs.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://seraphprotocol.tech">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Seraph Protocol — Privacy Continuum">
+  <meta name="twitter:description" content="A four-level privacy continuum: Monero-inspired base layer + two private EVMs. Native SER + XMR.">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230e1012'/%3E%3Ctext x='16' y='23' font-family='Arial' font-size='20' font-weight='900' fill='%232f4cff' text-anchor='middle'%3ES%3C/text%3E%3C/svg%3E">
   <!-- itsua.com design system: Space Grotesk + JetBrains Mono -->
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      /* === itsua.com exact color values === */
       --color-white:      #ffffff;
       --color-bg:         #ffffff;
       --color-paper:      #f5f5f3;
       --color-ink:        #0e1012;
       --color-sub:        #60636a;
       --color-line:       #d9dadd;
-      --color-accent:     #2f4cff;   /* electric blue — primary functional accent */
-      --color-green:      #047857;   /* green — AI Payments / positive */
+      --color-accent:     #2f4cff;
+      --color-green:      #047857;
       --color-green-bright: #34d399;
-      --color-orange:     #b45309;   /* orange — bridge */
-      --color-magenta:    #a21caf;   /* magenta — base layer / messaging */
-      --color-ink-soft:     #eeeef0;
+      --color-orange:     #b45309;
+      --color-magenta:    #a21caf;
+      --color-ink-soft:   #eeeef0;
       --color-magenta-soft: #fbeefc;
       --color-blue-soft:    #eef1ff;
       --color-green-soft:   #e6f7f1;
       --color-orange-soft:  #fff2e5;
-
-      /* === Industrial accents (BMW / SpaceX inspired) === */
       --color-metal:        #c0c0c0;
-      --color-steel:        #4a5568;
-      --color-rivet:        #0e1012;
-
-      /* Shadows-as-borders */
       --line-shadow:       var(--color-line) 0px 0px 0px 1px;
       --card-shadow:       var(--color-line) 0px 0px 0px 1px, rgba(0,0,0,0.04) 0px 2px 2px, var(--color-paper) 0px 0px 0px 1px;
       --card-shadow-hover: rgba(0,0,0,0.10) 0px 0px 0px 1px, rgba(0,0,0,0.06) 0px 4px 8px, var(--color-paper) 0px 0px 0px 1px;
@@ -48,13 +48,16 @@
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
     }
-    .font-mono { font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
 
     /* === Page views (hash-routed) === */
     .view { display: none; }
     .view.active { display: block; }
 
-    /* === Navigation (exact itsua.com pattern) === */
+    /* === Scroll reveal === */
+    .reveal { opacity: 0; transform: translateY(18px); transition: opacity 0.6s ease, transform 0.6s ease; }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    /* === Navigation === */
     header {
       position: sticky; top: 0; z-index: 50;
       display: flex; flex-wrap: wrap; align-items: stretch;
@@ -76,24 +79,32 @@
     .nav-link {
       display: flex; align-items: center;
       font-family: "JetBrains Mono", monospace;
-      font-size: 12px; font-weight: 500; text-transform: uppercase;
+      font-size: 11px; font-weight: 500; text-transform: uppercase;
       letter-spacing: 0.02em;
-      padding: 16px 22px; border-right: var(--line-shadow);
+      padding: 16px 15px; border-right: var(--line-shadow);
       color: var(--color-sub); text-decoration: none;
       transition: color 0.15s; white-space: nowrap;
     }
     .nav-link:hover { color: var(--color-ink); }
+    .nav-link.active { color: var(--color-ink); }
     .nav-link.active .bracket { color: var(--color-accent); }
-    .bracket { margin-right: 6px; color: var(--color-sub); }
+    .bracket { margin-right: 5px; color: var(--color-sub); }
     .status-cell {
-      flex-shrink: 0; display: flex; align-items: center; padding: 16px 24px;
+      flex-shrink: 0; display: flex; align-items: center; padding: 16px 20px;
       font-family: "JetBrains Mono", monospace;
-      font-size: 12px; font-weight: 500; border-left: var(--line-shadow);
+      font-size: 11px; font-weight: 500; border-left: var(--line-shadow);
     }
-    .status-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--color-green-bright); margin-right: 8px; }
-    .status-text { color: var(--color-green); font-weight: 700; }
+    .status-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--color-orange); margin-right: 8px; }
+    .status-text { color: var(--color-orange); font-weight: 700; }
 
-    /* === Meta / Section Labels === */
+    .nav-toggle {
+      display: none; align-items: center; justify-content: center;
+      padding: 0 20px; border: none; border-left: var(--line-shadow);
+      background: var(--color-white); color: var(--color-ink);
+      font-family: "JetBrains Mono", monospace; font-size: 18px; cursor: pointer;
+    }
+
+    /* === Meta === */
     .meta {
       font-family: "JetBrains Mono", monospace;
       font-size: 11px; font-weight: 500;
@@ -102,11 +113,23 @@
       margin-bottom: 12px;
     }
 
-    /* === Hero (massive typography, tall) === */
+    /* === Hero === */
     .hero {
+      position: relative;
       padding: 80px 24px;
       max-width: 1200px; margin: 0 auto;
     }
+    .hero::before {
+      content: ""; position: absolute; inset: 0; pointer-events: none;
+      background-image:
+        linear-gradient(var(--color-line) 1px, transparent 1px),
+        linear-gradient(90deg, var(--color-line) 1px, transparent 1px);
+      background-size: 56px 56px;
+      opacity: 0.35;
+      -webkit-mask-image: linear-gradient(to bottom, black 0%, transparent 85%);
+      mask-image: linear-gradient(to bottom, black 0%, transparent 85%);
+    }
+    .hero > * { position: relative; }
     .hero-sub {
       font-size: 14px; font-weight: 400;
       line-height: 1.6; color: var(--color-sub);
@@ -135,7 +158,7 @@
       .hero h1 { font-size: 120px; }
     }
 
-    /* === Split CTA Button (exact itsua.com) === */
+    /* === CTAs === */
     .cta-split {
       display: inline-flex; align-items: center;
       font-family: "JetBrains Mono", monospace;
@@ -163,7 +186,7 @@
       padding: 12px 24px; text-decoration: none;
     }
 
-    /* === Stats Grid (large colored numbers) === */
+    /* === Stats === */
     .stats-grid {
       max-width: 1200px; margin: 0 auto;
       padding: 32px 24px;
@@ -198,7 +221,7 @@
     }
     @media (min-width: 768px) { .stat-number { font-size: 56px; } }
 
-    /* === Section (tall, big titles) === */
+    /* === Sections === */
     .section {
       max-width: 1200px; margin: 0 auto;
       padding: 80px 24px;
@@ -224,172 +247,149 @@
     }
     .view-all:hover { color: var(--color-ink); }
 
-    /* === Deck Cards (white backgrounds, colored text per layer) === */
-    .deck {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 24px;
+    /* === Privacy Continuum levels === */
+    .cont-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      border: var(--line-shadow);
     }
+    @media (max-width: 900px) { .cont-grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 560px) { .cont-grid { grid-template-columns: 1fr; } }
+    .cont-level {
+      padding: 28px 24px;
+      border-right: var(--line-shadow);
+      border-top: 4px solid var(--c);
+    }
+    .cont-level:last-child { border-right: none; }
+    @media (max-width: 900px) { .cont-level { border-bottom: var(--line-shadow); } }
+    .cont-num {
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 56px; font-weight: 900; line-height: 0.9;
+      color: var(--c); letter-spacing: -0.03em;
+    }
+    .cont-name {
+      font-family: "JetBrains Mono", monospace;
+      font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em;
+      color: var(--color-ink); margin: 14px 0 8px;
+    }
+    .cont-level p { font-size: 15px; line-height: 1.6; color: var(--color-sub); }
+
+    /* === Deck Cards === */
+    .deck { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
     @media (max-width: 768px) { .deck { grid-template-columns: 1fr; } }
-
-    .deck-card {
-      background: var(--color-white);
-      box-shadow: var(--card-shadow);
-      cursor: pointer;
-      transition: box-shadow 0.15s ease;
-      display: flex; flex-direction: column;
-    }
+    .deck-card { background: var(--color-white); box-shadow: var(--card-shadow); transition: box-shadow 0.15s ease; display: flex; flex-direction: column; }
     .deck-card:hover { box-shadow: var(--card-shadow-hover); }
-
-    .deck-face {
-      padding: 24px; display: flex; flex-direction: column; flex: 1;
-    }
-    .deck-brand-row {
-      display: flex; justify-content: space-between; align-items: center;
-      font-family: "JetBrains Mono", monospace;
-      font-size: 11px; font-weight: 500;
-      color: var(--color-sub); margin-bottom: 16px;
-    }
+    .deck-face { padding: 24px; display: flex; flex-direction: column; flex: 1; }
+    .deck-brand-row { display: flex; justify-content: space-between; align-items: center; font-family: "JetBrains Mono", monospace; font-size: 11px; font-weight: 500; color: var(--color-sub); margin-bottom: 16px; }
     .deck-brand { font-weight: 600; }
-    .deck-badge {
-      display: flex; align-items: center; gap: 6px;
-      font-family: "JetBrains Mono", monospace;
-      font-size: 10px; font-weight: 700;
-    }
+    .deck-badge { display: flex; align-items: center; gap: 6px; font-family: "JetBrains Mono", monospace; font-size: 10px; font-weight: 700; }
     .deck-badge .dot { width: 6px; height: 6px; border-radius: 50%; }
     .deck-badge.text-magenta .dot { background: var(--color-magenta); }
     .deck-badge.text-accent .dot { background: var(--color-accent); }
     .deck-badge.text-green .dot { background: var(--color-green); }
-
-    .deck-name {
-      font-family: "Space Grotesk", sans-serif;
-      font-size: 24px; font-weight: 500;
-      line-height: 1.05; letter-spacing: -0.01em;
-      margin-bottom: 8px;
-    }
-    .deck-domain {
-      font-family: "JetBrains Mono", monospace;
-      font-size: 11px; font-weight: 700;
-      text-transform: uppercase; letter-spacing: 0.02em;
-      color: var(--color-sub); margin-bottom: 12px;
-    }
+    .deck-name { font-family: "Space Grotesk", sans-serif; font-size: 24px; font-weight: 500; line-height: 1.05; letter-spacing: -0.01em; margin-bottom: 8px; }
+    .deck-domain { font-family: "JetBrains Mono", monospace; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em; color: var(--color-sub); margin-bottom: 12px; }
     .deck-domain.text-magenta { color: var(--color-magenta); }
     .deck-domain.text-accent { color: var(--color-accent); }
     .deck-domain.text-green { color: var(--color-green); }
-
-    .deck-result {
-      font-family: "Space Grotesk", sans-serif;
-      font-size: 16px; font-weight: 500;
-      color: var(--color-ink);
-      margin-top: auto; margin-bottom: 12px;
-    }
+    .deck-result { font-family: "Space Grotesk", sans-serif; font-size: 16px; font-weight: 500; color: var(--color-ink); margin-top: auto; margin-bottom: 12px; }
     .deck-result.text-magenta { color: var(--color-magenta); }
     .deck-result.text-accent { color: var(--color-accent); }
     .deck-result.text-green { color: var(--color-green); }
-
     .tech-tags { display: flex; flex-wrap: wrap; gap: 6px; }
-    .tech-tag {
+    .tech-tag { font-family: "JetBrains Mono", monospace; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.02em; padding: 3px 8px; border-radius: 9999px; background: var(--color-ink-soft); color: var(--color-ink); }
+
+    /* === Status tags === */
+    .status-tag {
       font-family: "JetBrains Mono", monospace;
-      font-size: 10px; font-weight: 600;
-      text-transform: uppercase; letter-spacing: 0.02em;
-      padding: 3px 8px; border-radius: 9999px;
-      background: var(--color-ink-soft);
-      color: var(--color-ink);
+      font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em;
+      padding: 3px 8px; align-self: flex-start; display: inline-block;
     }
+    .st-magenta { background: var(--color-magenta-soft); color: var(--color-magenta); }
+    .st-accent { background: var(--color-blue-soft); color: var(--color-accent); }
+    .st-green { background: var(--color-green-soft); color: var(--color-green); }
+    .st-orange { background: var(--color-orange-soft); color: var(--color-orange); }
 
-    /* === Module Grid (white cards, colored bars) === */
-    .module-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 24px;
-    }
+    /* === Architecture diagram === */
+    .arch-diagram { display: flex; flex-direction: column; }
+    .arch-top { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    @media (max-width: 768px) { .arch-top { grid-template-columns: 1fr; } }
+    .arch-box { box-shadow: var(--card-shadow); padding: 24px; }
+    .arch-box:hover { box-shadow: var(--card-shadow-hover); }
+    .arch-tag { font-family: "JetBrains Mono", monospace; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em; color: var(--color-sub); }
+    .arch-name { font-family: "Space Grotesk", sans-serif; font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 6px 0 8px; }
+    .arch-sub { font-size: 15px; line-height: 1.6; color: var(--color-sub); }
+    .arch-features { list-style: none; margin-top: 12px; }
+    .arch-features li { font-family: "JetBrains Mono", monospace; font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.02em; color: var(--color-sub); padding: 5px 0; border-top: var(--line-shadow); }
+    .arch-features li:first-child { border-top: none; }
+    .arch-shared { box-shadow: var(--card-shadow); border-top: 4px solid var(--color-accent); padding: 24px; margin: 24px 0; background: var(--color-paper); }
+    .arch-shared .arch-name { font-size: 18px; }
+    .arch-shared p { font-size: 15px; line-height: 1.6; color: var(--color-sub); }
+    .arch-base { border-top: 4px solid var(--color-magenta); }
+
+    /* === Module grid === */
+    .module-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
     @media (max-width: 768px) { .module-grid { grid-template-columns: 1fr; } }
-
-    .module-card {
-      padding: 24px;
-      box-shadow: var(--card-shadow);
-      display: flex; flex-direction: column;
-      background: var(--color-white);
-    }
+    .module-card { padding: 24px; box-shadow: var(--card-shadow); display: flex; flex-direction: column; background: var(--color-white); }
     .module-card:hover { box-shadow: var(--card-shadow-hover); }
-    .module-bar {
-      width: 100%; height: 4px; border-radius: 2px;
-      display: block; margin-bottom: 16px;
-    }
+    .module-bar { width: 100%; height: 4px; display: block; margin-bottom: 16px; }
     .bar-magenta { background: var(--color-magenta); }
     .bar-orange { background: var(--color-orange); }
     .bar-green { background: var(--color-green); }
     .bar-accent { background: var(--color-accent); }
-
-    .module-card h3 {
-      font-family: "Space Grotesk", sans-serif;
-      font-size: 20px; font-weight: 500;
-      line-height: 1.15; margin-bottom: 8px;
-    }
+    .module-card h3 { font-family: "Space Grotesk", sans-serif; font-size: 20px; font-weight: 500; line-height: 1.15; margin-bottom: 8px; }
     .module-card h3 .dot { font-size: 16px; margin-right: 6px; }
-    .module-card p {
-      font-size: 16px; font-weight: 400;
-      line-height: 1.6; color: var(--color-sub);
-      margin-top: auto;
-    }
+    .module-card p { font-size: 16px; font-weight: 400; line-height: 1.6; color: var(--color-sub); margin-top: auto; }
+    .module-specs { list-style: none; margin: 12px 0; }
+    .module-specs li { font-family: "JetBrains Mono", monospace; font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.02em; color: var(--color-sub); padding: 6px 0; border-top: var(--line-shadow); display: flex; justify-content: space-between; gap: 12px; }
+    .module-specs li:first-child { border-top: none; }
+    .module-specs li .v { color: var(--color-ink); font-weight: 700; }
 
-    /* === Industrial Elements (blended with itsua.com) === */
-    .struct-line { border-top: 3px solid var(--color-line); margin: 48px 0; }
-    .struct-line-accent { border-top: 4px solid var(--color-accent); margin: 48px 0; }
-    .struct-line-magenta { border-top: 4px solid var(--color-magenta); margin: 48px 0; }
-    .num-heavy { font-weight: 900; }
-    .tight { line-height: 1.15; }
-    .metal-text { color: var(--color-metal); }
+    /* === Tokenomics === */
+    .token-two { display: grid; grid-template-columns: 1.2fr 1fr; gap: 24px; align-items: start; }
+    @media (max-width: 900px) { .token-two { grid-template-columns: 1fr; } }
+    .alloc-row { display: grid; grid-template-columns: 1fr 220px 56px; align-items: center; gap: 16px; padding: 12px 0; border-top: var(--line-shadow); }
+    .alloc-row:first-child { border-top: none; }
+    .alloc-lbl { font-size: 15px; font-weight: 500; }
+    .alloc-track { height: 14px; background: var(--color-paper); box-shadow: var(--line-shadow); }
+    .alloc-fill { height: 100%; }
+    .alloc-pct { font-family: "JetBrains Mono", monospace; font-size: 12px; font-weight: 700; text-align: right; }
+    @media (max-width: 640px) { .alloc-row { grid-template-columns: 1fr 1fr 40px; gap: 10px; } }
+    .fee-card { box-shadow: var(--card-shadow); padding: 24px; }
+    .fee-card h3 { font-family: "Space Grotesk", sans-serif; font-size: 18px; font-weight: 700; margin-bottom: 12px; }
+    .fee-card ul { list-style: none; }
+    .fee-card li { font-size: 15px; line-height: 1.6; color: var(--color-sub); padding: 8px 0; border-top: var(--line-shadow); }
+    .fee-card li:first-child { border-top: none; }
+    .fee-card li b { color: var(--color-ink); }
 
-    /* === Presale Status Banner === */
-    .presale-status {
-      display: flex; align-items: flex-start; gap: 16px;
-      box-shadow: var(--line-shadow);
-      padding: 20px 24px;
-      background: var(--color-paper);
-      margin-bottom: 64px;
-    }
-    .presale-status .pdot {
-      width: 12px; height: 12px; border-radius: 50%;
-      background: var(--color-orange); flex-shrink: 0; margin-top: 4px;
-    }
-    .presale-status strong {
-      font-family: "JetBrains Mono", monospace;
-      font-size: 12px; font-weight: 700;
-      text-transform: uppercase; letter-spacing: 0.02em;
-      display: block; margin-bottom: 6px; color: var(--color-ink);
-    }
-    .presale-status p { font-size: 15px; line-height: 1.6; color: var(--color-sub); }
+    /* === Roadmap === */
+    .roadmap { position: relative; margin-left: 8px; }
+    .roadmap::before { content: ""; position: absolute; left: 7px; top: 8px; bottom: 8px; width: 3px; background: var(--color-line); }
+    .road-item { position: relative; padding: 0 0 32px 40px; }
+    .road-item:last-child { padding-bottom: 0; }
+    .road-dot { position: absolute; left: 0; top: 6px; width: 17px; height: 17px; border-radius: 50%; background: var(--color-white); box-shadow: var(--line-shadow); }
+    .road-item:nth-child(1) .road-dot { background: var(--color-orange); }
+    .road-item:nth-child(2) .road-dot { background: var(--color-magenta); }
+    .road-item:nth-child(3) .road-dot { background: var(--color-accent); }
+    .road-item:nth-child(4) .road-dot { background: var(--color-green); }
+    .road-item:nth-child(5) .road-dot { background: var(--color-ink); }
+    .road-phase { font-family: "JetBrains Mono", monospace; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em; color: var(--color-sub); margin-bottom: 4px; }
+    .road-title { font-family: "Space Grotesk", sans-serif; font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin-bottom: 8px; }
+    .road-item p { font-size: 15px; line-height: 1.6; color: var(--color-sub); max-width: 640px; }
 
-    /* === Target cells (real contract parameters) === */
-    .target-row { display: flex; gap: 24px; flex-wrap: wrap; margin-bottom: 48px; }
-    .target-cell {
-      flex: 1; min-width: 200px;
-      box-shadow: var(--card-shadow);
-      padding: 24px;
-    }
-    .target-cell .num {
-      font-family: "Space Grotesk", sans-serif;
-      font-size: 48px; font-weight: 900;
-      line-height: 0.9; letter-spacing: -0.02em;
-    }
-    .target-cell .num .unit { font-size: 0.5em; }
-    .target-cell .lbl {
-      font-family: "JetBrains Mono", monospace;
-      font-size: 11px; font-weight: 500;
-      text-transform: uppercase; letter-spacing: 0.02em;
-      color: var(--color-sub); margin-top: 10px;
-    }
-    @media (min-width: 768px) { .target-cell .num { font-size: 64px; } }
+    /* === Security === */
+    .threat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    @media (max-width: 768px) { .threat-grid { grid-template-columns: 1fr; } }
+    .threat-card { box-shadow: var(--card-shadow); padding: 24px; }
+    .threat-card h4 { font-family: "JetBrains Mono", monospace; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em; color: var(--color-ink); margin-bottom: 6px; }
+    .threat-card p { font-size: 15px; line-height: 1.6; color: var(--color-sub); }
+    .sec-list { list-style: none; }
+    .sec-list li { display: flex; gap: 12px; padding: 12px 0; border-top: var(--line-shadow); font-size: 15px; color: var(--color-sub); line-height: 1.5; }
+    .sec-list li:first-child { border-top: none; }
+    .sec-list .m { font-family: "JetBrains Mono", monospace; font-weight: 700; color: var(--color-ink); flex-shrink: 0; }
 
-    /* === Tier Cards === */
-    .tier-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 24px;
-    }
+    /* === Tier cards (presale) === */
+    .tier-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
     @media (max-width: 768px) { .tier-grid { grid-template-columns: 1fr; } }
-
     .tier-card {
       background: var(--color-white);
       box-shadow: var(--card-shadow);
@@ -406,7 +406,6 @@
       font-size: 10px; font-weight: 700;
       text-transform: uppercase; letter-spacing: 0.02em;
       padding: 4px 12px;
-      border-radius: 0;
       display: inline-flex; align-items: center; gap: 6px;
       margin-bottom: 12px; align-self: flex-start;
     }
@@ -417,33 +416,12 @@
     .tier-badge.text-magenta .dot { background: var(--color-magenta); }
     .tier-badge.text-accent .dot { background: var(--color-accent); }
     .tier-badge.text-green .dot { background: var(--color-green); }
-    .tier-name {
-      font-family: "Space Grotesk", sans-serif;
-      font-size: 24px; font-weight: 900;
-      line-height: 1.05; letter-spacing: -0.01em;
-      margin-bottom: 8px;
-    }
-    .tier-detail {
-      font-family: "JetBrains Mono", monospace;
-      font-size: 11px; font-weight: 700;
-      text-transform: uppercase; letter-spacing: 0.02em;
-      color: var(--color-sub);
-      margin-bottom: 16px;
-    }
-    .tier-price {
-      font-family: "Space Grotesk", sans-serif;
-      font-size: 32px; font-weight: 900;
-      line-height: 0.9; letter-spacing: -0.02em;
-      color: var(--color-ink);
-      margin-bottom: 16px;
-    }
+    .tier-name { font-family: "Space Grotesk", sans-serif; font-size: 24px; font-weight: 900; line-height: 1.05; letter-spacing: -0.01em; margin-bottom: 8px; }
+    .tier-detail { font-family: "JetBrains Mono", monospace; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em; color: var(--color-sub); margin-bottom: 16px; }
+    .tier-price { font-family: "Space Grotesk", sans-serif; font-size: 32px; font-weight: 900; line-height: 0.9; letter-spacing: -0.02em; color: var(--color-ink); margin-bottom: 16px; }
     .tier-price .unit { font-size: 0.5em; color: var(--color-sub); }
-    .tier-desc {
-      font-size: 15px; font-weight: 400;
-      line-height: 1.6; color: var(--color-sub);
-      margin-top: auto;
-    }
-    .tier-list { list-style: none; margin: 12px 0 16px; }
+    .tier-desc { font-size: 15px; font-weight: 400; line-height: 1.6; color: var(--color-sub); margin-top: auto; }
+    .tier-list { list-style: none; margin: 0 0 14px; }
     .tier-list li {
       font-family: "JetBrains Mono", monospace;
       font-size: 11px; font-weight: 500;
@@ -455,196 +433,157 @@
     }
     .tier-list li:first-child { border-top: none; }
     .tier-list li .v { color: var(--color-ink); font-weight: 700; }
+    .tier-progress { height: 6px; background: var(--color-paper); box-shadow: var(--line-shadow); margin: 12px 0 6px; }
+    .tier-progress .tp-fill { height: 100%; width: 0%; background: var(--color-accent); transition: width 0.6s ease; }
+    .tp-labels { display: flex; justify-content: space-between; font-family: "JetBrains Mono", monospace; font-size: 10px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.02em; color: var(--color-sub); }
+
+    /* === Presale status === */
+    .presale-status { display: flex; align-items: flex-start; gap: 16px; box-shadow: var(--line-shadow); padding: 20px 24px; background: var(--color-paper); margin-bottom: 64px; }
+    .presale-status .pdot { width: 12px; height: 12px; border-radius: 50%; background: var(--color-orange); flex-shrink: 0; margin-top: 4px; }
+    .presale-status strong { font-family: "JetBrains Mono", monospace; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em; display: block; margin-bottom: 6px; color: var(--color-ink); }
+    .presale-status p { font-size: 15px; line-height: 1.6; color: var(--color-sub); }
+
+    .target-row { display: flex; gap: 24px; flex-wrap: wrap; margin-bottom: 48px; }
+    .target-cell { flex: 1; min-width: 200px; box-shadow: var(--card-shadow); padding: 24px; }
+    .target-cell .num { font-family: "Space Grotesk", sans-serif; font-size: 48px; font-weight: 900; line-height: 0.9; letter-spacing: -0.02em; }
+    .target-cell .num .unit { font-size: 0.5em; }
+    .target-cell .lbl { font-family: "JetBrains Mono", monospace; font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.02em; color: var(--color-sub); margin-top: 10px; }
+    @media (min-width: 768px) { .target-cell .num { font-size: 64px; } }
 
     /* === Purchase flow === */
-    .purchase-panel {
-      display: grid;
-      grid-template-columns: 1.4fr 1fr;
-      gap: 24px;
-      margin-top: 16px;
-    }
+    .purchase-panel { display: grid; grid-template-columns: 1.4fr 1fr; gap: 24px; margin-top: 16px; }
     @media (max-width: 900px) { .purchase-panel { grid-template-columns: 1fr; } }
-    .purchase-controls, .purchase-summary {
-      background: var(--color-white);
-      box-shadow: var(--card-shadow);
-      padding: 24px;
-    }
+    .purchase-controls, .purchase-summary { background: var(--color-white); box-shadow: var(--card-shadow); padding: 24px; }
     .currency-tabs { display: inline-flex; box-shadow: var(--line-shadow); margin-bottom: 16px; }
-    .currency-tab {
-      font-family: "JetBrains Mono", monospace;
-      font-size: 12px; font-weight: 700;
-      text-transform: uppercase; letter-spacing: 0.02em;
-      padding: 12px 20px;
-      background: var(--color-white); color: var(--color-sub);
-      cursor: pointer; border: none;
-    }
+    .currency-tab { font-family: "JetBrains Mono", monospace; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em; padding: 12px 20px; background: var(--color-white); color: var(--color-sub); cursor: pointer; border: none; }
     .currency-tab + .currency-tab { box-shadow: inset var(--line-shadow); }
     .currency-tab.active { background: var(--color-ink); color: var(--color-white); }
-
-    .amount-wrap {
-      display: flex; align-items: center; gap: 12px;
-      box-shadow: var(--line-shadow);
-      padding: 16px 20px;
-      background: var(--color-white);
-      margin-bottom: 16px;
-    }
-    .amount-wrap .sym {
-      font-family: "JetBrains Mono", monospace;
-      font-size: 14px; font-weight: 700; color: var(--color-sub);
-    }
-    .amount-input {
-      flex: 1; border: none; outline: none;
-      font-family: "Space Grotesk", sans-serif;
-      font-size: 36px; font-weight: 900; letter-spacing: -0.02em;
-      color: var(--color-ink); background: transparent; min-width: 0;
-    }
+    .amount-wrap { display: flex; align-items: center; gap: 12px; box-shadow: var(--line-shadow); padding: 16px 20px; background: var(--color-white); margin-bottom: 16px; }
+    .amount-wrap .sym { font-family: "JetBrains Mono", monospace; font-size: 14px; font-weight: 700; color: var(--color-sub); }
+    .amount-input { flex: 1; border: none; outline: none; font-family: "Space Grotesk", sans-serif; font-size: 36px; font-weight: 900; letter-spacing: -0.02em; color: var(--color-ink); background: transparent; min-width: 0; }
     .amount-input::placeholder { color: var(--color-line); }
-
-    .wallet-btn {
-      display: inline-flex; align-items: center;
-      font-family: "JetBrains Mono", monospace;
-      font-size: 12px; font-weight: 700;
-      text-transform: uppercase; letter-spacing: 0.02em;
-      text-decoration: none;
-      padding: 14px 28px;
-      background: var(--color-ink); color: var(--color-white);
-      border: none; cursor: pointer;
-      transition: box-shadow 0.15s ease;
-    }
+    .wallet-btn { display: inline-flex; align-items: center; font-family: "JetBrains Mono", monospace; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em; text-decoration: none; padding: 14px 28px; background: var(--color-ink); color: var(--color-white); border: none; cursor: pointer; transition: box-shadow 0.15s ease; }
     .wallet-btn:hover { box-shadow: var(--card-shadow-hover); }
     .wallet-btn .metal { color: var(--color-metal); margin-right: 8px; }
-    .connect-note {
-      margin-top: 12px;
-      font-size: 13px; line-height: 1.5; color: var(--color-sub);
-    }
-
-    .spec-row {
-      display: flex; justify-content: space-between; align-items: baseline;
-      padding: 12px 0;
-      border-bottom: var(--line-shadow);
-      font-size: 15px;
-    }
+    .connect-note { margin-top: 12px; font-size: 13px; line-height: 1.5; color: var(--color-sub); }
+    .spec-row { display: flex; justify-content: space-between; align-items: baseline; padding: 12px 0; border-bottom: var(--line-shadow); font-size: 15px; }
     .spec-row:last-child { border-bottom: none; }
     .spec-row .k { color: var(--color-sub); }
     .spec-row .v { font-family: "JetBrains Mono", monospace; font-size: 13px; font-weight: 700; }
     .spec-row .v.accent { color: var(--color-accent); }
 
+    /* === FAQ === */
+    .faq { max-width: 860px; }
+    .faq-item { box-shadow: var(--line-shadow); margin-bottom: 12px; background: var(--color-white); }
+    .faq-item summary {
+      cursor: pointer; list-style: none;
+      display: flex; justify-content: space-between; align-items: center; gap: 16px;
+      padding: 18px 20px;
+      font-family: "Space Grotesk", sans-serif; font-size: 16px; font-weight: 600;
+    }
+    .faq-item summary::-webkit-details-marker { display: none; }
+    .faq-item summary::after { content: "+"; font-family: "JetBrains Mono", monospace; font-size: 18px; color: var(--color-accent); }
+    .faq-item[open] summary::after { content: "–"; }
+    .faq-item p { padding: 0 20px 18px; font-size: 15px; line-height: 1.6; color: var(--color-sub); }
+
+    /* === Structural === */
+    .struct-line { border-top: 3px solid var(--color-line); margin: 48px 0; }
+    .struct-line-accent { border-top: 4px solid var(--color-accent); margin: 48px 0; }
+    .struct-line-magenta { border-top: 4px solid var(--color-magenta); margin: 48px 0; }
+    .num-heavy { font-weight: 900; }
+    .metal-text { color: var(--color-metal); }
+
     /* === Footer === */
-    footer {
-      padding: 48px 24px;
-      border-top: var(--line-shadow);
-      font-family: "Space Grotesk", sans-serif;
-      font-size: 14px; line-height: 1.6;
-      color: var(--color-sub);
-    }
-    .footer-top {
-      display: flex; justify-content: space-between; align-items: center;
-      margin-bottom: 32px;
-    }
+    footer { padding: 48px 24px; border-top: var(--line-shadow); font-family: "Space Grotesk", sans-serif; font-size: 14px; line-height: 1.6; color: var(--color-sub); }
+    .footer-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; flex-wrap: wrap; gap: 16px; }
     footer .logo { font-weight: 700; font-size: 18px; }
     footer .logo .dot { color: var(--color-accent); }
-    .footer-grid {
-      display: grid; grid-template-columns: repeat(4, 1fr);
-      gap: 32px;
-    }
-    .footer-column h4 {
-      font-family: "JetBrains Mono", monospace;
-      font-size: 11px; font-weight: 700;
-      text-transform: uppercase; letter-spacing: 0.02em;
-      color: var(--color-sub); margin-bottom: 16px;
-    }
+    .footer-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px; }
+    .footer-column h4 { font-family: "JetBrains Mono", monospace; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em; color: var(--color-sub); margin-bottom: 16px; }
     .footer-column ul { list-style: none; }
     .footer-column li { margin-bottom: 8px; }
-    .footer-column a {
-      color: var(--color-sub); text-decoration: none;
-      transition: color 0.15s;
-    }
+    .footer-column a { color: var(--color-sub); text-decoration: none; transition: color 0.15s; }
     .footer-column a:hover { color: var(--color-ink); }
-    .copyright {
-      margin-top: 32px; padding-top: 16px;
-      border-top: var(--line-shadow);
-      font-size: 11px; color: var(--color-sub);
-    }
+    .footer-column a .soon { color: var(--color-line); }
+    .copyright { margin-top: 32px; padding-top: 16px; border-top: var(--line-shadow); font-size: 11px; color: var(--color-sub); }
 
-    @media (max-width: 768px) {
+    /* === Responsive === */
+    @media (max-width: 860px) {
+      .nav-toggle { display: flex; }
+      .nav-area { display: none; width: 100%; flex-direction: column; order: 3; }
+      .nav-area.open { display: flex; }
+      .nav-link { padding: 14px 24px; border-right: none; border-bottom: var(--line-shadow); }
+      .status-cell { border-left: none; width: 100%; border-top: var(--line-shadow); }
       .hero h1 { font-size: 48px; }
       .stats-grid { grid-template-columns: 1fr 1fr; }
       .stat-cell { border-right: none; border-bottom: var(--line-shadow); }
-      .stat-cell:last-child { border-bottom: none; }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 560px) {
       .footer-grid { grid-template-columns: 1fr; }
-      header { flex-wrap: wrap; }
-      .nav-link { font-size: 11px; padding: 12px 16px; }
-      .module-grid { grid-template-columns: 1fr; }
-      .status-cell { border-left: none; width: 100%; border-top: var(--line-shadow); }
+      .stats-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
 
-  <!-- ===== Navigation (shared across all pages) ===== -->
-  <header>
-    <a href="#hero" class="logo-cell" data-view="home">
+  <!-- ===== Navigation (shared) ===== -->
+  <header id="siteHeader">
+    <a href="#hero" class="logo-cell">
       <span class="logo">SERAPH<span class="dot">.</span></span>
     </a>
-    <div class="nav-area">
-      <a href="#hero" class="nav-link active" data-view="home">
-        <span class="bracket">[ 00 ]</span> INDEX
-      </a>
-      <a href="#architecture" class="nav-link" data-view="home">
-        <span class="bracket">[ 01 ]</span> ARCHITECTURE
-      </a>
-      <a href="#modules" class="nav-link" data-view="home">
-        <span class="bracket">[ 02 ]</span> MODULES
-      </a>
-      <a href="#docs" class="nav-link" data-view="home">
-        <span class="bracket">[ 03 ]</span> DOCS
-      </a>
-      <a href="#governance" class="nav-link" data-view="home">
-        <span class="bracket">[ 04 ]</span> GOVERNANCE
-      </a>
-      <a href="#presale" class="nav-link" data-view="presale">
-        <span class="bracket">[ 05 ]</span> PRESALE
-      </a>
+    <div class="nav-area" id="navArea">
+      <a href="#hero" class="nav-link active" data-view="home" data-section="hero"><span class="bracket">[ 00 ]</span> INDEX</a>
+      <a href="#privacy" class="nav-link" data-view="home" data-section="privacy"><span class="bracket">[ 01 ]</span> PRIVACY</a>
+      <a href="#architecture" class="nav-link" data-view="home" data-section="architecture"><span class="bracket">[ 02 ]</span> ARCHITECTURE</a>
+      <a href="#modules" class="nav-link" data-view="home" data-section="modules"><span class="bracket">[ 03 ]</span> MODULES</a>
+      <a href="#tokenomics" class="nav-link" data-view="home" data-section="tokenomics"><span class="bracket">[ 04 ]</span> TOKENOMICS</a>
+      <a href="#roadmap" class="nav-link" data-view="home" data-section="roadmap"><span class="bracket">[ 05 ]</span> ROADMAP</a>
+      <a href="#security" class="nav-link" data-view="home" data-section="security"><span class="bracket">[ 06 ]</span> SECURITY</a>
+      <a href="#docs" class="nav-link" data-view="home" data-section="docs"><span class="bracket">[ 07 ]</span> DOCS</a>
+      <a href="#governance" class="nav-link" data-view="home" data-section="governance"><span class="bracket">[ 08 ]</span> GOVERNANCE</a>
+      <a href="#presale" class="nav-link" data-view="presale" data-section="presale"><span class="bracket">[ 09 ]</span> PRESALE</a>
     </div>
     <div class="status-cell">
       <span class="status-dot"></span>
-      <span class="status-text">TESTNET LIVE</span>
+      <span class="status-text">PHASE 0 · POC</span>
     </div>
+    <button class="nav-toggle" id="navToggle" aria-label="Menu">☰</button>
   </header>
 
-  <!-- ============ HOME PAGE ============ -->
+  <!-- ============ HOME ============ -->
   <div id="view-home" class="view active">
 
-    <!-- ===== Hero ===== -->
+    <!-- Hero -->
     <div id="hero" class="hero">
-      <div class="hero-sub">A full-stack privacy protocol. Shipping since 2024.</div>
+      <div class="hero-sub">A full-stack privacy protocol. In research &amp; development since 2024.</div>
       <div class="meta">§ 00 — THE PRIVACY CONTINUUM</div>
       <h1>
         Monero-grade<span class="word-magenta">.</span><br>
         <span class="word-orange">Programmable</span> <span class="word-green">private</span><br>
         <span class="word-accent">execution.</span>
       </h1>
-      <p>Seraph is a modular privacy continuum combining a Monero-inspired base layer with dual private EVMs. Seamless XMR integration, programmable private contracts, and a six-level privacy spectrum.</p>
+      <p>Seraph is a modular privacy continuum combining a Monero-inspired base layer with two private EVMs. A four-level privacy spectrum, native SER + XMR, and programmable private contracts — built so privacy is the default, not the opt-in.</p>
       <a href="#presale" class="cta-split">
         <span class="cta-arrow">→</span>
         <span class="cta-label">JOIN PRESALE</span>
       </a>
-      <a href="https://github.com/0xfuckian/seraph/blob/main/whitepaper/seraph_whitepaper.md" target="_blank" rel="noopener" class="cta-secondary">READ WHITEPAPER →</a>
+      <a href="https://github.com/0xfuckian/seraph" target="_blank" rel="noopener" class="cta-secondary">VIEW SOURCE ON GITHUB →</a>
       <div class="struct-line-accent"></div>
     </div>
 
-    <!-- ===== Stats Grid ===== -->
+    <!-- Stats -->
     <div class="stats-grid">
       <div class="stat-cell">
-        <div class="stat-number">100<span class="unit">M</span></div>
+        <div class="stat-number"><span data-count="100">0</span><span class="unit">M</span></div>
         <div class="stat-label">max supply</div>
       </div>
       <div class="stat-cell">
-        <div class="stat-number text-magenta num-heavy">6</div>
+        <div class="stat-number text-magenta num-heavy"><span data-count="4">0</span></div>
         <div class="stat-label">privacy levels</div>
       </div>
       <div class="stat-cell">
-        <div class="stat-number text-accent num-heavy">2</div>
+        <div class="stat-number text-accent num-heavy"><span data-count="2">0</span></div>
         <div class="stat-label">evm layers</div>
       </div>
       <div class="stat-cell">
@@ -652,241 +591,419 @@
         <div class="stat-label">anonymity set</div>
       </div>
       <div class="stat-cell">
-        <div class="stat-number text-orange num-heavy">8</div>
+        <div class="stat-number text-orange num-heavy"><span data-count="4">0</span></div>
         <div class="stat-label">first-party modules</div>
       </div>
     </div>
 
-    <!-- ===== Architecture ===== -->
-    <div id="architecture" class="section">
+    <!-- § 01 Privacy Continuum -->
+    <div id="privacy" class="section">
       <div class="section-header">
         <div>
-          <div class="meta">§ 01 — ARCHITECTURE</div>
-          <h2 class="section-title">Three layers.</h2>
-          <p class="section-desc">Seraph spans a Monero-inspired base layer, a general-purpose private EVM, and an XMR-optimized EVM — all sharing a unified key hierarchy and anonymity set.</p>
+          <div class="meta">§ 01 — THE PRIVACY CONTINUUM</div>
+          <h2 class="section-title">Privacy is a spectrum, not a switch.</h2>
+          <p class="section-desc">Every transaction chooses its level — transparent when it must be, fully private by default when it can be. No one is forced to disclose; compliance paths exist only where explicitly chosen.</p>
         </div>
-        <a href="#" class="view-all">VIEW DOCS →</a>
       </div>
-
-      <div class="deck">
-        <div class="deck-card">
-          <div class="deck-face">
-            <div class="deck-brand-row">
-              <span class="deck-brand">SERAPH</span>
-              <span class="deck-badge text-magenta"><span class="dot"></span> BASE</span>
-            </div>
-            <div class="deck-name">Base Layer</div>
-            <div class="deck-domain text-magenta">Monero-inspired privacy chain</div>
-            <div class="tech-tags">
-              <span class="tech-tag">Rust</span>
-              <span class="tech-tag">Noir</span>
-              <span class="tech-tag">FCMP++</span>
-            </div>
-            <div class="deck-result text-magenta">Native SER + XMR, stealth addresses, confidential amounts</div>
-          </div>
+      <div class="cont-grid reveal">
+        <div class="cont-level" style="--c: var(--color-ink);">
+          <div class="cont-num">0</div>
+          <div class="cont-name">Transparent</div>
+          <p>Public transaction, like Ethereum. For regulated flows and audited transfers that must be public.</p>
         </div>
-
-        <div class="deck-card">
-          <div class="deck-face">
-            <div class="deck-brand-row">
-              <span class="deck-brand">SERAPH</span>
-              <span class="deck-badge text-accent"><span class="dot"></span> EVM.01</span>
-            </div>
-            <div class="deck-name">Seraph EVM</div>
-            <div class="deck-domain text-accent">General-purpose private EVM</div>
-            <div class="tech-tags">
-              <span class="tech-tag">Solidity</span>
-              <span class="tech-tag">TypeScript</span>
-              <span class="tech-tag">ZK</span>
-            </div>
-            <div class="deck-result text-accent">Programmable contracts, gas in SER, optional private state</div>
-          </div>
+        <div class="cont-level" style="--c: var(--color-magenta);">
+          <div class="cont-num">1</div>
+          <div class="cont-name">Optional Shielding</div>
+          <p>The user chooses when to enter and exit the privacy pool. The bridge between public and private.</p>
         </div>
-
-        <div class="deck-card">
-          <div class="deck-face">
-            <div class="deck-brand-row">
-              <span class="deck-brand">SERAPH</span>
-              <span class="deck-badge text-green"><span class="dot"></span> EVM.02</span>
-            </div>
-            <div class="deck-name">XMR EVM</div>
-            <div class="deck-domain text-green">XMR-optimized EVM</div>
-            <div class="tech-tags">
-              <span class="tech-tag">Rust</span>
-              <span class="tech-tag">Solidity</span>
-              <span class="tech-tag">Noir</span>
-            </div>
-            <div class="deck-result text-green">Preferential XMR fees, tight base-layer coupling</div>
-          </div>
+        <div class="cont-level" style="--c: var(--color-accent);">
+          <div class="cont-num">2</div>
+          <div class="cont-name">Default Strong</div>
+          <p>Private by default on the base layer; opting out is explicit. The default for value movement.</p>
+        </div>
+        <div class="cont-level" style="--c: var(--color-green);">
+          <div class="cont-num">3</div>
+          <div class="cont-name">Private Compute</div>
+          <p>Confidential contract state and ZK execution on the EVMs. Programmable privacy, not just transfers.</p>
         </div>
       </div>
     </div>
 
-    <!-- ===== Modules ===== -->
+    <!-- § 02 Architecture -->
+    <div id="architecture" class="section">
+      <div class="section-header">
+        <div>
+          <div class="meta">§ 02 — ARCHITECTURE</div>
+          <h2 class="section-title">Three layers, one key hierarchy.</h2>
+          <p class="section-desc">A Monero-inspired base layer for settlement, two specialized private EVMs, and shared components that keep every layer in the same anonymity set. One seed controls all accounts.</p>
+        </div>
+      </div>
+
+      <div class="arch-diagram reveal">
+        <div class="arch-top">
+          <div class="arch-box">
+            <div class="arch-tag">EVM.01</div>
+            <div class="arch-name">Seraph EVM</div>
+            <div class="arch-sub">General-purpose private EVM — Solidity-compatible, gas in SER, optional private contract state.</div>
+            <ul class="arch-features">
+              <li>Privacy continuum per transaction</li>
+              <li>Precompiles for privacy primitives</li>
+            </ul>
+            <span class="status-tag st-accent" style="margin-top:12px;">Phase 1 · MVP</span>
+          </div>
+          <div class="arch-box">
+            <div class="arch-tag">EVM.02</div>
+            <div class="arch-name">XMR EVM</div>
+            <div class="arch-sub">XMR-optimized EVM — preferential XMR fees and tight base-layer coupling for XMR flows.</div>
+            <ul class="arch-features">
+              <li>Pay fees in XMR via relayers</li>
+              <li>Bridged XMR representation</li>
+            </ul>
+            <span class="status-tag st-green" style="margin-top:12px;">Phase 2 · Alpha</span>
+          </div>
+        </div>
+        <div class="arch-shared">
+          <div class="meta" style="margin-bottom:6px;">Shared layer</div>
+          <div class="arch-name">Unified key hierarchy · shared anonymity sets</div>
+          <p>One seed derives accounts on every layer. Note pools are shared where possible, bridges are trust-minimized (lock → prove → mint), and a relayer network provides gas abstraction so users can pay in XMR or SER on either EVM.</p>
+        </div>
+        <div class="arch-box arch-base">
+          <div class="arch-tag">BASE</div>
+          <div class="arch-name">Seraph Base Layer</div>
+          <div class="arch-sub">Monero-inspired privacy chain — the settlement and hard-money layer.</div>
+          <ul class="arch-features">
+            <li>Native SER + XMR</li>
+            <li>Stealth addresses · one-time keys</li>
+            <li>Confidential amounts · Pedersen</li>
+            <li>Range proofs · Bulletproofs++</li>
+            <li>Full-chain membership · FCMP++</li>
+            <li>Encrypted memos</li>
+          </ul>
+          <span class="status-tag st-magenta" style="margin-top:12px;">Phase 0 · PoC</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- § 03 Modules -->
     <div id="modules" class="section">
-      <div class="meta">§ 02 — FIRST-PARTY MODULES</div>
+      <div class="meta">§ 03 — FIRST-PARTY MODULES</div>
       <h2 class="section-title">Built-in privacy primitives.</h2>
       <p class="section-desc">Each module ships as a privacy-aware contract suite with first-party wallet integration. All share the same note pool and key hierarchy.</p>
 
       <div class="module-grid">
-        <div class="module-card">
+        <div class="module-card reveal">
           <div class="module-bar bar-magenta"></div>
           <h3><span class="dot" style="color: var(--color-magenta)">●</span> Private Stablecoins</h3>
-          <p>Over-collateralized stablecoins with private mint/burn. CollateralVault, xUSD, OracleAdapter, LiquidationEngine.</p>
+          <ul class="module-specs">
+            <li><span>Contracts</span><span class="v">CollateralVault · xUSD · OracleAdapter · LiquidationEngine</span></li>
+            <li><span>Status</span><span class="v">Phase 2 · Alpha</span></li>
+          </ul>
+          <p>Over-collateralized stablecoins with private mint/burn.</p>
         </div>
-        <div class="module-card">
+        <div class="module-card reveal">
           <div class="module-bar bar-orange"></div>
           <h3><span class="dot" style="color: var(--color-orange)">●</span> AI Payments</h3>
-          <p>Unlinkable payments for AI agents and metered services. ZKCreditAuthorizer proves credit remaining without revealing balance.</p>
+          <ul class="module-specs">
+            <li><span>Contracts</span><span class="v">UsageVault · ZKCreditAuthorizer</span></li>
+            <li><span>Status</span><span class="v">Phase 2 · Alpha</span></li>
+          </ul>
+          <p>Unlinkable payments for AI agents and metered services. Proves credit remaining without revealing balance.</p>
         </div>
-        <div class="module-card">
+        <div class="module-card reveal">
           <div class="module-bar bar-green"></div>
           <h3><span class="dot" style="color: var(--color-green)">●</span> Private Messaging</h3>
-          <p>On-chain verifiable payment requests. InvoiceRegistry with fulfillment proofs and encrypted memos.</p>
+          <ul class="module-specs">
+            <li><span>Contracts</span><span class="v">InvoiceRegistry · encrypted memos</span></li>
+            <li><span>Status</span><span class="v">Phase 2 · Alpha</span></li>
+          </ul>
+          <p>On-chain verifiable payment requests with fulfillment proofs.</p>
         </div>
-        <div class="module-card">
+        <div class="module-card reveal">
           <div class="module-bar bar-accent"></div>
           <h3><span class="dot" style="color: var(--color-accent)">●</span> Relayer Network</h3>
+          <ul class="module-specs">
+            <li><span>Contracts</span><span class="v">GasAbstraction.sol</span></li>
+            <li><span>Status</span><span class="v">Phase 2–3 · Beta</span></li>
+          </ul>
           <p>Gas abstraction — pay fees in XMR or SER while using either EVM. Intent signing, batched settlement.</p>
         </div>
       </div>
     </div>
 
-    <!-- ===== Docs ===== -->
+    <!-- § 04 Tokenomics -->
+    <div id="tokenomics" class="section">
+      <div class="section-header">
+        <div>
+          <div class="meta">§ 04 — TOKENOMICS</div>
+          <h2 class="section-title">100M SER. Fixed. No inflation.</h2>
+          <p class="section-desc">SER is the gas, stake, and governance asset across the base layer and both EVMs. Allocation follows the whitepaper.</p>
+        </div>
+      </div>
+
+      <div class="token-two reveal">
+        <div>
+          <div class="alloc-row">
+            <span class="alloc-lbl">Ecosystem &amp; Community</span>
+            <div class="alloc-track"><div class="alloc-fill" style="width:40%; background:var(--color-magenta);"></div></div>
+            <span class="alloc-pct">40%</span>
+          </div>
+          <div class="alloc-row">
+            <span class="alloc-lbl">Team &amp; Advisors</span>
+            <div class="alloc-track"><div class="alloc-fill" style="width:20%; background:var(--color-orange);"></div></div>
+            <span class="alloc-pct">20%</span>
+          </div>
+          <div class="alloc-row">
+            <span class="alloc-lbl">Foundation / Treasury</span>
+            <div class="alloc-track"><div class="alloc-fill" style="width:15%; background:var(--color-accent);"></div></div>
+            <span class="alloc-pct">15%</span>
+          </div>
+          <div class="alloc-row">
+            <span class="alloc-lbl">Early Contributors</span>
+            <div class="alloc-track"><div class="alloc-fill" style="width:15%; background:var(--color-green);"></div></div>
+            <span class="alloc-pct">15%</span>
+          </div>
+          <div class="alloc-row">
+            <span class="alloc-lbl">Public Sale + Liquidity</span>
+            <div class="alloc-track"><div class="alloc-fill" style="width:10%; background:var(--color-ink);"></div></div>
+            <span class="alloc-pct">10%</span>
+          </div>
+        </div>
+        <div class="fee-card">
+          <h3>Utility &amp; fees</h3>
+          <ul>
+            <li><b>Gas</b> — base layer payable in SER or XMR; EVM gas primarily in SER</li>
+            <li><b>Staking</b> — validator stake (PoS research ongoing)</li>
+            <li><b>Governance</b> — voting power scales with stake duration</li>
+            <li><b>Fees</b> — a share of protocol fees is burned, a share funds treasury &amp; public goods</li>
+            <li><b>Discounts</b> — fee reductions inside first-party modules</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- § 05 Roadmap -->
+    <div id="roadmap" class="section">
+      <div class="meta">§ 05 — ROADMAP</div>
+      <h2 class="section-title">From PoC to mainnet.</h2>
+      <p class="section-desc">Honest, phase-gated delivery. Nothing ships before its exit criteria pass — and the earlier phases deliberately exclude features that don't belong yet.</p>
+
+      <div class="roadmap reveal">
+        <div class="road-item">
+          <span class="road-dot"></span>
+          <div class="road-phase">Phase 0 · PoC · current</div>
+          <div class="road-title">Private transfers work end-to-end.</div>
+          <p>Note system, ZK spend circuit, CLI wallet, single-node base layer with in-process P2P, and an XMR simulation. Exit: two users privately transfer value, double-spends rejected, amounts confidential.</p>
+        </div>
+        <div class="road-item">
+          <span class="road-dot"></span>
+          <div class="road-phase">Phase 1 · MVP</div>
+          <div class="road-title">A usable testnet with wallet, explorer, one EVM.</div>
+          <p>Multi-node base-layer testnet, Seraph EVM v1, audited PrivacyPool + SER token, reference wallet, explorer, and bridge. Exit: 100+ testnet users, 10K+ transactions.</p>
+        </div>
+        <div class="road-item">
+          <span class="road-dot"></span>
+          <div class="road-phase">Phase 2 · Alpha</div>
+          <div class="road-title">The dual-EVM architecture proves out.</div>
+          <p>XMR EVM v1, cross-EVM bridge, messaging, AI payments, stablecoin prototype, gas abstraction, TypeScript SDK. Audits begin. Exit: all modules deployed, 500+ testnet users.</p>
+        </div>
+        <div class="road-item">
+          <span class="road-dot"></span>
+          <div class="road-phase">Phase 3 · Beta</div>
+          <div class="road-title">Mainnet candidate. Production modules.</div>
+          <p>Genesis config, production modules, full TS/Rust/Go SDKs, relayer network, audits complete, liquidity plan, governance bootstrap. Exit: bug bounty live, 5+ relayers, liquidity secured.</p>
+        </div>
+        <div class="road-item">
+          <span class="road-dot"></span>
+          <div class="road-phase">Phase 4 · v1.0 Mainnet</div>
+          <div class="road-title">Production launch and stabilization.</div>
+          <p>Base layer + both EVMs + all bridges, progressive deposits, professional relayers and validators, explorer v1, governance transition. Exit: 20+ validators, no critical incidents.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- § 06 Security -->
+    <div id="security" class="section">
+      <div class="section-header">
+        <div>
+          <div class="meta">§ 06 — SECURITY &amp; PRIVACY MODEL</div>
+          <h2 class="section-title">Private by construction.</h2>
+          <p class="section-desc">The privacy guarantees come from cryptography, not policy. Here is exactly how each class of attack is handled, and what we commit to before any mainnet.</p>
+        </div>
+      </div>
+
+      <div class="threat-grid reveal">
+        <div class="threat-card">
+          <h4>Anonymity-set depletion</h4>
+          <p>Shared note pools across layers plus full-chain membership proofs (FCMP++) keep the set large and mixin-free.</p>
+        </div>
+        <div class="threat-card">
+          <h4>Nullifier guessing</h4>
+          <p>Domain-separated nullifier derivation from secret spend keys — a nullifier reveals nothing about which note it came from.</p>
+        </div>
+        <div class="threat-card">
+          <h4>Amount overflow</h4>
+          <p>Bulletproofs++ range proofs guarantee values are in range and non-negative inside the proof itself.</p>
+        </div>
+        <div class="threat-card">
+          <h4>Key reuse</h4>
+          <p>Stealth addresses and one-time keys — every output note has a fresh destination key.</p>
+        </div>
+        <div class="threat-card">
+          <h4>Bridge theft</h4>
+          <p>Fraud proofs and bond-and-challenge on every lock → mint path across layers.</p>
+        </div>
+        <div class="threat-card">
+          <h4>Oracle manipulation</h4>
+          <p>Time-weighted, decentralized oracles with delay and challenge windows.</p>
+        </div>
+      </div>
+
+      <div class="struct-line"></div>
+      <ul class="sec-list reveal">
+        <li><span class="m">Selective disclosure</span><span>Incoming view keys scan for received notes; optional outgoing view keys prove a nullifier was spent by a party — compliance without breaking default privacy.</span></li>
+        <li><span class="m">Audits</span><span>Two independent security audits before mainnet, plus formal verification of core ZK circuits.</span></li>
+        <li><span class="m">Fuzzing</span><span>Fuzz testing of all contracts and circuits, continuous monitoring post-launch.</span></li>
+        <li><span class="m">Bug bounty</span><span>Audit-grade bounty covering base-layer consensus, EVM circuits, and first-party modules — rewards in SER + XMR.</span></li>
+      </ul>
+    </div>
+
+    <!-- § 07 Docs -->
     <div id="docs" class="section">
-      <div class="meta">§ 03 — DOCUMENTATION</div>
+      <div class="meta">§ 07 — DOCUMENTATION</div>
       <h2 class="section-title">Build in private.</h2>
-      <p class="section-desc">Full SDK reference, contract specs, and circuit verification guides. Everything you need to build privacy-first applications on Seraph.</p>
+      <p class="section-desc">The whitepaper, brand system, and contracts are public today. SDK reference and circuit guides land with their roadmap phases.</p>
 
       <div class="deck">
         <div class="deck-card">
           <div class="deck-face">
             <div class="deck-brand-row">
               <span class="deck-brand">SERAPH</span>
-              <span class="deck-badge text-accent"><span class="dot"></span> SDK</span>
+              <span class="deck-badge text-magenta"><span class="dot"></span> SPEC</span>
             </div>
-            <div class="deck-name">TypeScript SDK</div>
-            <div class="deck-domain text-accent">Wallet & contract integration</div>
+            <div class="deck-name">Whitepaper</div>
+            <div class="deck-domain text-magenta">Privacy Continuum Protocol · v2.1</div>
+            <div class="tech-tags">
+              <span class="tech-tag">Cryptography</span>
+              <span class="tech-tag">Tokenomics</span>
+              <span class="tech-tag">Architecture</span>
+            </div>
+            <div class="deck-result text-magenta">The full design — now.</div>
+            <a href="https://github.com/0xfuckian/seraph/blob/main/whitepaper/seraph_whitepaper.md" target="_blank" rel="noopener" class="cta-secondary" style="font-size:11px; padding:10px 18px;">READ →</a>
+          </div>
+        </div>
+        <div class="deck-card">
+          <div class="deck-face">
+            <div class="deck-brand-row">
+              <span class="deck-brand">SERAPH</span>
+              <span class="deck-badge text-accent"><span class="dot"></span> CODE</span>
+            </div>
+            <div class="deck-name">Contracts</div>
+            <div class="deck-domain text-accent">SER · Presale · PrivacyPool</div>
+            <div class="tech-tags">
+              <span class="tech-tag">Solidity</span>
+              <span class="tech-tag">Foundry</span>
+              <span class="tech-tag">16 tests</span>
+            </div>
+            <div class="deck-result text-accent">Audit-ready source, verified by tests.</div>
+            <a href="https://github.com/0xfuckian/seraph/tree/main/contracts" target="_blank" rel="noopener" class="cta-secondary" style="font-size:11px; padding:10px 18px;">BROWSE →</a>
+          </div>
+        </div>
+        <div class="deck-card">
+          <div class="deck-face">
+            <div class="deck-brand-row">
+              <span class="deck-brand">SERAPH</span>
+              <span class="deck-badge text-green"><span class="dot"></span> SDK</span>
+            </div>
+            <div class="deck-name">SDK (TypeScript)</div>
+            <div class="deck-domain text-green">Wallet &amp; contract integration</div>
             <div class="tech-tags">
               <span class="tech-tag">TypeScript</span>
               <span class="tech-tag">Viem</span>
               <span class="tech-tag">ZK</span>
             </div>
-            <div class="deck-result">Connect, sign, and transact privately across both EVMs.</div>
-          </div>
-        </div>
-        <div class="deck-card">
-          <div class="deck-face">
-            <div class="deck-brand-row">
-              <span class="deck-brand">SERAPH</span>
-              <span class="deck-badge text-green"><span class="dot"></span> RUST</span>
-            </div>
-            <div class="deck-name">Rust SDK</div>
-            <div class="deck-domain text-green">Base layer + node toolkit</div>
-            <div class="tech-tags">
-              <span class="tech-tag">Rust</span>
-              <span class="tech-tag">Noir</span>
-              <span class="tech-tag">gRPC</span>
-            </div>
-            <div class="deck-result text-green">Run a node, build circuits, access the base layer natively.</div>
-          </div>
-        </div>
-        <div class="deck-card">
-          <div class="deck-face">
-            <div class="deck-brand-row">
-              <span class="deck-brand">SERAPH</span>
-              <span class="deck-badge text-magenta"><span class="dot"></span> GO</span>
-            </div>
-            <div class="deck-name">Go SDK</div>
-            <div class="deck-domain text-magenta">Infrastructure & tooling</div>
-            <div class="tech-tags">
-              <span class="tech-tag">Go</span>
-              <span class="tech-tag">Protobuf</span>
-              <span class="tech-tag">gRPC</span>
-            </div>
-            <div class="deck-result text-magenta">Indexers, explorers, and relayer backends.</div>
+            <div class="deck-result text-green">Planned · Phase 2.</div>
+            <span class="status-tag st-green" style="margin-top:12px;">Coming soon</span>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- ===== Governance ===== -->
+    <!-- § 08 Governance -->
     <div id="governance" class="section">
       <div class="section-header">
         <div>
-          <div class="meta">§ 04 — GOVERNANCE</div>
+          <div class="meta">§ 08 — GOVERNANCE</div>
           <h2 class="section-title">Self-custody control.</h2>
-          <p class="section-desc">SER token holders govern the protocol through on-chain voting, treasury proposals, and module upgrades. All votes are cast privately by default.</p>
+          <p class="section-desc">SER token holders govern through on-chain voting, treasury proposals, and module upgrades. Votes are private by default — ZK ballot proofs.</p>
         </div>
-        <a href="#" class="view-all">JOIN FORUM →</a>
       </div>
-
       <div class="module-grid">
-        <div class="module-card">
+        <div class="module-card reveal">
           <div class="module-bar bar-magenta"></div>
           <h3><span class="dot" style="color: var(--color-magenta)">●</span> Treasury</h3>
           <p>40M SER allocated to ecosystem incentives — liquidity, grants, airdrops, usage rewards. Proposals voted on-chain with private ballot support.</p>
+          <span class="status-tag st-orange" style="margin-top:14px;">Design · Phase 3</span>
         </div>
-        <div class="module-card">
+        <div class="module-card reveal">
           <div class="module-bar bar-accent"></div>
           <h3><span class="dot" style="color: var(--color-accent)">●</span> Forum</h3>
-          <p>Discourse-based discussion forum for protocol upgrades, module proposals, and parameter adjustments. Sign-in with SIWE or Farcaster.</p>
+          <p>Discussion forum for protocol upgrades and parameter adjustments. Sign-in with SIWE or Farcaster.</p>
+          <span class="status-tag st-orange" style="margin-top:14px;">Coming soon</span>
         </div>
-        <div class="module-card">
+        <div class="module-card reveal">
           <div class="module-bar bar-green"></div>
           <h3><span class="dot" style="color: var(--color-green)">●</span> Bug Bounty</h3>
-          <p>Audit-grade bug bounty program covering base-layer consensus, EVM circuits, and first-party modules. Rewards paid in SER + XMR.</p>
+          <p>Audit-grade program covering base-layer consensus, EVM circuits, and first-party modules. Rewards in SER + XMR.</p>
+          <span class="status-tag st-orange" style="margin-top:14px;">Coming soon</span>
         </div>
-        <div class="module-card">
+        <div class="module-card reveal">
           <div class="module-bar bar-orange"></div>
           <h3><span class="dot" style="color: var(--color-orange)">●</span> Proposals</h3>
-          <p>On-chain governance via Seraph Governance contracts. Voting power scales with stake duration. Private voting via ZK ballot proofs.</p>
+          <p>On-chain governance via Seraph Governance contracts. Voting power scales with stake duration.</p>
+          <span class="status-tag st-orange" style="margin-top:14px;">Design · Phase 3</span>
         </div>
       </div>
     </div>
 
-    <!-- ===== Presale teaser (home) ===== -->
+    <!-- § 09 Presale teaser -->
     <div id="presale-teaser" class="section">
       <div class="section-header">
         <div>
-          <div class="meta">§ 05 — PRESALE</div>
+          <div class="meta">§ 09 — PRESALE</div>
           <h2 class="section-title">Seed the continuum.</h2>
-          <p class="section-desc">SERAPH ($SER) tier-based presale: 100M SER across three tiers on seraphprotocol.tech. Real contract parameters below — launch date to be announced.</p>
+          <p class="section-desc">SERAPH ($SER) tier-based presale on seraphprotocol.tech. Real contract parameters below — launch date to be announced.</p>
         </div>
         <a href="#presale" class="view-all">VIEW PRESALE PAGE →</a>
       </div>
 
       <div class="tier-grid">
-        <div class="tier-card">
+        <div class="tier-card reveal">
           <span class="tier-badge text-magenta"><span class="dot"></span> STRATEGIC</span>
           <div class="tier-name">Strategic</div>
           <div class="tier-detail">10M SER · $0.02/SER</div>
           <ul class="tier-list">
             <li><span>Allocation</span><span class="v">10M SER</span></li>
-            <li><span>Price</span><span class="v">$0.02</span></li>
-            <li><span>KYC</span><span class="v">Required</span></li>
+            <li><span>Access</span><span class="v">Allowlisted</span></li>
             <li><span>At TGE</span><span class="v">25% · rest vested</span></li>
           </ul>
         </div>
-        <div class="tier-card active">
+        <div class="tier-card active reveal">
           <span class="tier-badge text-accent"><span class="dot"></span> PRIVATE</span>
           <div class="tier-name">Private</div>
           <div class="tier-detail">30M SER · $0.03/SER</div>
           <ul class="tier-list">
             <li><span>Allocation</span><span class="v">30M SER</span></li>
-            <li><span>Price</span><span class="v">$0.03</span></li>
-            <li><span>KYC</span><span class="v">Required</span></li>
+            <li><span>Access</span><span class="v">Allowlisted</span></li>
             <li><span>At TGE</span><span class="v">20% · rest vested</span></li>
           </ul>
         </div>
-        <div class="tier-card">
+        <div class="tier-card reveal">
           <span class="tier-badge text-green"><span class="dot"></span> PUBLIC</span>
           <div class="tier-name">Public</div>
           <div class="tier-detail">60M SER · $0.04/SER</div>
           <ul class="tier-list">
             <li><span>Allocation</span><span class="v">60M SER</span></li>
-            <li><span>Price</span><span class="v">$0.04</span></li>
-            <li><span>KYC</span><span class="v">None</span></li>
+            <li><span>Access</span><span class="v">Open</span></li>
             <li><span>At TGE</span><span class="v">100%</span></li>
           </ul>
         </div>
@@ -896,82 +1013,84 @@
 
   <!-- ============ PRESALE PAGE ============ -->
   <div id="view-presale" class="view">
-
     <div class="section">
-      <!-- Status banner — no fake numbers -->
+
       <div class="presale-status">
         <span class="pdot"></span>
         <div>
           <strong>Presale not live yet</strong>
-          <p>The launch date and final terms will be announced here. When the sale opens, this page connects your wallet and buys SER directly against the deployed presale contract — real balances, real progress, real prices. Every figure shown now is a true contract parameter.</p>
+          <p>The launch date and final terms will be announced here. When the sale opens, this page connects your wallet and buys SER directly against the deployed presale contract — real balances, real progress, real prices. No placeholder numbers: every figure shown is a true contract parameter.</p>
         </div>
       </div>
 
       <div class="section-header">
         <div>
-          <div class="meta">§ 05 — PRESALE</div>
+          <div class="meta">§ 09 — PRESALE</div>
           <h2 class="section-title">Seed the continuum.</h2>
-          <p class="section-desc">SERAPH ($SER) tier-based presale on seraphprotocol.tech. Strategic and Private tiers are whitelisted; Public is open to everyone. Terms below come straight from the presale contract.</p>
+          <p class="section-desc">SERAPH ($SER) tier-based presale on seraphprotocol.tech. Strategic and Private tiers are allowlisted; Public is open. Terms below come straight from the presale contract.</p>
         </div>
       </div>
 
-      <!-- Real targets (computed from contract) -->
       <div class="target-row">
-        <div class="target-cell">
+        <div class="target-cell reveal">
           <div class="num text-accent">100<span class="unit">M</span></div>
           <div class="lbl">Total SER for sale</div>
         </div>
-        <div class="target-cell">
+        <div class="target-cell reveal">
           <div class="num text-orange">$3.5<span class="unit">M</span></div>
           <div class="lbl">Target raise · all tiers</div>
         </div>
-        <div class="target-cell">
+        <div class="target-cell reveal">
           <div class="num text-green">0<span class="unit">%</span></div>
           <div class="lbl">Funded so far · updates at launch</div>
         </div>
       </div>
 
-      <!-- Tiers -->
       <div class="meta">Tiers</div>
       <div class="tier-grid" id="tierGrid">
         <div class="tier-card" data-tier="Strategic" data-price="0.02">
           <span class="tier-badge text-magenta"><span class="dot"></span> STRATEGIC</span>
           <div class="tier-name">Strategic</div>
-          <div class="tier-detail">Whitelisted · KYC</div>
+          <div class="tier-detail">Allowlisted</div>
           <div class="tier-price">$0.02<span class="unit">/SER</span></div>
           <ul class="tier-list">
             <li><span>Allocation</span><span class="v">10M SER</span></li>
             <li><span>At TGE</span><span class="v">25%</span></li>
-            <li><span>Vesting</span><span class="v">12-month</span></li>
+            <li><span>Vesting</span><span class="v">14-day cliff · 12 mo</span></li>
           </ul>
+          <div class="tier-progress"><div class="tp-fill" style="width:0%"></div></div>
+          <div class="tp-labels"><span>0 / 10M SER</span><span>at launch</span></div>
         </div>
         <div class="tier-card active" data-tier="Private" data-price="0.03">
           <span class="tier-badge text-accent"><span class="dot"></span> PRIVATE</span>
           <div class="tier-name">Private</div>
-          <div class="tier-detail">Whitelisted · KYC</div>
+          <div class="tier-detail">Allowlisted</div>
           <div class="tier-price">$0.03<span class="unit">/SER</span></div>
           <ul class="tier-list">
             <li><span>Allocation</span><span class="v">30M SER</span></li>
             <li><span>At TGE</span><span class="v">20%</span></li>
-            <li><span>Vesting</span><span class="v">12-month</span></li>
+            <li><span>Vesting</span><span class="v">14-day cliff · 12 mo</span></li>
           </ul>
+          <div class="tier-progress"><div class="tp-fill" style="width:0%"></div></div>
+          <div class="tp-labels"><span>0 / 30M SER</span><span>at launch</span></div>
         </div>
         <div class="tier-card" data-tier="Public" data-price="0.04">
           <span class="tier-badge text-green"><span class="dot"></span> PUBLIC</span>
           <div class="tier-name">Public</div>
-          <div class="tier-detail">Open · no KYC</div>
+          <div class="tier-detail">Open · no allowlist</div>
           <div class="tier-price">$0.04<span class="unit">/SER</span></div>
           <ul class="tier-list">
             <li><span>Allocation</span><span class="v">60M SER</span></li>
             <li><span>At TGE</span><span class="v">100%</span></li>
             <li><span>Vesting</span><span class="v">None</span></li>
           </ul>
+          <div class="tier-progress"><div class="tp-fill" style="width:0%"></div></div>
+          <div class="tp-labels"><span>0 / 60M SER</span><span>at launch</span></div>
         </div>
       </div>
 
       <div class="struct-line-magenta"></div>
 
-      <!-- Purchase flow shell -->
       <div class="meta">Buy SER</div>
       <div class="purchase-panel">
         <div class="purchase-controls">
@@ -985,7 +1104,7 @@
             <input class="amount-input" id="amountInput" type="text" inputmode="decimal" placeholder="0.00" value="">
           </div>
           <button class="wallet-btn" id="connectBtn"><span class="metal">●</span> CONNECT WALLET</button>
-          <div class="connect-note" id="connectNote" style="display:none;">Wallet connect goes live when the presale opens. This button will call the deployed presale contract — approve &amp; buy, live tier progress, and whitelist checks — with nothing fake underneath.</div>
+          <div class="connect-note" id="connectNote" style="display:none;">Wallet connect goes live when the presale opens. The flow is two steps: <b>Connect</b> (MetaMask, WalletConnect, or Phantom) then <b>Approve &amp; Buy</b> against the deployed presale contract — live tier progress, allowlist checks, and purchases, with nothing fake underneath.</div>
         </div>
         <div class="purchase-summary">
           <div class="meta">Order summary</div>
@@ -997,7 +1116,6 @@
         </div>
       </div>
 
-      <!-- Accepted currencies -->
       <div class="struct-line"></div>
       <div class="meta">Accepted currencies</div>
       <div style="display: flex; gap: 16px; flex-wrap: wrap;">
@@ -1015,11 +1133,35 @@
         </div>
       </div>
 
-      <!-- Disclosures -->
       <div class="struct-line"></div>
       <div style="display: flex; align-items: center; gap: 8px; font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.02em; color: var(--color-sub);">
         <span class="metal-text">●</span>
-        <span>0.5% presale fee · 1% sell tax post-TGE · 50% auto-burn · 50% to treasury</span>
+        <span>0.5% presale fee · 1% transfer tax post-TGE · 50% auto-burn · 50% to treasury</span>
+      </div>
+
+      <div class="struct-line"></div>
+      <div class="meta">FAQ</div>
+      <div class="faq">
+        <details class="faq-item">
+          <summary>When does the presale go live?</summary>
+          <p>The launch date and final terms are announced here. Nothing is sold until the contracts are deployed and this page is wired to them.</p>
+        </details>
+        <details class="faq-item">
+          <summary>How do I participate?</summary>
+          <p>Connect a wallet (MetaMask, WalletConnect, or Phantom) when the sale opens, choose a tier, approve the payment, and buy. Strategic and Private tiers require an allowlisted address; Public is open.</p>
+        </details>
+        <details class="faq-item">
+          <summary>What are the fees?</summary>
+          <p>A 0.5% presale fee is applied on each purchase and goes to treasury. Post-TGE, a 1% transfer tax applies on non-exempt transfers — 50% auto-burned, 50% to treasury.</p>
+        </details>
+        <details class="faq-item">
+          <summary>What happens at TGE?</summary>
+          <p>Strategic and Private buyers receive 25% / 20% of their allocation at TGE, with the remainder vesting linearly over 12 months after a 14-day cliff. Public buyers receive 100% at TGE.</p>
+        </details>
+        <details class="faq-item">
+          <summary>Is this private?</summary>
+          <p>The presale itself is a public token sale on-chain. Seraph's privacy guarantees apply to the base layer and private pools, which are separate phases of the roadmap. We do not collect identity data — participation is address-based.</p>
+        </details>
       </div>
     </div>
   </div>
@@ -1035,47 +1177,57 @@
         <h4>Product</h4>
         <ul>
           <li><a href="#presale">Presale</a></li>
-          <li><a href="#">Wallet</a></li>
-          <li><a href="#">Documentation</a></li>
+          <li><a href="#">Wallet <span class="soon">(soon)</span></a></li>
+          <li><a href="#">Explorer <span class="soon">(soon)</span></a></li>
           <li><a href="https://github.com/0xfuckian/seraph/blob/main/whitepaper/seraph_whitepaper.md" target="_blank" rel="noopener">Whitepaper</a></li>
-          <li><a href="#">Explorer</a></li>
         </ul>
       </div>
       <div class="footer-column">
         <h4>Developers</h4>
         <ul>
-          <li><a href="#">SDK (TypeScript)</a></li>
-          <li><a href="#">SDK (Rust)</a></li>
-          <li><a href="#">SDK (Go)</a></li>
+          <li><a href="https://github.com/0xfuckian/seraph" target="_blank" rel="noopener">GitHub</a></li>
           <li><a href="https://github.com/0xfuckian/seraph/tree/main/contracts" target="_blank" rel="noopener">Contracts</a></li>
+          <li><a href="#">SDK — TS <span class="soon">(soon)</span></a></li>
+          <li><a href="#">SDK — Rust <span class="soon">(soon)</span></a></li>
+          <li><a href="#">SDK — Go <span class="soon">(soon)</span></a></li>
         </ul>
       </div>
       <div class="footer-column">
-        <h4>Modules</h4>
+        <h4>Protocol</h4>
         <ul>
-          <li><a href="#">Stablecoin</a></li>
-          <li><a href="#">AI Payments</a></li>
-          <li><a href="#">Messaging</a></li>
-          <li><a href="#">Relayer</a></li>
+          <li><a href="#privacy">Privacy continuum</a></li>
+          <li><a href="#architecture">Architecture</a></li>
+          <li><a href="#tokenomics">Tokenomics</a></li>
+          <li><a href="#roadmap">Roadmap</a></li>
         </ul>
       </div>
       <div class="footer-column">
         <h4>Governance</h4>
         <ul>
-          <li><a href="#">Forum</a></li>
-          <li><a href="#">Proposals</a></li>
-          <li><a href="#">Treasury</a></li>
-          <li><a href="#">Bug Bounty</a></li>
+          <li><a href="#">Forum <span class="soon">(soon)</span></a></li>
+          <li><a href="#">Proposals <span class="soon">(soon)</span></a></li>
+          <li><a href="#">Treasury <span class="soon">(soon)</span></a></li>
+          <li><a href="#">Bug Bounty <span class="soon">(soon)</span></a></li>
         </ul>
       </div>
     </div>
     <div class="copyright">
-      MIT License • Seraph Protocol v0.1.0-dev
+      MIT License · Seraph Protocol v0.1.0-dev · Phase 0 — PoC. Nothing on this site is financial advice; the presale is not yet open.
     </div>
   </footer>
 
   <script>
-    /* ===== Hash router: home ↔ presale, shared nav/footer ===== */
+    /* ===== Hash router: home ↔ presale ===== */
+    function clearNavActive() {
+      document.querySelectorAll('.nav-link').forEach(function (a) { a.classList.remove('active'); });
+    }
+    function setNavActiveByView(view) {
+      clearNavActive();
+      if (view === 'presale') {
+        var link = document.querySelector('a[data-view="presale"]');
+        if (link) link.classList.add('active');
+      }
+    }
     function route() {
       var hash = location.hash || '#hero';
       var isPresale = hash === '#presale';
@@ -1085,16 +1237,92 @@
         if (prev) prev.classList.remove('active');
         next.classList.add('active');
       }
-      document.querySelectorAll('.nav-link').forEach(function (a) {
-        a.classList.toggle('active', a.getAttribute('data-view') === (isPresale ? 'presale' : 'home'));
-      });
-      // Only force scroll-to-top on a real page switch (not section anchors in home)
+      setNavActiveByView(isPresale ? 'presale' : 'home');
+      // Deep link (e.g. #tokenomics): highlight that section's nav entry directly.
+      if (!isPresale && hash.length > 1) {
+        var secLink = document.querySelector('a[data-section="' + hash.slice(1) + '"]');
+        if (secLink) { clearNavActive(); secLink.classList.add('active'); }
+      }
       if (prev !== next && !document.getElementById(hash.slice(1))) {
         window.scrollTo(0, 0);
       }
     }
     window.addEventListener('hashchange', route);
-    window.addEventListener('DOMContentLoaded', route);
+
+    /* ===== Scrollspy (home sections) ===== */
+    var homeSections = ['hero', 'privacy', 'architecture', 'modules', 'tokenomics', 'roadmap', 'security', 'docs', 'governance', 'presale-teaser'];
+    function onScroll() {
+      var homeView = document.getElementById('view-home');
+      if (!homeView.classList.contains('active')) return;
+      var current = 'hero';
+      homeSections.forEach(function (id) {
+        var el = document.getElementById(id);
+        if (el && el.getBoundingClientRect().top <= 120) current = id;
+      });
+      clearNavActive();
+      var link = document.querySelector('a[data-section="' + current + '"]') ||
+                 (current === 'presale-teaser' ? document.querySelector('a[data-view="presale"]') : null);
+      if (link) link.classList.add('active');
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+
+    /* ===== Mobile nav toggle ===== */
+    var navToggle = document.getElementById('navToggle');
+    var navArea = document.getElementById('navArea');
+    navToggle.addEventListener('click', function () {
+      navArea.classList.toggle('open');
+    });
+    navArea.addEventListener('click', function (e) {
+      if (e.target.closest('.nav-link')) navArea.classList.remove('open');
+    });
+
+    /* ===== Scroll reveal ===== */
+    var revealObserver = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.08 });
+    document.querySelectorAll('.reveal').forEach(function (el) { revealObserver.observe(el); });
+
+    /* ===== Count-up stats ===== */
+    function animateCount(el) {
+      var target = parseInt(el.getAttribute('data-count'), 10);
+      if (isNaN(target)) return;
+      var start = Date.now();
+      var dur = 900;
+      var iv = setInterval(function () {
+        var t = Math.min((Date.now() - start) / dur, 1);
+        var eased = 1 - Math.pow(1 - t, 3);
+        el.textContent = Math.round(target * eased);
+        if (t >= 1) clearInterval(iv);
+      }, 30);
+      // Guarantee the final value lands even if timers are throttled (background tabs, webviews).
+      setTimeout(function () { el.textContent = target; clearInterval(iv); }, dur + 60);
+    }
+    var countObserver = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          animateCount(entry.target);
+          entry.target.dataset.done = '1';
+          countObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.4 });
+    document.querySelectorAll('[data-count]').forEach(function (el) { countObserver.observe(el); });
+
+    /* ===== Safety net: never leave content hidden =====
+       IntersectionObserver can fail to fire inside embedded preview frames,
+       webviews, or old browsers — so force-reveal everything shortly after
+       load. The observer above still provides the scroll effect on real pages. */
+    setTimeout(function () {
+      document.querySelectorAll('.reveal').forEach(function (el) { el.classList.add('visible'); });
+      document.querySelectorAll('[data-count]').forEach(function (el) {
+        if (!el.dataset.done) { animateCount(el); el.dataset.done = '1'; }
+      });
+    }, 1200);
 
     /* ===== Presale flow (static shell — live wallet calls come later) ===== */
     var currentCur = 'USDT';
@@ -1104,7 +1332,6 @@
       if (!isFinite(n)) return '—';
       return n.toLocaleString('en-US', { maximumFractionDigits: n >= 1000 ? 0 : 2 });
     }
-
     function updateOrder() {
       var raw = (document.getElementById('amountInput').value || '').replace(/[^0-9.]/g, '');
       var amt = parseFloat(raw || '0');
@@ -1117,7 +1344,6 @@
       var ser = currentCur === 'ETH' ? NaN : net / activeTier.price;
       document.getElementById('sumSER').textContent = fmt(ser) + (currentCur === 'ETH' ? '' : ' SER');
     }
-
     document.getElementById('amountInput').addEventListener('input', updateOrder);
 
     document.querySelectorAll('#currencyTabs .currency-tab').forEach(function (btn) {
@@ -1143,6 +1369,10 @@
       var note = document.getElementById('connectNote');
       note.style.display = note.style.display === 'none' ? 'block' : 'none';
     });
+
+    /* Init */
+    route();
+    onScroll();
   </script>
 </body>
 </html>
