@@ -300,4 +300,24 @@ contract PresaleTest is Test {
         presale.withdrawETH();
         assertEq(presale.totalRaisedETH(), 0, "totalRaisedETH clamped to 0 instead of underflowing");
     }
+
+    function capOf(uint256 id) internal view returns (uint256) {
+        (string memory nm, uint256 pr, uint256 hc, uint256 sd, bool kyc, uint256 lk, uint256 vs, bool ac) = presale.tiers(id);
+        return hc;
+    }
+
+    function test_Allocation_MatchesWhitepaper() public {
+        // Presale distributes Early Contributors (15M) + Public Sale & Liquidity (10M) = 25M
+        (uint256 sold, uint256 cap) = presale.getProgress();
+        assertEq(sold, 0, "Nothing sold yet");
+        assertEq(cap, 25_000_000e18, "Presale cap must equal 25M SER (15M private + 10M public)");
+
+        // Per-tier caps match the §9.2 split
+        assertEq(capOf(1), 3_750_000e18, "Strategic = 3.75M (25% of Early Contributors 15M)");
+        assertEq(capOf(2), 11_250_000e18, "Private = 11.25M (75% of Early Contributors 15M)");
+        assertEq(capOf(3), 10_000_000e18, "Public = 10M (Public Sale + Liquidity)");
+
+        // Remaining 75M stays out of the presale (40M ecosystem + 20M team + 15M foundation)
+        assertEq(100_000_000e18 - cap, 75_000_000e18, "75M allocated to ecosystem/team/foundation");
+    }
 }

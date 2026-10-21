@@ -103,14 +103,18 @@ contract SeraphPresale is ReentrancyGuard {
         usdc = _usdc;
         tgeTimestamp = _tgeTimestamp;
 
-        /* Default tiers (from spec Section 10 roadmap) */
+        /* Default tiers — allocation mapped to whitepaper §9.2:
+           Early Contributors (15% = 15M SER, private sale terms) → Strategic + Private (1:3 split)
+           Public Sale + Liquidity (10% = 10M SER)                → Public tier.
+           Presale total = 25M SER. The remaining 75M (ecosystem 40M, team 20M, foundation 15M)
+           is minted separately by treasury/governance — never offered for sale. */
         // price = USD per token * 1e6 (stablecoin decimals)
         // $0.02 → 20000, $0.03 → 30000, $0.04 → 40000
         _addTier(
             "Strategic",
             20000, // $0.02 in 1e6 units
-            10_000_000e18, // 10M SER
-            true, // KYC required
+            3_750_000e18, // 3.75M SER (25% of Early Contributors)
+            true, // allowlist required
             2500, // 25% TGE, 75% vested
             365 days, // 12-month vesting
             true
@@ -118,8 +122,8 @@ contract SeraphPresale is ReentrancyGuard {
         _addTier(
             "Private",
             30000, // $0.03
-            30_000_000e18, // 30M SER
-            true, // KYC required
+            11_250_000e18, // 11.25M SER (75% of Early Contributors)
+            true, // allowlist required
             2000, // 20% TGE, 80% vested
             365 days, // 12-month vesting
             true
@@ -127,8 +131,8 @@ contract SeraphPresale is ReentrancyGuard {
         _addTier(
             "Public",
             40000, // $0.04
-            60_000_000e18, // 60M SER
-            false, // No KYC
+            10_000_000e18, // 10M SER (Public Sale + Liquidity)
+            false, // open — no allowlist
             10000, // 100% TGE
             0, // no vesting
             true
