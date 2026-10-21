@@ -27,6 +27,7 @@ contract SeraphPresale is ReentrancyGuard {
         uint256 cost,
         address currency
     );
+    event FeeCollected(address indexed buyer, uint256 amount, address currency);
     event VestingReleased(address indexed beneficiary, uint256 amount);
     event Withdrawal(address indexed to, uint256 amount, address currency);
     event TierAdded(
@@ -82,6 +83,13 @@ contract SeraphPresale is ReentrancyGuard {
     uint256 public totalTokensSold;
 
     uint256 public constant BPS = 10000; // basis points scale
+
+    /* === Presale fee: 0.5% of payment goes to treasury === */
+    uint256 public constant PRESALE_FEE_BPS = 50; // 50 bps = 0.5%
+
+    uint256 public feesCollectedUSDT;
+    uint256 public feesCollectedUSDC;
+    uint256 public feesCollectedETH;
 
     /* ── Constructor ───────────────────────────────────────── */
     constructor(
@@ -168,23 +176,44 @@ contract SeraphPresale is ReentrancyGuard {
     /**
      * @dev Buy tokens with USDT or USDC.
      * @param tierId 1=Strategic, 2=Private, 3=Public
+     * @param stablecoinAmount Amount of stablecoin to spend (in token-native units)
+     * @param currency Address of the stablecoin to use (USDT or USDC)
+     * @param referrer Referral address (zero for none)
      */
     function buyWithStablecoin(
         uint256 tierId,
         uint256 stablecoinAmount,
+        address currency,
         address referrer
     ) external payable nonReentrant {
         require(tiers[tierId].active, "Presale: tier inactive");
         require(isWhitelisted(msg.sender, tierId), "Presale: not whitelisted");
+        require(
+            currency == usdt || currency == usdc,
+            "Presale: invalid currency"
+        );
 
         PresaleTier storage tier = tiers[tierId];
-        uint256 tokens = (stablecoinAmount * 1e18) / tier.price;
-        require(tier.sold + tokens <= tier.hardCap, "Presale: tier cap exceeded");
 
-        // Pull stablecoin from buyer
-        if (msg.value > 0) revert("Presale: ETH not accepted for stable purchase");
-        // Note: In practice, the frontend sends USDT/USDC. Here we verify balance.
-        IERC20(stablecoinAddress(tierId)).safeTransferFrom(msg.sender, address(this), stablecoinAmount);
+        // ── 0.5% presale fee ──
+        uint256 fee = (stablecoinAmount * PRESALE_FEE_BPS) / BPS;
+        uint256 netAmount = stablecoinAmount - fee;
+
+        // Pull full stablecoin from buyer
+        IERC20(currency).safeTransferFrom(msg.sender, address(this), stablecoinAmount);
+
+        // Send fee to treasury
+        IERC20(currency).safeTransfer(treasury, fee);
+
+        // Track fees
+        if (currency == usdt) feesCollectedUSDT += fee;
+        else feesCollectedUSDC += fee;
+
+        if (fee > 0) emit FeeCollected(msg.sender, fee, currency);
+
+        // Calculate tokens from net amount (after fee)
+        uint256 tokens = (netAmount * 1e18) / tier.price;
+        require(tier.sold + tokens <= tier.hardCap, "Presale: tier cap exceeded");
 
         // Record vesting
         _setupVesting(msg.sender, tierId, tokens);
@@ -192,22 +221,22 @@ contract SeraphPresale is ReentrancyGuard {
         tier.sold += tokens;
         totalTokensSold += tokens;
 
-        if (msg.sender == usdt) totalRaisedUSDT += stablecoinAmount;
-        else totalRaisedUSDC += stablecoinAmount;
+        if (currency == usdt) totalRaisedUSDT += netAmount;
+        else totalRaisedUSDC += netAmount;
 
         if (referrer != address(0)) referredBy[msg.sender] = uint256(referrer);
 
-        emit Purchased(msg.sender, tierId, tokens, stablecoinAmount, msg.value > 0 ? address(0) : address(0));
+        emit Purchased(msg.sender, tierId, tokens, netAmount, currency);
     }
 
     function stablecoinAddress(uint256 tierId) internal view returns (address) {
-        // All tiers accept both USDT and USDC — determined by frontend
-        // This is a placeholder; actual implementation distinguishes via param
+        // Legacy helper — kept for backward compat
         return usdt;
     }
 
     /**
      * @dev Buy tokens with ETH. Only Public tier accepts ETH.
+     *      0.5% fee is sent to treasury, rest used for token calculation.
      */
     function buyWithETH(uint256 tierId) external payable nonReentrant {
         require(tierId == 3, "Presale: ETH only for Public tier");
@@ -215,16 +244,28 @@ contract SeraphPresale is ReentrancyGuard {
         require(isWhitelisted(msg.sender, tierId), "Presale: not whitelisted");
 
         PresaleTier storage tier = tiers[tierId];
-        uint256 tokens = (msg.value * 1e18) / tier.price;
+
+        // ── 0.5% presale fee ──
+        uint256 fee = (msg.value * PRESALE_FEE_BPS) / BPS;
+        uint256 netValue = msg.value - fee;
+
+        // Send fee to treasury
+        if (fee > 0) {
+            payable(treasury).transfer(fee);
+            feesCollectedETH += fee;
+            emit FeeCollected(msg.sender, fee, address(0));
+        }
+
+        uint256 tokens = (netValue * 1e18) / tier.price;
         require(tier.sold + tokens <= tier.hardCap, "Presale: tier cap exceeded");
 
         _setupVesting(msg.sender, tierId, tokens);
 
         tier.sold += tokens;
         totalTokensSold += tokens;
-        totalRaisedETH += msg.value;
+        totalRaisedETH += netValue;
 
-        emit Purchased(msg.sender, tierId, tokens, msg.value, address(0));
+        emit Purchased(msg.sender, tierId, tokens, netValue, address(0));
     }
 
     /* ── Vesting ──────────────────────────────────────────── */
@@ -313,6 +354,24 @@ contract SeraphPresale is ReentrancyGuard {
     }
 
     /* ── View Functions ───────────────────────────────────── */
+    function getFeesCollected()
+        external
+        view
+        returns (
+            uint256 usdtFees,
+            uint256 usdcFees,
+            uint256 ethFees,
+            uint256 totalFeesUSD
+        )
+    {
+        return (
+            feesCollectedUSDT,
+            feesCollectedUSDC,
+            feesCollectedETH,
+            feesCollectedUSDT + feesCollectedUSDC + (feesCollectedETH * 0)
+        );
+    }
+
     function getProgress() external view returns (uint256 sold, uint256 cap) {
         uint256 totalSold;
         uint256 totalCap;
