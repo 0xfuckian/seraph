@@ -18,6 +18,14 @@ contract SeraphToken is ERC20, ERC20Burnable, ERC20Permit {
     address public treasury;
     address public presale; // settable — avoids circular deployment dependency
 
+    // Authorized minters: presale (vesting claims), treasury (genesis), bridge (bridged mints)
+    mapping(address => bool) public minters;
+
+    modifier onlyMinter() {
+        require(minters[msg.sender], "SeraphToken: not a minter");
+        _;
+    }
+
     uint256 private constant PRECISION = 1e18; // 18 decimals
 
     /* === Presale tax (active during and after presale) === */
@@ -37,14 +45,23 @@ contract SeraphToken is ERC20, ERC20Burnable, ERC20Permit {
         privacyPool = _privacyPool;
         treasury = _treasury;
         presale = _presale;
+        minters[_treasury] = true; // treasury may mint genesis / burn-allocated supply
+        if (_presale != address(0)) minters[_presale] = true; // presale mints TGE + vesting claims
     }
 
     /* ------------------------------------------------------------------ */
     /* Mint (for genesis / bridge minting — governance-gated)              */
     /* ------------------------------------------------------------------ */
 
-    function mint(address to, uint256 amount) external /* onlyGovernance */  {
+    function mint(address to, uint256 amount) external onlyMinter {
         _mint(to, amount);
+    }
+
+    /**
+     * @dev Grant/revoke minting rights (e.g. a bridge, a second presale, governance).
+     */
+    function setMinter(address minter, bool allowed) external onlyTreasury {
+        minters[minter] = allowed;
     }
 
     /* ------------------------------------------------------------------ */
@@ -62,8 +79,9 @@ contract SeraphToken is ERC20, ERC20Burnable, ERC20Permit {
      */
     function _update(address from, address to, uint256 amount) internal virtual override {
         // Only apply sell tax on regular transfers (not mint/burn, not from presale, not from/to self)
-        bool isSell =
-            from != address(0) && to != address(0) && from != address(this) && to != address(this) && from != presale;
+        bool isSell = from != address(0) && to != address(0) && from != address(this) && to != address(this)
+            && from != presale && to != presale && from != treasury && to != treasury
+            && from != privacyPool && to != privacyPool;
 
         if (sellTaxEnabled && isSell && amount > 0) {
             uint256 tax = (amount * SELL_TAX_BPS) / 10000;
@@ -97,6 +115,7 @@ contract SeraphToken is ERC20, ERC20Burnable, ERC20Permit {
 
     function setPresale(address _presale) external onlyTreasury {
         presale = _presale;
+        minters[_presale] = true; // presale remains able to mint TGE + vesting claims
     }
 
     /* ------------------------------------------------------------------ */
@@ -130,7 +149,7 @@ contract SeraphToken is ERC20, ERC20Burnable, ERC20Permit {
         emit Bridged(msg.sender, to, amount, chainId);
     }
 
-    function receiveFromBridge(address to, uint256 amount) external /* onlyBridge */  {
+    function receiveFromBridge(address to, uint256 amount) external onlyMinter {
         _mint(to, amount);
         emit BridgeReceived(to, amount, msg.sender);
     }

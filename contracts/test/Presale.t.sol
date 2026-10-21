@@ -202,4 +202,102 @@ contract PresaleTest is Test {
         assertEq(token.balanceOf(stranger), 100e18, "No tax when disabled");
         assertEq(token.totalSupply(), initialSupply, "No burn when disabled");
     }
+
+    function test_Mint_RequiresMinter() public {
+        // Non-minter cannot mint
+        vm.prank(stranger);
+        vm.expectRevert("SeraphToken: not a minter");
+        token.mint(stranger, 1e18);
+
+        // Treasury (registered as minter in constructor) can
+        vm.prank(treasury);
+        token.mint(buyer, 100e18);
+        assertEq(token.balanceOf(buyer), 100e18);
+
+        // Bridge can be granted minting and then mint
+        vm.prank(treasury);
+        token.setMinter(stranger, true);
+        vm.prank(stranger);
+        token.receiveFromBridge(buyer, 50e18);
+        assertEq(token.balanceOf(buyer), 150e18, "Registered bridge can mint via receiveFromBridge");
+    }
+
+    function test_SellTax_ExemptsTreasuryAndPool() public {
+        vm.startPrank(treasury);
+        token.mint(treasury, 1000e18);
+        token.mint(address(presale), 1000e18);
+        vm.stopPrank();
+
+        // Treasury -> stranger must be tax-exempt (liquidity provision, grants)
+        uint256 supplyBefore = token.totalSupply();
+        vm.prank(treasury);
+        token.transfer(stranger, 100e18);
+        assertEq(token.balanceOf(stranger), 100e18, "Treasury transfers untaxed");
+        assertEq(token.totalSupply(), supplyBefore, "No burn on treasury transfer");
+
+        // Presale -> stranger must be tax-exempt (TGE disbursements)
+        vm.prank(address(presale));
+        token.transfer(stranger, 100e18);
+        assertEq(token.balanceOf(stranger), 200e18, "Presale transfers untaxed");
+    }
+
+    function test_Strategic_Cliff_Is14Days() public {
+        vm.startPrank(buyer);
+        usdt.approve(address(presale), 1000 * 1e6);
+        presale.buyWithStablecoin(1, 1000 * 1e6, address(usdt), address(0)); // Strategic tier
+        vm.stopPrank();
+
+        (,,, uint256 cliffSeconds, uint256 duration,) = presale.vesting(buyer, 1);
+        assertEq(cliffSeconds, 14 days, "Strategic cliff should be 14 days");
+        assertEq(duration, 365 days, "Strategic vesting should be 12 months");
+    }
+
+    function test_Public_Tier_HasNoVesting() public {
+        vm.startPrank(buyer);
+        usdt.approve(address(presale), 1000 * 1e6);
+        presale.buyWithStablecoin(3, 1000 * 1e6, address(usdt), address(0)); // Public tier
+        vm.stopPrank();
+
+        (,,, uint256 cliffSeconds, uint256 duration,) = presale.vesting(buyer, 3);
+        assertEq(cliffSeconds, 0, "Public cliff should be 0");
+        assertEq(duration, 0, "Public has no vesting");
+    }
+
+    function test_TierAdmin_Controls() public {
+        // Treasury can pause a tier -> purchase reverts
+        vm.prank(treasury);
+        presale.setTierActive(3, false);
+        vm.startPrank(buyer);
+        usdt.approve(address(presale), 1000 * 1e6);
+        vm.expectRevert("Presale: tier inactive");
+        presale.buyWithStablecoin(3, 1000 * 1e6, address(usdt), address(0));
+        vm.stopPrank();
+
+        // Treasury can update price; token math follows the new price
+        vm.prank(treasury);
+        presale.setTierActive(3, true); // re-open the tier
+        vm.prank(treasury);
+        presale.setTierPrice(3, 50000); // $0.05
+        vm.startPrank(buyer);
+        usdt.approve(address(presale), 1000 * 1e6);
+        presale.buyWithStablecoin(3, 1000 * 1e6, address(usdt), address(0));
+        vm.stopPrank();
+        (uint256 total,,) = presale.getBuyerAllocation(buyer, 3);
+        // 995 USDT / $0.05 = 19,900 tokens
+        assertEq(total / 1e18, 19900, "Tokens recomputed at updated price");
+
+        // Non-treasury cannot pause
+        vm.prank(stranger);
+        vm.expectRevert("Presale: caller is not treasury");
+        presale.setTierActive(3, true);
+    }
+
+    function test_WithdrawETH_SurvivesStrayETH() public {
+        // Donate stray ETH to the presale contract (simulates forced transfer)
+        vm.deal(address(presale), 1 ether);
+        // Treasury withdraws — must not underflow totalRaisedETH even though nothing was raised
+        vm.prank(treasury);
+        presale.withdrawETH();
+        assertEq(presale.totalRaisedETH(), 0, "totalRaisedETH clamped to 0 instead of underflowing");
+    }
 }

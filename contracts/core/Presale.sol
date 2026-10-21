@@ -76,6 +76,9 @@ contract SeraphPresale is ReentrancyGuard {
 
     uint256 public constant BPS = 10000; // basis points scale
 
+    /* === Vesting: fixed 14-day cliff for vested tiers (matches published terms) === */
+    uint256 public constant VESTING_CLIFF = 14 days;
+
     /* === Presale fee: 0.5% of payment goes to treasury === */
     uint256 public constant PRESALE_FEE_BPS = 50; // 50 bps = 0.5%
 
@@ -286,7 +289,7 @@ contract SeraphPresale is ReentrancyGuard {
             total: total,
             released: 0,
             startTime: 0, // set on TGE execution
-            cliffSeconds: lockupBps == BPS ? 0 : (BPS - lockupBps) * tiers[tierId].vestingDuration / BPS,
+            cliffSeconds: vestedAmount > 0 ? VESTING_CLIFF : 0,
             duration: vestedAmount > 0 ? tiers[tierId].vestingDuration : 0,
             claimed: false
         });
@@ -330,6 +333,7 @@ contract SeraphPresale is ReentrancyGuard {
 
         uint256 elapsed = block.timestamp - v.startTime;
         if (elapsed <= v.cliffSeconds) return; // still in cliff
+        if (v.duration == 0) revert("Presale: no vesting"); // fully-liquid tier has nothing to claim
 
         uint256 vestedTotal = v.total - ((v.total * tiers[tierId].lockupBps) / BPS); // vested portion
         uint256 releasable = (vestedTotal * (elapsed - v.cliffSeconds)) / v.duration;
@@ -352,8 +356,27 @@ contract SeraphPresale is ReentrancyGuard {
     function withdrawETH() external onlyTreasury {
         uint256 amount = address(this).balance;
         payable(treasury).transfer(amount);
-        totalRaisedETH -= amount;
+        // Guard against underflow if the contract ever holds stray (donated) ETH
+        totalRaisedETH = amount > totalRaisedETH ? 0 : totalRaisedETH - amount;
         emit Withdrawal(treasury, amount, address(0));
+    }
+
+    /* ── Tier Administration (configurable pricing per spec §6.4) ── */
+    function setTierActive(uint256 tierId, bool active) external onlyTreasury {
+        require(tierId > 0 && tierId <= tierCount, "Presale: invalid tier");
+        tiers[tierId].active = active;
+    }
+
+    function setTierPrice(uint256 tierId, uint256 price) external onlyTreasury {
+        require(tierId > 0 && tierId <= tierCount, "Presale: invalid tier");
+        require(price > 0, "Presale: price must be > 0");
+        tiers[tierId].price = price;
+    }
+
+    function setTierHardCap(uint256 tierId, uint256 hardCap) external onlyTreasury {
+        require(tierId > 0 && tierId <= tierCount, "Presale: invalid tier");
+        require(hardCap >= tiers[tierId].sold, "Presale: cap below sold");
+        tiers[tierId].hardCap = hardCap;
     }
 
     /* ── View Functions ───────────────────────────────────── */
@@ -389,7 +412,7 @@ contract SeraphPresale is ReentrancyGuard {
         total = v.total;
         tgeClaimed = v.claimed ? v.released : 0;
 
-        if (v.startTime > 0 && block.timestamp > v.startTime + v.cliffSeconds) {
+        if (v.startTime > 0 && v.duration > 0 && block.timestamp > v.startTime + v.cliffSeconds) {
             uint256 elapsed = block.timestamp - v.startTime;
             uint256 vestedTotal = v.total - ((v.total * tiers[tierId].lockupBps) / BPS);
             uint256 vested = (vestedTotal * (elapsed - v.cliffSeconds)) / v.duration;
