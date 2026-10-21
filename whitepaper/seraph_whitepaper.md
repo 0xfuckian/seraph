@@ -1,345 +1,292 @@
 # Seraph: A Privacy Continuum Protocol
 
-**Version 2.1 — October 19, 2026**
+**Version 3.0 — 21 October 2026**  
+**Status: Research & Design Specification**
 
 ---
 
 ## Abstract
 
-Seraph solves the programmability gap of pure privacy coins and the weak
-default privacy of most smart-contract platforms by combining a
-Monero-inspired base layer with two specialized private EVMs that share
-anonymity sets. Users enjoy strong default privacy for payments while
-developers get familiar EVM tooling with private state. Deep XMR support
-ensures users never have to leave the privacy set. The continuum model
-allows gradual disclosure when required without forcing it on everyone.
+Existing privacy solutions force an unacceptable trade-off: pure privacy coins such as Monero deliver strong default privacy for value transfer but lack programmability, while smart-contract platforms and most privacy layers offer programmability at the cost of weak or fragmented privacy.
+
+Seraph resolves this tension by introducing a **Privacy Continuum** built on three tightly integrated layers:
+
+1. A Monero-inspired base layer providing default strong privacy and a large shared anonymity set.
+2. A general-purpose private EVM (Seraph EVM).
+3. An XMR-optimized private EVM (XMR EVM).
+
+Both EVMs inherit and contribute to the base layer’s anonymity set. Deep native XMR support ensures users never need to leave the privacy set. The continuum model makes strong privacy the default while still permitting selective disclosure when explicitly required.
 
 ---
 
 ## 1. Introduction
 
-Current privacy solutions are incomplete:
+### 1.1 The Privacy–Programmability Gap
 
-- **Pure privacy coins** (Monero, Grisade) offer strong default privacy for
-  value transfer but lack programmable private execution.
-- **Smart-contract platforms** (Ethereum, Solana) provide programmability
-  but weak or opt-in privacy, leaking behavior on-chain.
-- **Privacy layers** (Aztec, Nocturne) add privacy to existing chains but
-  fragment the anonymity set and require users to bridge assets.
+- **Monero-style systems** excel at untraceable payments but cannot host general smart contracts.
+- **Transparent or opt-in smart-contract platforms** (Ethereum, Solana, etc.) leak rich behavioral metadata.
+- **Existing privacy layers** (Aztec, Railgun, etc.) improve privacy on top of transparent chains but typically create smaller, fragmented anonymity sets and force users through bridges.
 
-Seraph unifies these by building a base layer with Monero-grade default
-privacy as a settlement layer, then adding two specialized private EVMs
-that share the base layer's anonymity set.
+Seraph is designed from the ground up so that **privacy is the base layer**, not an optional overlay.
 
-### 1.1 Design Goals
+### 1.2 Design Goals
 
-- Default strong privacy for all value movement
-- Programmable private smart contracts
-- Seamless XMR + SER dual-asset experience
-- Progressive privacy levels (transparent → optional → default-strong → private compute)
-- Practical usability for normal users and developers
+- Default strong privacy for all value transfers
+- Programmable private execution (Solidity-compatible)
+- Large, shared anonymity sets across layers
+- First-class XMR support without compromising the set
+- Progressive privacy levels (the Continuum)
+- Practical developer and user experience
 
-### 1.2 Anti-Goals
+### 1.3 Anti-Goals
 
-- Not a clone of an existing privacy coin
-- Not a general-purpose EVM without privacy
-- Not a bridge-only privacy layer (we are the base)
+- Not a pure privacy coin without programmability
+- Not a general-purpose EVM with weak privacy
+- Not a pure L2/bridge that depends on a transparent base chain for security
 
 ---
 
-## 2. Architecture Overview
+## 2. System Architecture
 
 ### 2.1 Layer 1 — Seraph Base Layer
 
-A new Monero-inspired privacy chain providing:
+A purpose-built privacy settlement layer inspired by Monero’s cryptographic primitives, with the following properties:
 
-- Native support for SER and XMR
-- Stealth addresses (one-time destination keys)
-- Confidential amounts (Pedersen commitments)
-- Range proofs (Bulletproofs++)
-- Full-chain membership proofs (FCMP++)
+- Stealth addresses
+- Confidential amounts (Pedersen commitments + Bulletproofs++ or successor)
+- Nullifiers
+- Path toward Full-Chain Membership Proofs (FCMP++)
+- Native support for both SERAPH and XMR
 - Encrypted memos
-- Settlement and hard-money layer
+
+This layer serves as the ultimate source of truth and the primary anonymity-set reservoir.
 
 ### 2.2 Layer 2a — Seraph EVM
 
-A general-purpose EVM with selective-privacy defaults:
+A general-purpose EVM environment with private state capabilities:
 
-- Solidity-compatible
-- Gas primarily in SER
-- Optional private contract state
-- Privacy continuum applied per-transaction
+- Solidity compatibility
+- Client-side or hybrid proving for private transactions and private contract state
+- Primary gas token: SERAPH
+- Ability to interact with the base-layer privacy pools
 
 ### 2.3 Layer 2b — XMR EVM
 
-A specialized EVM optimized for XMR flows:
+A specialized EVM optimized for XMR-centric workflows:
 
-- Preferential XMR fee payment
+- Preferential or native XMR fee payment via gas abstraction
 - Tighter coupling to base-layer XMR
-- Gas abstraction via relayers
+- Same privacy guarantees as Seraph EVM
 
-### 2.4 Shared Components
+### 2.4 Shared Infrastructure
 
-- **Unified Key Hierarchy**: One seed controls accounts on all layers.
-- **Shared Anonymity Sets**: Note pools where possible across layers.
-- **Trust-Minimized Bridges**: Lock on source, prove, mint on destination.
-- **Relayer Network**: Gas abstraction, XMR fee payment, mempool batching.
+- **Unified key hierarchy** — one seed controls accounts across all layers
+- **Shared note / commitment pools** where cryptographically feasible
+- **Trust-minimized bridges** with clear security models
+- **Relayer network** for gas abstraction and improved UX
 
 ---
 
 ## 3. Cryptographic Foundations
 
-### 3.1 Notes, Commitments, Nullifiers
+### 3.1 Notes and the Privacy Pool
 
-A **note** represents a private balance. Its structure includes:
+A note represents a private UTXO-like balance and contains:
 
-- Amount commitment (Pedersen)
-- Owner stealth address data
+- Pedersen commitment to the amount
+- Stealth address / ownership data
 - Blinding factors
 - Optional encrypted memo
-- Nullifier derived from spend key + note
+- Derived nullifier
 
-A **commitment** is published to a Merkle tree. The tree root is updated on each block.
+Notes are inserted into one or more Merkle trees. Spending a note requires a zero-knowledge proof of:
 
-A **nullifier** is derived from the note's blinding factor and a secret spend key. Publishing the nullifier prevents double-spending without revealing which note it came from.
+- Knowledge of the note opening
+- Correct nullifier derivation
+- Merkle inclusion
+- Balance conservation
+- Valid range
 
-### 3.2 Transaction Flow (Private Spend)
+### 3.2 Path to Full-Chain Membership Proofs
 
-1. Select input notes (proof-of-legitimacy via view key or ownership proof)
-2. Generate new output note commitments
-3. Construct a zero-knowledge proof showing:
-   - Ownership of inputs (nullifier preimage)
-   - Balance conservation (inputs == outputs + fee)
-   - Amount range (no overflow, > 0)
-   - Merkle inclusion for each nullifier
-4. Publish nullifiers + new commitments + proof
-5. Network verifies proof, checks nullifiers are unspent, updates Merkle root
+Initial implementations may use efficient ring or limited-set membership proofs. The long-term target is FCMP++-class proofs that allow membership against the entire set of eligible outputs, dramatically increasing the anonymity set and eliminating many decoy-selection attacks.
 
-### 3.3 Membership Proofs (Path to Full-Chain)
+### 3.3 View Keys and Selective Disclosure
 
-Ring signatures provide logarithmic anonymity. Seraph targets FCMP++ (Full
-Chain Membership Signatures) for constant-sized proofs with full-chain
-anonymity, eliminating the need for mixin selection and addressing
-decoy-linkability concerns.
+- Incoming view keys enable light clients and selective scanning
+- Optional outgoing view keys enable proofs of specific spending behavior when the owner chooses to disclose
 
-### 3.4 View Keys & Selective Disclosure
+This design supports legitimate compliance needs without making disclosure the default.
 
-- **Incoming View Key**: Allows scanning for received notes
-- **Outgoing View Key** (optional): Allows proving that a specific nullifier
-  was spent by a specific party
+### 3.4 Cross-Layer Anonymity
 
-This enables selective disclosure for compliance without breaking default
-privacy.
+A core research and engineering challenge is ensuring that notes originating from different layers can meaningfully contribute to and benefit from a common anonymity set. Mechanisms under consideration include shared commitment trees, carefully designed bridging of notes, and unified nullifier spaces where safe.
 
 ---
 
 ## 4. The Privacy Continuum
 
-Seraph introduces a four-level privacy continuum:
+Seraph defines four explicit privacy levels:
 
-| Level | Name | Description |
-|-------|------|-------------|
-| 0 | Transparent | Public transaction, like Ethereum |
-| 1 | Optional Shielding | User chooses when to enter/exit privacy pools |
-| 2 | Default Strong | Private transactions by default; user opts out |
-| 3 | Private Compute | Confidential contract state + ZK compute |
+| Level | Name                  | Characteristics                                      |
+|-------|-----------------------|------------------------------------------------------|
+| 0     | Transparent           | Fully public (Ethereum-style)                        |
+| 1     | Optional Shielding    | User elects when to enter/exit privacy pools         |
+| 2     | Default Strong        | Private by default; explicit opt-out required        |
+| 3     | Private Compute       | Confidential contract state + private execution      |
 
-Users can gradually disclose more information as needed. The continuum
-model means privacy is the default, but compliance and auditability paths
-exist where explicitly chosen.
+The continuum is a first-class protocol feature, not an afterthought. Wallets and SDKs are expected to surface these levels clearly to users.
 
 ---
 
-## 5. Dual EVM Design & Gas Abstraction
+## 5. Dual EVM Design and Gas Abstraction
 
-### 5.1 Seraph EVM
-
-- Solidity-compatible runtime with precompiles for privacy primitives
-- Gas paid in SER by default
-- Optional private contract state via ZK state channels
-- Bridge to base layer for privacy pool operations
-
-### 5.2 XMR EVM
-
-- Same EVM semantics, XMR-native
-- XMR can be used for gas via gas-abstracted relayers
-- Tighter integration with XMR-flavored privacy primitives
-
-### 5.3 Gas Abstraction
-
-`GasAbstraction.sol` allows users to pay fees in either SER or XMR:
-
-1. User signs an intent (pay fee in XMR, receive service in SER EVM)
-2. Relayer pays gas in the required token
-3. Relayer is reimbursed from the user's selected asset
-4. Optional privacy on settlement
+Both EVMs support private transfers and private contract interactions. Gas abstraction allows users to pay fees in either SERAPH or XMR regardless of which EVM they are using, via a relayer network that settles privately or semi-privately when possible.
 
 ---
 
-## 6. XMR Integration Philosophy
+## 6. XMR Integration
 
-Seraph integrates XMR at three levels:
+XMR is treated as a first-class asset:
 
-1. **Native**: XMR is a first-class asset on the base layer, with the same
-   privacy guarantees as SER.
-2. **EVM**: XMR can be used in both EVMs via bridged representation.
-3. **Wallet**: Unified interface — users can transact in either asset without
-   leaving the privacy set.
+- Native on the base layer with identical privacy guarantees to SERAPH
+- Representable and usable inside both EVMs
+- Fully supported in the official wallet under a unified interface
 
-XMR support does not compromise Seraph's anonymity set because both assets
-share the same note pool primitives at the base layer.
+The design goal is that moving between SERAPH and XMR never forces a user out of the strong privacy set.
 
 ---
 
 ## 7. First-Party Modules
 
-### 7.1 Private Stablecoins
+Planned modules built on the core protocol:
 
-Over-collateralized stablecoins with private mint/burn:
+- **Private Stablecoins** — over-collateralized, private mint/burn
+- **AI Agent Payment Rails** — unlinkable, metered payments
+- **Private Messaging + Payments** — encrypted messaging with native private tips and invoices
+- **RWA Privacy Interfaces** (later) — selective disclosure for regulated assets
 
-- `CollateralVault.sol` — manages collateral positions
-- `PrivateStableFactory.sol` — deploys new private stable tokens
-- `xUSD.sol` — example stablecoin (extendable to xEUR, xJPY, etc.)
-- `OracleAdapter.sol` — delay-tolerant oracle design
-- `LiquidationEngine.sol` — privacy-preserving liquidations
-
-### 7.2 AI Payments
-
-Unlinkable payments for AI agents and metered services:
-
-- `UsageVault.sol` — holds deposits
-- `ZKCreditAuthorizer.sol` — proves credit remaining without revealing balance
-
-### 7.3 Messaging
-
-On-chain verifiable payment requests for private messaging:
-
-- `InvoiceRegistry.sol` — registry of request hashes and fulfillment
-
-### 7.4 RWA Privacy (Future)
-
-- `RWAVault.sol` — private RWA custody
-- `ComplianceModule.sol` — view-key-based selective disclosure
+These modules are designed to expand the usefulness of the continuum without weakening the base privacy guarantees.
 
 ---
 
-## 8. Consensus Considerations
+## 8. Consensus and Security Considerations
 
-The base layer may use:
+The base layer requires:
 
-- **Ouroboros-based PoS** — proven, peer-reviewed
-- **Tendermint/HotStuff BFT** — fast finality, good for bridging
-- **Hybrid PoS + privacy-poW** — experimental
+- Fast enough finality for practical L2 exits
+- Strong resistance to long-range attacks
+- Compatibility with privacy-preserving validator or mining participation
 
-The final choice will be determined by the research phase. Key requirements:
-fast finality for L2 exits, validator anonymity, and resistance to
-long-range attacks.
+Candidate approaches (PoS variants, hybrid designs, etc.) will be evaluated against these criteria during the research phase. Economic security of bridges and relayers is treated as a first-class concern.
 
 ---
 
 ## 9. Token Economics
 
-### 9.1 Token
+- **Token**: SERAPH (SER)
+- **Max Supply**: 100,000,000 (fixed)
+- **Allocation** (proposed):
+  - 40% Ecosystem & Community
+  - 20% Team & Advisors (4-year vesting, 1-year cliff)
+  - 15% Foundation / Treasury
+  - 15% Early Contributors
+  - 10% Public Sale + Initial Liquidity
 
-- **Name:** Seraph
-- **Ticker:** SER
-- **Supply:** 100,000,000 SER (fixed, no inflation)
+**Utility**: gas, staking (if applicable), governance, module fee discounts, and privacy-pool incentives.
 
-### 9.2 Allocation
-
-| Recipient | % | Vesting |
-|-----------|---|---------|
-| Ecosystem & Community | 40% | Gradual (incentives, grants, airdrops) |
-| Team & Advisors | 20% | 4-year vesting, 1-year cliff |
-| Foundation / Treasury | 15% | Long-term reserves |
-| Early Contributors | 15% | Private sale terms |
-| Public Sale + Liquidity | 10% | At launch |
-
-### 9.3 Utility
-
-- Gas fees on both EVMs and base layer
-- Staking (if PoS)
-- Governance voting
-- Fee discounts in modules
-- Privacy-pool incentive rewards
-
-### 9.4 Fee Model
-
-- Base layer: payable in SER or XMR
-- EVMs: primary gas in SER, XMR via gas abstraction/relayers
-- A percentage of fees is burned; a percentage goes to treasury and public goods
+A portion of fees is burned; the remainder supports the treasury and public goods.
 
 ---
 
-## 10. Security Model & Threat Analysis
+## 10. Security Model and Threat Analysis
 
-### 10.1 Core Assumptions
+**Primary Security Goals**:
+- Transaction unlinkability
+- Amount confidentiality
+- Non-malleability of transactions
+- Integrity of the note set (no inflation)
+- Bridge safety under defined trust assumptions
 
-- Trusted setup is minimized or eliminated (universal circuits)
-- Base-layer validators follow BFT assumptions
-- Bridges are trust-minimized with fraud proofs
+**Key Threats and Mitigations** (summary):
 
-### 10.2 Threat Model
+- Small anonymity sets → shared pools + FCMP++ roadmap
+- Malicious relayers → economic bonds + fraud proofs where possible
+- Bridge attacks → minimized trust + challenge periods
+- Cryptographic breaks → conservative primitive choices + upgrade paths
+- Long-range attacks → consensus design constraints
 
-| Threat | Mitigation |
-|--------|-----------|
-| Anonymity-set depletion | Shared pools, FCMP++ |
-| Nullifier guessing | Domain-separated nullifier derivation |
-| Amount overflow | Bulletproofs++ range proofs |
-| Key reuse | Stealth addresses, one-time keys |
-| Bridge theft | Fraud proofs, bond-and-challenge |
-| Oracle manipulation | Delay + decentralization |
-
-### 10.3 Audit Requirements
-
-- Two independent security audits before mainnet
-- Formal verification of core ZK circuits
-- Fuzz testing of all contracts and circuits
-- Continuous monitoring post-launch
+Multiple independent audits and formal verification of core circuits are required before mainnet.
 
 ---
 
-## 11. Development Roadmap
+## 11. Scalability and Performance Considerations
 
-| Phase | Timeline | Deliverables |
-|-------|----------|-------------|
-| **PoC** | 2–4 months | Note system, CLI wallet, private transfer demo, XMR simulation |
-| **MVP** | 4–8 months | Base-layer testnet, one EVM, reference wallet, explorer, bridge, website |
-| **Alpha** | 3–6 months | Second EVM, messaging v1, AI payments v1, stablecoin prototype, audits start, incentivized testnet |
-| **Beta** | 4–8 months | Mainnet candidate, production modules, multiple audits, full SDKs, liquidity plan |
-| **v1.0** | — | Production mainnet launch + stabilization |
+Key metrics to be measured and optimized:
+
+- Client-side proof generation time
+- Proof size
+- On-chain verification cost
+- Note-set growth and sync time for light clients
+- Effective throughput under private transaction load
+
+Client-side proving is preferred for maximum privacy; hybrid approaches may be used for better UX where necessary.
 
 ---
 
-## 12. Conclusion
+## 12. Development Roadmap
 
-Seraph bridges the gap between privacy-first value transfer and programmable
-private execution. By starting from a Monero-inspired base layer and adding
-two specialized private EVMs, it offers developers the tools they need —
-Solidity, familiar EVM semantics — without compromising the user's right to
-financial privacy.
+| Phase   | Duration     | Focus                                      |
+|---------|--------------|--------------------------------------------|
+| PoC     | 2–4 months   | Core note system, private transfers, demos |
+| MVP     | 4–8 months   | Base testnet + one EVM + wallet + bridge   |
+| Alpha   | 3–6 months   | Dual EVMs, first modules, audits begin     |
+| Beta    | 4–8 months   | Mainnet candidate, production modules      |
+| v1.0    | —            | Production mainnet                         |
 
-The privacy continuum model ensures that privacy is the default, while
-selective disclosure paths exist for compliance. Deep XMR integration means
-users never leave the privacy set. And the modular architecture ensures
-that new use cases — messaging, AI payments, private stablecoins, RWA —
-can be built as first-party modules without endangering the core.
+---
+
+## 13. Conclusion
+
+Seraph aims to be the first system that simultaneously delivers:
+
+- Monero-grade default privacy
+- Programmable private execution
+- A large shared anonymity set
+- Deep XMR integration
+- A clear Privacy Continuum for users
+
+By making privacy the foundation rather than an add-on, Seraph seeks to close the long-standing gap between private money and private computation.
 
 ---
 
 ## References
 
-1. RingCT: https://eprint.iacr.org/2017/497
-2. Bulletproofs++: https://eprint.iacr.org/2022/1379
-3. FCMP++: https://eprint.iacr.org/2024/1238
-4. Serpent: https://github.com/seraph-protocol
-5. Seraphis: https://github.com/UkoeHIDX/Seraphis
+(Selected)
+
+1. Ring Confidential Transactions – https://eprint.iacr.org/2015/1098
+2. Bulletproofs / Bulletproofs++ literature
+3. Full-Chain Membership Proofs research (Monero Research Lab / related)
+4. Aztec, Railgun, and other private EVM designs (for comparison)
+5. Seraphis and related Monero next-generation designs
 
 ---
+
+## Glossary
+
+- **Note**: Private UTXO-like balance
+- **Nullifier**: Unique tag preventing double-spends
+- **Stealth Address**: One-time destination address
+- **FCMP++**: Full-Chain Membership Proofs
+- **Privacy Continuum**: The four explicit privacy levels defined by the protocol
+- **Gas Abstraction**: Ability to pay fees in a different asset than the one required by the execution environment
+
+---
+
 
 *This is a living document. See [CONTRIBUTING.md](/CONTRIBUTING.md) to suggest edits.*
 
 ```text
 Seraph Protocol — Privacy Continuum
-Version 2.1 | October 19, 2026 | Fixed Supply: 100,000,000 SER
+Version 3.0 | October 21, 2026 | Fixed Supply: 100,000,000 SER
 ```
