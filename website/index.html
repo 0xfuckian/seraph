@@ -465,6 +465,8 @@
     .wallet-btn { display: inline-flex; align-items: center; font-family: "JetBrains Mono", monospace; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em; text-decoration: none; padding: 14px 28px; background: var(--color-ink); color: var(--color-white); border: none; cursor: pointer; transition: box-shadow 0.15s ease; }
     .wallet-btn:hover { box-shadow: var(--card-shadow-hover); }
     .wallet-btn .metal { color: var(--color-metal); margin-right: 8px; }
+    .wallet-btn:disabled { background: var(--color-ink-soft); color: var(--color-sub); cursor: not-allowed; box-shadow: none; }
+    .wallet-btn:disabled .metal { color: var(--color-line); }
     .connect-note { margin-top: 12px; font-size: 13px; line-height: 1.5; color: var(--color-sub); }
     .spec-row { display: flex; justify-content: space-between; align-items: baseline; padding: 12px 0; border-bottom: var(--line-shadow); font-size: 15px; }
     .spec-row:last-child { border-bottom: none; }
@@ -556,42 +558,45 @@
 
     <!-- Hero -->
     <div id="hero" class="hero">
-      <div class="hero-sub">A full-stack privacy protocol. In research &amp; development since 2024.</div>
+      <div class="hero-sub">A full-stack privacy protocol. In active research &amp; development since 2024.</div>
       <div class="meta">§ 00 — THE PRIVACY CONTINUUM</div>
       <h1>
         Monero-grade<span class="word-magenta">.</span><br>
         <span class="word-orange">Programmable</span> <span class="word-green">private</span><br>
         <span class="word-accent">execution.</span>
       </h1>
-      <p>Seraph is a modular privacy continuum combining a Monero-inspired base layer with two private EVMs. A four-level privacy spectrum, native SER + XMR, and programmable private contracts — built so privacy is the default, not the opt-in.</p>
+      <p>Seraph is a Privacy Continuum protocol: a Monero-inspired base layer plus two specialized private EVMs that share anonymity sets. Strong default privacy for value transfer, Solidity-compatible private contracts, and first-class XMR support — so users never have to leave the privacy set.</p>
       <a href="#presale" class="cta-split">
         <span class="cta-arrow">→</span>
         <span class="cta-label">JOIN PRESALE</span>
       </a>
-      <a href="https://github.com/0xfuckian/seraph" target="_blank" rel="noopener" class="cta-secondary">VIEW SOURCE ON GITHUB →</a>
+      <a href="https://github.com/0xfuckian/seraph/blob/main/whitepaper/seraph_whitepaper.md" target="_blank" rel="noopener" class="cta-secondary">READ WHITEPAPER →</a>
+      <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.02em; color: var(--color-sub); margin-top: 8px;">
+        In active research &amp; development · Open-source · No mainnet yet
+      </div>
       <div class="struct-line-accent"></div>
     </div>
 
     <!-- Stats -->
     <div class="stats-grid">
       <div class="stat-cell">
-        <div class="stat-number"><span data-count="100">0</span><span class="unit">M</span></div>
+        <div class="stat-number">100<span class="unit">M</span></div>
         <div class="stat-label">max supply</div>
       </div>
       <div class="stat-cell">
-        <div class="stat-number text-magenta num-heavy"><span data-count="4">0</span></div>
+        <div class="stat-number text-magenta num-heavy">4</div>
         <div class="stat-label">privacy levels</div>
       </div>
       <div class="stat-cell">
-        <div class="stat-number text-accent num-heavy"><span data-count="2">0</span></div>
+        <div class="stat-number text-accent num-heavy">2</div>
         <div class="stat-label">evm layers</div>
       </div>
       <div class="stat-cell">
         <div class="stat-number text-green num-heavy" style="font-size: 32px;">∞</div>
-        <div class="stat-label">anonymity set</div>
+        <div class="stat-label">full-chain anonymity target</div>
       </div>
       <div class="stat-cell">
-        <div class="stat-number text-orange num-heavy"><span data-count="4">0</span></div>
+        <div class="stat-number text-orange num-heavy">5</div>
         <div class="stat-label">first-party modules</div>
       </div>
     </div>
@@ -602,7 +607,7 @@
         <div>
           <div class="meta">§ 01 — THE PRIVACY CONTINUUM</div>
           <h2 class="section-title">Privacy is a spectrum, not a switch.</h2>
-          <p class="section-desc">Every transaction chooses its level — transparent when it must be, fully private by default when it can be. No one is forced to disclose; compliance paths exist only where explicitly chosen.</p>
+          <p class="section-desc">Every transaction chooses its level — transparent when it must be, fully private by default when it can be. No one is forced to disclose; compliance paths exist only where explicitly chosen. Level 2 is the default for base-layer value movement.</p>
         </div>
       </div>
       <div class="cont-grid reveal">
@@ -666,6 +671,7 @@
           <div class="meta" style="margin-bottom:6px;">Shared layer</div>
           <div class="arch-name">Unified key hierarchy · shared anonymity sets</div>
           <p>One seed derives accounts on every layer. Note pools are shared where possible, bridges are trust-minimized (lock → prove → mint), and a relayer network provides gas abstraction so users can pay in XMR or SER on either EVM.</p>
+          <p style="margin-top:10px;">Notes from the base layer and both EVMs are designed to contribute to common privacy pools where cryptographically feasible. Full shared-set guarantees are a core research goal, not yet a shipped guarantee.</p>
         </div>
         <div class="arch-box arch-base">
           <div class="arch-tag">BASE</div>
@@ -727,6 +733,15 @@
           </ul>
           <p>Gas abstraction — pay fees in XMR or SER while using either EVM. Intent signing, batched settlement.</p>
         </div>
+        <div class="module-card reveal" style="grid-column: 1 / -1;">
+          <div class="module-bar bar-green"></div>
+          <h3><span class="dot" style="color: var(--color-green)">●</span> Official Wallet</h3>
+          <ul class="module-specs">
+            <li><span>Surfaces</span><span class="v">Desktop (Tauri) · Web · Mobile (React Native)</span></li>
+            <li><span>Status</span><span class="v">Phase 1 · MVP → Phase 4</span></li>
+          </ul>
+          <p>The first-party wallet for shield/unshield, private sends, and view-key scanning — the UX layer every other module plugs into.</p>
+        </div>
       </div>
     </div>
 
@@ -736,7 +751,7 @@
         <div>
           <div class="meta">§ 04 — TOKENOMICS</div>
           <h2 class="section-title">100M SER. Fixed. No inflation.</h2>
-          <p class="section-desc">SER is the gas, stake, and governance asset across the base layer and both EVMs. Allocation follows the whitepaper.</p>
+          <p class="section-desc">Fixed supply of 100,000,000 SER. No inflation. SER is the gas, stake, and governance asset across the base layer and both EVMs; allocation follows the whitepaper.</p>
         </div>
       </div>
 
@@ -776,6 +791,7 @@
             <li><b>Governance</b> — voting power scales with stake duration</li>
             <li><b>Fees</b> — a share of protocol fees is burned, a share funds treasury &amp; public goods</li>
             <li><b>Discounts</b> — fee reductions inside first-party modules</li>
+            <li><b>Presale fees</b> — 0.5% per purchase; 1% transfer tax post-TGE (50% burned, 50% treasury)</li>
           </ul>
         </div>
       </div>
@@ -790,25 +806,25 @@
       <div class="roadmap reveal">
         <div class="road-item">
           <span class="road-dot"></span>
-          <div class="road-phase">Phase 0 · PoC · current</div>
+          <div class="road-phase">Phase 0 · PoC · 2–4 months · in progress</div>
           <div class="road-title">Private transfers work end-to-end.</div>
           <p>Note system, ZK spend circuit, CLI wallet, single-node base layer with in-process P2P, and an XMR simulation. Exit: two users privately transfer value, double-spends rejected, amounts confidential.</p>
         </div>
         <div class="road-item">
           <span class="road-dot"></span>
-          <div class="road-phase">Phase 1 · MVP</div>
+          <div class="road-phase">Phase 1 · MVP · 4–8 months</div>
           <div class="road-title">A usable testnet with wallet, explorer, one EVM.</div>
           <p>Multi-node base-layer testnet, Seraph EVM v1, audited PrivacyPool + SER token, reference wallet, explorer, and bridge. Exit: 100+ testnet users, 10K+ transactions.</p>
         </div>
         <div class="road-item">
           <span class="road-dot"></span>
-          <div class="road-phase">Phase 2 · Alpha</div>
+          <div class="road-phase">Phase 2 · Alpha · 3–6 months</div>
           <div class="road-title">The dual-EVM architecture proves out.</div>
           <p>XMR EVM v1, cross-EVM bridge, messaging, AI payments, stablecoin prototype, gas abstraction, TypeScript SDK. Audits begin. Exit: all modules deployed, 500+ testnet users.</p>
         </div>
         <div class="road-item">
           <span class="road-dot"></span>
-          <div class="road-phase">Phase 3 · Beta</div>
+          <div class="road-phase">Phase 3 · Beta · 4–8 months</div>
           <div class="road-title">Mainnet candidate. Production modules.</div>
           <p>Genesis config, production modules, full TS/Rust/Go SDKs, relayer network, audits complete, liquidity plan, governance bootstrap. Exit: bug bounty live, 5+ relayers, liquidity secured.</p>
         </div>
@@ -831,6 +847,9 @@
         </div>
       </div>
 
+      <div style="font-family:'JetBrains Mono',monospace; font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.02em; color:var(--color-magenta); box-shadow: var(--line-shadow); padding:16px 20px; margin-bottom:24px; background:var(--color-magenta-soft);">
+        No mainnet until two independent audits + formal verification of the core circuits are complete.
+      </div>
       <div class="threat-grid reveal">
         <div class="threat-card">
           <h4>Anonymity-set depletion</h4>
@@ -963,6 +982,9 @@
           <span class="status-tag st-orange" style="margin-top:14px;">Design · Phase 3</span>
         </div>
       </div>
+      <p class="reveal" style="margin-top:32px; font-size:16px; line-height:1.6; color:var(--color-sub); max-width:760px;">
+        Governance decentralizes progressively: launch under a multi-sig, then transition to token voting with private ZK ballots over roughly six months after mainnet — the same selective-disclosure rails the protocol uses everywhere else.
+      </p>
     </div>
 
     <!-- § 09 Presale teaser -->
@@ -976,36 +998,18 @@
         <a href="#presale" class="view-all">VIEW PRESALE PAGE →</a>
       </div>
 
-      <div class="tier-grid">
-        <div class="tier-card reveal">
-          <span class="tier-badge text-magenta"><span class="dot"></span> STRATEGIC</span>
-          <div class="tier-name">Strategic</div>
-          <div class="tier-detail">3.75M SER · $0.02/SER</div>
-          <ul class="tier-list">
-            <li><span>Allocation</span><span class="v">3.75M SER</span></li>
-            <li><span>Access</span><span class="v">Allowlisted</span></li>
-            <li><span>At TGE</span><span class="v">25% · rest vested</span></li>
-          </ul>
+      <div style="display:flex; flex-wrap:wrap; gap:24px; align-items:center; justify-content:space-between; box-shadow: var(--card-shadow); padding:24px;">
+        <div style="font-family:'JetBrains Mono',monospace; font-size:12px; font-weight:500; text-transform:uppercase; letter-spacing:0.02em; color:var(--color-sub); line-height:2;">
+          Strategic · $0.02 · 3.75M SER<br>
+          Private · $0.03 · 11.25M SER<br>
+          Public · $0.04 · 10M SER
         </div>
-        <div class="tier-card active reveal">
-          <span class="tier-badge text-accent"><span class="dot"></span> PRIVATE</span>
-          <div class="tier-name">Private</div>
-          <div class="tier-detail">11.25M SER · $0.03/SER</div>
-          <ul class="tier-list">
-            <li><span>Allocation</span><span class="v">11.25M SER</span></li>
-            <li><span>Access</span><span class="v">Allowlisted</span></li>
-            <li><span>At TGE</span><span class="v">20% · rest vested</span></li>
-          </ul>
-        </div>
-        <div class="tier-card reveal">
-          <span class="tier-badge text-green"><span class="dot"></span> PUBLIC</span>
-          <div class="tier-name">Public</div>
-          <div class="tier-detail">10M SER · $0.04/SER</div>
-          <ul class="tier-list">
-            <li><span>Allocation</span><span class="v">10M SER</span></li>
-            <li><span>Access</span><span class="v">Open</span></li>
-            <li><span>At TGE</span><span class="v">100%</span></li>
-          </ul>
+        <div>
+          <div class="meta" style="margin-bottom:10px;">25M SER total · launch date TBA</div>
+          <a href="#presale" class="cta-split" style="margin-bottom:0;">
+            <span class="cta-arrow">→</span>
+            <span class="cta-label">GO TO PRESALE PAGE</span>
+          </a>
         </div>
       </div>
     </div>
@@ -1018,8 +1022,8 @@
       <div class="presale-status">
         <span class="pdot"></span>
         <div>
-          <strong>Presale not live yet</strong>
-          <p>The launch date and final terms will be announced here. When the sale opens, this page connects your wallet and buys SER directly against the deployed presale contract — real balances, real progress, real prices. No placeholder numbers: every figure shown is a true contract parameter.</p>
+          <strong>Presale not live — contracts not yet deployed. No funds can be sent.</strong>
+          <p>The launch date and final terms will be announced here, and nothing is sold until the contracts are deployed and audited. When the sale opens, this page connects your wallet and buys SER directly against the deployed presale contract — real balances, real progress, real prices. No placeholder numbers: every figure shown is a true contract parameter.</p>
         </div>
       </div>
 
@@ -1106,8 +1110,8 @@
             <span class="sym" id="amountSym">$</span>
             <input class="amount-input" id="amountInput" type="text" inputmode="decimal" placeholder="0.00" value="">
           </div>
-          <button class="wallet-btn" id="connectBtn"><span class="metal">●</span> CONNECT WALLET</button>
-          <div class="connect-note" id="connectNote" style="display:none;">Wallet connect goes live when the presale opens. The flow is two steps: <b>Connect</b> (MetaMask, WalletConnect, or Phantom) then <b>Approve &amp; Buy</b> against the deployed presale contract — live tier progress, allowlist checks, and purchases, with nothing fake underneath.</div>
+          <button class="wallet-btn" id="connectBtn" disabled><span class="metal">●</span> CONNECT WALLET — NOT LIVE</button>
+          <div class="connect-note" id="connectNote">Wallet connect is disabled until the presale is live. When it opens, the flow is two steps: <b>Connect</b> (MetaMask, WalletConnect, or Phantom) then <b>Approve &amp; Buy</b> against the deployed presale contract — live tier progress, allowlist checks, and purchases, with nothing fake underneath.</div>
         </div>
         <div class="purchase-summary">
           <div class="meta">Order summary</div>
@@ -1134,6 +1138,9 @@
         <div style="display: flex; align-items: center; gap: 8px; font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 500; color: var(--color-sub);">
           <span class="metal-text">●</span> XMR (Monero)
         </div>
+      </div>
+      <div style="font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:500; text-transform:uppercase; letter-spacing:0.02em; color:var(--color-sub); margin-top:12px;">
+        XMR acceptance requires additional infrastructure and is subject to launch readiness.
       </div>
 
       <div class="struct-line"></div>
@@ -1168,6 +1175,18 @@
         <details class="faq-item">
           <summary>How is the 100M SER supply allocated?</summary>
           <p>Per the whitepaper: ecosystem &amp; community 40%, team &amp; advisors 20% (4-year vest, 1-year cliff), foundation/treasury 15%, early contributors 15%, public sale + liquidity 10%. This presale offers only the 25M earmarked for early contributors and the public sale — the other 75M is not for sale.</p>
+        </details>
+        <details class="faq-item">
+          <summary>Is this related to the Seraph ARPG game?</summary>
+          <p>No. Seraph Protocol is an unrelated privacy-blockchain research project. Any similarity in name is coincidental.</p>
+        </details>
+        <details class="faq-item">
+          <summary>When is mainnet?</summary>
+          <p>No date is set. Mainnet requires the Phase 3–4 exit criteria — including two independent audits and formal verification of the core circuits — which gate every launch.</p>
+        </details>
+        <details class="faq-item">
+          <summary>Can I run a node or contribute?</summary>
+          <p>Yes — the project is open-source on GitHub and contributors are welcome. Nodes arrive with the testnet phase (Phase 1).</p>
         </details>
       </div>
     </div>
@@ -1217,6 +1236,9 @@
           <li><a href="#">Bug Bounty <span class="soon">(soon)</span></a></li>
         </ul>
       </div>
+    </div>
+    <div style="font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:500; text-transform:uppercase; letter-spacing:0.02em; color:var(--color-sub); margin-top:24px; line-height:1.8;">
+      This is a research project. Nothing is live on mainnet. Security contact: security@seraphprotocol.tech
     </div>
     <div class="copyright">
       MIT License · Seraph Protocol v0.1.0-dev · Phase 0 — PoC. Nothing on this site is financial advice; the presale is not yet open.
@@ -1294,41 +1316,12 @@
     }, { threshold: 0.08 });
     document.querySelectorAll('.reveal').forEach(function (el) { revealObserver.observe(el); });
 
-    /* ===== Count-up stats ===== */
-    function animateCount(el) {
-      var target = parseInt(el.getAttribute('data-count'), 10);
-      if (isNaN(target)) return;
-      var start = Date.now();
-      var dur = 900;
-      var iv = setInterval(function () {
-        var t = Math.min((Date.now() - start) / dur, 1);
-        var eased = 1 - Math.pow(1 - t, 3);
-        el.textContent = Math.round(target * eased);
-        if (t >= 1) clearInterval(iv);
-      }, 30);
-      // Guarantee the final value lands even if timers are throttled (background tabs, webviews).
-      setTimeout(function () { el.textContent = target; clearInterval(iv); }, dur + 60);
-    }
-    var countObserver = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        if (entry.isIntersecting) {
-          animateCount(entry.target);
-          entry.target.dataset.done = '1';
-          countObserver.unobserve(entry.target);
-        }
-      });
-    }, { threshold: 0.4 });
-    document.querySelectorAll('[data-count]').forEach(function (el) { countObserver.observe(el); });
-
     /* ===== Safety net: never leave content hidden =====
        IntersectionObserver can fail to fire inside embedded preview frames,
        webviews, or old browsers — so force-reveal everything shortly after
        load. The observer above still provides the scroll effect on real pages. */
     setTimeout(function () {
       document.querySelectorAll('.reveal').forEach(function (el) { el.classList.add('visible'); });
-      document.querySelectorAll('[data-count]').forEach(function (el) {
-        if (!el.dataset.done) { animateCount(el); el.dataset.done = '1'; }
-      });
     }, 1200);
 
     /* ===== Presale flow (static shell — live wallet calls come later) ===== */
@@ -1370,11 +1363,6 @@
         activeTier = { name: card.getAttribute('data-tier'), price: parseFloat(card.getAttribute('data-price')) };
         updateOrder();
       });
-    });
-
-    document.getElementById('connectBtn').addEventListener('click', function () {
-      var note = document.getElementById('connectNote');
-      note.style.display = note.style.display === 'none' ? 'block' : 'none';
     });
 
     /* Init */
