@@ -20,7 +20,15 @@
       --color-green-bright: #34d399;
       --color-orange:     #b45309;   /* orange — bridge */
       --color-magenta:    #a21caf;   /* magenta — base layer / messaging */
-      --color-ink-soft:   #eeeef0;
+      --color-ink-soft:     #eeeef0;
+
+      /* === Industrial accents (BMW / SpaceX inspired) === */
+      --color-metal:        #c0c0c0;
+      --color-steel:        #4a5568;
+      --color-rivet:        #0e1012;
+      --struct-line:        var(--color-line) 0px 0px 0px 3px;       /* thick structural divider */
+      --struct-line-accent: var(--color-accent) 0px 0px 0px 4px;     /* accent structural divider */
+      --struct-line-magenta: var(--color-magenta) 0px 0px 0px 4px;
 
       /* Shadows-as-borders */
       --line-shadow:       var(--color-line) 0px 0px 0px 1px;
@@ -317,6 +325,165 @@
       margin-top: auto;
     }
 
+    /* === Industrial Elements (blended with itsua.com) === */
+    .struct-line {
+      border-top: 3px solid var(--color-line);
+      margin: 48px 0;
+    }
+    .struct-line-accent {
+      border-top: 4px solid var(--color-accent);
+      margin: 48px 0;
+    }
+    .struct-line-magenta {
+      border-top: 4px solid var(--color-magenta);
+      margin: 48px 0;
+    }
+    .num-heavy { font-weight: 900; }
+    .tight { line-height: 1.15; }
+    .bracket-left { color: var(--color-steel); font-weight: 900; }
+    .bracket-right { color: var(--color-steel); font-weight: 900; }
+    .metal-text { color: var(--color-metal); }
+
+    /* === Presale Progress Bar === */
+    .progress-bar {
+      width: 100%; height: 12px;
+      background: var(--color-paper);
+      border: var(--line-shadow);
+      border-radius: 0;
+      overflow: hidden;
+      margin: 16px 0 24px;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--color-accent) 0%, var(--color-magenta) 100%);
+      width: 38%;
+      transition: width 0.6s ease;
+    }
+    .progress-labels {
+      display: flex; justify-content: space-between;
+      font-family: "JetBrains Mono", monospace;
+      font-size: 11px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.02em;
+      color: var(--color-sub);
+      margin-bottom: 4px;
+    }
+
+    /* === Countdown === */
+    .countdown {
+      display: flex; gap: 16px;
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 32px; font-weight: 900;
+      line-height: 0.9; letter-spacing: -0.02em;
+    }
+    .countdown .num { color: var(--color-ink); }
+    .countdown .num-accent { color: var(--color-accent); }
+    .countdown .label {
+      font-family: "JetBrains Mono", monospace;
+      font-size: 10px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.02em;
+      color: var(--color-sub);
+      margin-top: 4px;
+    }
+    .countdown-item {
+      display: flex; flex-direction: column; align-items: center;
+    }
+
+    /* === Tier Cards === */
+    .tier-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    @media (max-width: 768px) { .tier-grid { grid-template-columns: 1fr; } }
+
+    .tier-card {
+      background: var(--color-white);
+      box-shadow: var(--card-shadow);
+      cursor: pointer;
+      transition: box-shadow 0.15s ease;
+      display: flex; flex-direction: column;
+      padding: 24px;
+    }
+    .tier-card:hover { box-shadow: var(--card-shadow-hover); }
+    .tier-card .tier-badge {
+      font-family: "JetBrains Mono", monospace;
+      font-size: 10px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.02em;
+      padding: 4px 12px;
+      border-radius: 0;
+      display: inline-flex; align-items: center; gap: 6px;
+      margin-bottom: 12px;
+    }
+    .tier-badge.text-magenta { background: var(--color-magenta-soft); color: var(--color-magenta); }
+    .tier-badge.text-accent { background: var(--color-blue-soft); color: var(--color-accent); }
+    .tier-badge.text-green { background: var(--color-green-soft); color: var(--color-green); }
+    .tier-badge .dot { width: 6px; height: 6px; border-radius: 50%; }
+    .tier-badge.text-magenta .dot { background: var(--color-magenta); }
+    .tier-badge.text-accent .dot { background: var(--color-accent); }
+    .tier-badge.text-green .dot { background: var(--color-green); }
+    .tier-name {
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 24px; font-weight: 900;
+      line-height: 1.05; letter-spacing: -0.01em;
+      margin-bottom: 8px;
+    }
+    .tier-detail {
+      font-family: "JetBrains Mono", monospace;
+      font-size: 11px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.02em;
+      color: var(--color-sub);
+      margin-bottom: 16px;
+    }
+    .tier-price {
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 32px; font-weight: 900;
+      line-height: 0.9; letter-spacing: -0.02em;
+      color: var(--color-ink);
+      margin-bottom: 16px;
+    }
+    .tier-price .unit { font-size: 0.5em; color: var(--color-sub); }
+    .tier-desc {
+      font-size: 16px; font-weight: 400;
+      line-height: 1.6; color: var(--color-sub);
+      margin-top: auto;
+    }
+
+    /* === Token Allocation === */
+    .allocation-row {
+      display: flex; align-items: center; gap: 12px;
+      margin-bottom: 12px;
+    }
+    .allocation-color {
+      width: 20px; height: 20px;
+      flex-shrink: 0;
+    }
+    .allocation-bar-track {
+      flex: 1; height: 12px;
+      background: var(--color-paper);
+      border: var(--line-shadow);
+    }
+    .allocation-bar-fill {
+      height: 100%;
+      display: flex;
+    }
+
+    /* === Wallet Connect Button === */
+    .wallet-btn {
+      display: inline-flex; align-items: center;
+      font-family: "JetBrains Mono", monospace;
+      font-size: 12px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.02em;
+      text-decoration: none;
+      padding: 12px 24px;
+      background: var(--color-white);
+      color: var(--color-ink);
+      border: var(--line-shadow);
+      transition: box-shadow 0.15s ease;
+      overflow: hidden;
+    }
+    .wallet-btn:hover { box-shadow: var(--card-shadow-hover); }
+    .wallet-btn .metal { color: var(--color-metal); margin-right: 8px; }
+
     /* === Footer === */
     footer {
       padding: 48px 24px;
@@ -388,6 +555,9 @@
       <a href="#governance" class="nav-link">
         <span class="bracket">[ 04 ]</span> GOVERNANCE
       </a>
+      <a href="#presale" class="nav-link">
+        <span class="bracket">[ 05 ]</span> PRESALE
+      </a>
     </div>
     <div class="status-cell">
       <span class="status-dot"></span>
@@ -410,6 +580,7 @@
       <span class="cta-label">LAUNCH WALLET</span>
     </div>
     <a href="#" class="cta-secondary">READ WHITEPAPER →</a>
+    <div class="struct-line-accent"></div>
   </div>
 
   <!-- ===== Stats Grid ===== */
@@ -419,19 +590,19 @@
       <div class="stat-label">max supply</div>
     </div>
     <div class="stat-cell">
-      <div class="stat-number text-magenta">6</div>
+      <div class="stat-number text-magenta num-heavy">6</div>
       <div class="stat-label">privacy levels</div>
     </div>
     <div class="stat-cell">
-      <div class="stat-number text-accent">2</div>
+      <div class="stat-number text-accent num-heavy">2</div>
       <div class="stat-label">evm layers</div>
     </div>
     <div class="stat-cell">
-      <div class="stat-number text-green">∞</div>
+      <div class="stat-number text-green num-heavy" style="font-size: 32px;">∞</div>
       <div class="stat-label">anonymity set</div>
     </div>
     <div class="stat-cell">
-      <div class="stat-number text-orange">8</div>
+      <div class="stat-number text-orange num-heavy">8</div>
       <div class="stat-label">first-party modules</div>
     </div>
   </div>
@@ -623,6 +794,111 @@
         <div class="module-bar bar-orange"></div>
         <h3><span class="dot" style="color: var(--color-orange)">●</span> Proposals</h3>
         <p>On-chain governance via Seraph Governance contracts. Voting power scales with stake duration. Private voting via ZK ballot proofs.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Presale ===== -->
+  <div id="presale" class="section">
+    <div class="section-header">
+      <div>
+        <div class="meta">§ 05 — PRESALE</div>
+        <h2 class="section-title">Seed the continuum.</h2>
+        <p class="section-desc">SERAPH ($SER) token presale on seraphprotocol.tech. 40M tokens allocated to community incentives and early contributors.</p>
+      </div>
+    </div>
+
+    <!-- Presale Progress -->
+    <div class="struct-line-magenta"></div>
+    <div class="progress-labels">
+      <span>Raised</span>
+      <span>Hard cap</span>
+    </div>
+    <div class="progress-bar">
+      <div class="progress-fill"></div>
+    </div>
+    <div style="display: flex; justify-content: space-between; font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700; color: var(--color-sub);">
+      <span>38M / 100M SER</span>
+      <span>$2.1M / $4.0M USDT</span>
+    </div>
+
+    <!-- Countdown -->
+    <div style="margin: 48px 0;">
+      <div class="meta">Time remaining</div>
+      <div class="countdown">
+        <div class="countdown-item">
+          <span class="num num-heavy">14</span>
+          <span class="label">Days</span>
+        </div>
+        <span class="metal-text">:</span>
+        <div class="countdown-item">
+          <span class="num num-heavy">08</span>
+          <span class="label">Hours</span>
+        </div>
+        <span class="metal-text">:</span>
+        <div class="countdown-item">
+          <span class="num num-heavy">32</span>
+          <span class="label">Minutes</span>
+        </div>
+        <span class="metal-text">:</span>
+        <div class="countdown-item">
+          <span class="num num-heavy">17</span>
+          <span class="label">Seconds</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Presale Tiers -->
+    <div class="tier-grid">
+      <div class="tier-card">
+        <span class="tier-badge text-magenta"><span class="dot"></span> STRATEGIC</span>
+        <div class="tier-name">Strategic</div>
+        <div class="tier-detail">10M tokens · 25% token lock</div>
+        <div class="tier-price">$0.02<span class="unit">/SER</span></div>
+        <p class="tier-desc">Closed allocation for strategic partners and early contributors. 14-day vesting cliff, 12-month linear release.</p>
+      </div>
+      <div class="tier-card" style="border-top: 4px solid var(--color-accent);">
+        <span class="tier-badge text-accent"><span class="dot"></span> PRIVATE</span>
+        <div class="tier-name">Private</div>
+        <div class="tier-detail">30M tokens · 20% token lock</div>
+        <div class="tier-price">$0.03<span class="unit">/SER</span></div>
+        <p class="tier-desc">Whitelisted private sale. 14-day vesting cliff, 10-month linear release. KYC required.</p>
+      </div>
+      <div class="tier-card">
+        <span class="tier-badge text-green"><span class="dot"></span> PUBLIC</span>
+        <div class="tier-name">Public</div>
+        <div class="tier-detail">60M tokens · no lock</div>
+        <div class="tier-price">$0.04<span class="unit">/SER</span></div>
+        <p class="tier-desc">Open to everyone. No whitelist, no KYC. Fully liquid on TGE. Runs until hard cap or end date.</p>
+      </div>
+    </div>
+
+    <!-- Payment Methods -->
+    <div class="struct-line"></div>
+    <div class="meta">Accepted currencies</div>
+    <div style="display: flex; gap: 16px; flex-wrap: wrap;">
+      <div style="display: flex; align-items: center; gap: 8px; font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 500; color: var(--color-sub);">
+        <span class="metal-text">●</span> USDT (ERC-20, BEP-20, Solana)
+      </div>
+      <div style="display: flex; align-items: center; gap: 8px; font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 500; color: var(--color-sub);">
+        <span class="metal-text">●</span> USDC (ERC-20, Polygon)
+      </div>
+      <div style="display: flex; align-items: center; gap: 8px; font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 500; color: var(--color-sub);">
+        <span class="metal-text">●</span> ETH (Ethereum)
+      </div>
+      <div style="display: flex; align-items: center; gap: 8px; font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 500; color: var(--color-sub);">
+        <span class="metal-text">●</span> XMR (Monero)
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div style="margin-top: 32px;">
+      <div class="cta-split">
+        <span class="cta-arrow">→</span>
+        <span class="cta-label">CONNECT WALLET</span>
+      </div>
+      <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.02em; color: var(--color-sub); margin-top: 8px;">
+        ERC-20 · BEP-20 · Solana · EVM
       </div>
     </div>
   </div>
