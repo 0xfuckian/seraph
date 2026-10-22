@@ -9,4 +9,10 @@ remappings = [
     "forge-std/=lib/forge-std/src/",
 ]
 
+script = "script"
+
 # See more config options https://github.com/foundry-rs/foundry/blob/master/crates/config/README.md#all-options
+
+[profile.base]
+chain_id = 8453
+eth_rpc_url = "${BASE_RPC_URL}"
