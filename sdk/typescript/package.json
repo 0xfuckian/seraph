@@ -1,0 +1,11 @@
+{
+  "name": "@seraph-protocol/sdk",
+  "version": "0.1.0",
+  "description": "TypeScript SDK for Seraph Protocol (PrivacyPool, SeraphLaunchpad, CrossEVMBridge, and First-Party Modules)",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "test": "node --test test/sdk.test.mjs"
+  },
+  "license": "MIT"
+}
