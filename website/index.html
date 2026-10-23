@@ -12,7 +12,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Seraph Protocol — Privacy Continuum">
   <meta name="twitter:description" content="A four-level privacy continuum: Monero-inspired base layer + two private EVMs. Native SER + XMR.">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230e1012'/%3E%3Ctext x='16' y='23' font-family='Arial' font-size='20' font-weight='900' fill='%232f4cff' text-anchor='middle'%3ES%3C/text%3E%3C/svg%3E">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <!-- itsua.com design system: Space Grotesk + JetBrains Mono -->
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
@@ -38,7 +38,7 @@
       --card-shadow:       var(--color-line) 0px 0px 0px 1px, rgba(0,0,0,0.04) 0px 2px 2px, var(--color-paper) 0px 0px 0px 1px;
       --card-shadow-hover: rgba(0,0,0,0.10) 0px 0px 0px 1px, rgba(0,0,0,0.06) 0px 4px 8px, var(--color-paper) 0px 0px 0px 1px;
     }
-
+ 
     * { margin: 0; padding: 0; box-sizing: border-box; }
     html { scroll-behavior: smooth; }
     body {
@@ -48,15 +48,15 @@
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
     }
-
+ 
     /* === Page views (hash-routed) === */
     .view { display: none; }
     .view.active { display: block; }
-
+ 
     /* === Scroll reveal === */
     .reveal { opacity: 0; transform: translateY(18px); transition: opacity 0.6s ease, transform 0.6s ease; }
     .reveal.visible { opacity: 1; transform: none; }
-
+ 
     /* === Navigation === */
     header {
       position: sticky; top: 0; z-index: 50;
@@ -109,14 +109,14 @@
     }
     .status-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--color-orange); margin-right: 8px; }
     .status-text { color: var(--color-orange); font-weight: 700; }
-
+ 
     .nav-toggle {
       display: none; align-items: center; justify-content: center;
       padding: 0 20px; border: none; border-left: var(--line-shadow);
       background: var(--color-white); color: var(--color-ink);
       font-family: "JetBrains Mono", monospace; font-size: 18px; cursor: pointer;
     }
-
+ 
     /* === Meta === */
     .meta {
       font-family: "JetBrains Mono", monospace;
@@ -125,7 +125,7 @@
       color: var(--color-sub);
       margin-bottom: 12px;
     }
-
+ 
     /* === Hero === */
     .hero {
       position: relative;
@@ -170,7 +170,7 @@
     @media (min-width: 1024px) {
       .hero h1 { font-size: 120px; }
     }
-
+ 
     /* === CTAs === */
     .cta-split {
       display: inline-flex; align-items: center;
@@ -198,7 +198,7 @@
       box-shadow: var(--line-shadow);
       padding: 12px 24px; text-decoration: none;
     }
-
+ 
     /* === Stats === */
     .stats-grid {
       max-width: 1200px; margin: 0 auto;
@@ -233,7 +233,7 @@
       margin-top: 6px;
     }
     @media (min-width: 768px) { .stat-number { font-size: 56px; } }
-
+ 
     /* === Sections === */
     .section {
       max-width: 1200px; margin: 0 auto;
@@ -259,7 +259,7 @@
       display: flex; align-items: center; gap: 6px;
     }
     .view-all:hover { color: var(--color-ink); }
-
+ 
     /* === Privacy Continuum levels === */
     .cont-grid {
       display: grid; grid-template-columns: repeat(4, 1fr);
@@ -285,7 +285,7 @@
       color: var(--color-ink); margin: 14px 0 8px;
     }
     .cont-level p { font-size: 15px; line-height: 1.6; color: var(--color-sub); }
-
+ 
     /* === Deck Cards === */
     .deck { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
     @media (max-width: 768px) { .deck { grid-template-columns: 1fr; } }
@@ -310,7 +310,7 @@
     .deck-result.text-green { color: var(--color-green); }
     .tech-tags { display: flex; flex-wrap: wrap; gap: 6px; }
     .tech-tag { font-family: "JetBrains Mono", monospace; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.02em; padding: 3px 8px; border-radius: 9999px; background: var(--color-ink-soft); color: var(--color-ink); }
-
+ 
     /* === Status tags === */
     .status-tag {
       font-family: "JetBrains Mono", monospace;
@@ -321,7 +321,7 @@
     .st-accent { background: var(--color-blue-soft); color: var(--color-accent); }
     .st-green { background: var(--color-green-soft); color: var(--color-green); }
     .st-orange { background: var(--color-orange-soft); color: var(--color-orange); }
-
+ 
     /* === Architecture diagram === */
     .arch-diagram { display: flex; flex-direction: column; }
     .arch-top { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
@@ -338,7 +338,7 @@
     .arch-shared .arch-name { font-size: 18px; }
     .arch-shared p { font-size: 15px; line-height: 1.6; color: var(--color-sub); }
     .arch-base { border-top: 4px solid var(--color-magenta); }
-
+ 
     /* === Module grid === */
     .module-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
     @media (max-width: 768px) { .module-grid { grid-template-columns: 1fr; } }
@@ -356,7 +356,7 @@
     .module-specs li { font-family: "JetBrains Mono", monospace; font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.02em; color: var(--color-sub); padding: 6px 0; border-top: var(--line-shadow); display: flex; justify-content: space-between; gap: 12px; }
     .module-specs li:first-child { border-top: none; }
     .module-specs li .v { color: var(--color-ink); font-weight: 700; }
-
+ 
     /* === Tokenomics === */
     .token-two { display: grid; grid-template-columns: 1.2fr 1fr; gap: 24px; align-items: start; }
     @media (max-width: 900px) { .token-two { grid-template-columns: 1fr; } }
@@ -373,7 +373,7 @@
     .fee-card li { font-size: 15px; line-height: 1.6; color: var(--color-sub); padding: 8px 0; border-top: var(--line-shadow); }
     .fee-card li:first-child { border-top: none; }
     .fee-card li b { color: var(--color-ink); }
-
+ 
     /* === Roadmap === */
     .roadmap { position: relative; margin-left: 8px; }
     .roadmap::before { content: ""; position: absolute; left: 7px; top: 8px; bottom: 8px; width: 3px; background: var(--color-line); }
@@ -388,7 +388,7 @@
     .road-phase { font-family: "JetBrains Mono", monospace; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em; color: var(--color-sub); margin-bottom: 4px; }
     .road-title { font-family: "Space Grotesk", sans-serif; font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin-bottom: 8px; }
     .road-item p { font-size: 15px; line-height: 1.6; color: var(--color-sub); max-width: 640px; }
-
+ 
     /* === Security === */
     .threat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
     @media (max-width: 768px) { .threat-grid { grid-template-columns: 1fr; } }
@@ -399,7 +399,7 @@
     .sec-list li { display: flex; gap: 12px; padding: 12px 0; border-top: var(--line-shadow); font-size: 15px; color: var(--color-sub); line-height: 1.5; }
     .sec-list li:first-child { border-top: none; }
     .sec-list .m { font-family: "JetBrains Mono", monospace; font-weight: 700; color: var(--color-ink); flex-shrink: 0; }
-
+ 
     /* === Tier cards (presale) === */
     .tier-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
     @media (max-width: 768px) { .tier-grid { grid-template-columns: 1fr; } }
@@ -449,20 +449,20 @@
     .tier-progress { height: 6px; background: var(--color-paper); box-shadow: var(--line-shadow); margin: 12px 0 6px; }
     .tier-progress .tp-fill { height: 100%; width: 0%; background: var(--color-accent); transition: width 0.6s ease; }
     .tp-labels { display: flex; justify-content: space-between; font-family: "JetBrains Mono", monospace; font-size: 10px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.02em; color: var(--color-sub); }
-
+ 
     /* === Presale status === */
     .presale-status { display: flex; align-items: flex-start; gap: 16px; box-shadow: var(--line-shadow); padding: 20px 24px; background: var(--color-paper); margin-bottom: 64px; }
     .presale-status .pdot { width: 12px; height: 12px; border-radius: 50%; background: var(--color-orange); flex-shrink: 0; margin-top: 4px; }
     .presale-status strong { font-family: "JetBrains Mono", monospace; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em; display: block; margin-bottom: 6px; color: var(--color-ink); }
     .presale-status p { font-size: 15px; line-height: 1.6; color: var(--color-sub); }
-
+ 
     .target-row { display: flex; gap: 24px; flex-wrap: wrap; margin-bottom: 48px; }
     .target-cell { flex: 1; min-width: 200px; box-shadow: var(--card-shadow); padding: 24px; }
     .target-cell .num { font-family: "Space Grotesk", sans-serif; font-size: 48px; font-weight: 900; line-height: 0.9; letter-spacing: -0.02em; }
     .target-cell .num .unit { font-size: 0.5em; }
     .target-cell .lbl { font-family: "JetBrains Mono", monospace; font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.02em; color: var(--color-sub); margin-top: 10px; }
     @media (min-width: 768px) { .target-cell .num { font-size: 64px; } }
-
+ 
     /* === Purchase flow === */
     .purchase-panel { display: grid; grid-template-columns: 1.4fr 1fr; gap: 24px; margin-top: 16px; }
     @media (max-width: 900px) { .purchase-panel { grid-template-columns: 1fr; } }
@@ -486,7 +486,7 @@
     .spec-row .k { color: var(--color-sub); }
     .spec-row .v { font-family: "JetBrains Mono", monospace; font-size: 13px; font-weight: 700; }
     .spec-row .v.accent { color: var(--color-accent); }
-
+ 
     /* === FAQ === */
     .faq { max-width: 860px; }
     .faq-item { box-shadow: var(--line-shadow); margin-bottom: 12px; background: var(--color-white); }
@@ -500,14 +500,102 @@
     .faq-item summary::after { content: "+"; font-family: "JetBrains Mono", monospace; font-size: 18px; color: var(--color-accent); }
     .faq-item[open] summary::after { content: "–"; }
     .faq-item p { padding: 0 20px 18px; font-size: 15px; line-height: 1.6; color: var(--color-sub); }
-
+ 
     /* === Structural === */
     .struct-line { border-top: 3px solid var(--color-line); margin: 48px 0; }
     .struct-line-accent { border-top: 4px solid var(--color-accent); margin: 48px 0; }
     .struct-line-magenta { border-top: 4px solid var(--color-magenta); margin: 48px 0; }
     .num-heavy { font-weight: 900; }
     .metal-text { color: var(--color-metal); }
-
+ 
+    [id] { scroll-margin-top: 80px; }
+ 
+    /* === Launchpad form === */
+    .field { display: block; margin-bottom: 16px; }
+    .field > span { display: block; font-family: "JetBrains Mono", monospace; font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.02em; color: var(--color-sub); margin-bottom: 6px; }
+    .field input, .field textarea { width: 100%; font-family: "Space Grotesk", sans-serif; font-size: 16px; color: var(--color-ink); background: var(--color-white); border: none; box-shadow: var(--line-shadow); padding: 12px 14px; outline: none; resize: vertical; }
+    .field input:focus, .field textarea:focus { box-shadow: 0 0 0 2px var(--color-accent); }
+    .field input:disabled { background: var(--color-paper); color: var(--color-sub); cursor: not-allowed; }
+    .check { display: flex; gap: 10px; align-items: flex-start; font-size: 14px; line-height: 1.5; color: var(--color-sub); margin: 8px 0 20px; }
+    .check input { margin-top: 4px; }
+ 
+    /* === Launchpad: Pons-style listing + Argus-style create === */
+    .lp-toolbar { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 16px; }
+    .lp-chips { display: flex; gap: 8px; flex-wrap: wrap; }
+    .lp-chip { font-family: "JetBrains Mono", monospace; font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.02em; padding: 9px 14px; background: var(--color-white); color: var(--color-sub); box-shadow: var(--line-shadow); border: none; border-radius: 999px; cursor: pointer; }
+    .lp-chip:hover { color: var(--color-ink); }
+    .lp-chip[aria-pressed="true"] { background: var(--color-ink); color: var(--color-white); }
+    .lp-table-wrap { overflow-x: auto; background: var(--color-white); box-shadow: var(--card-shadow); }
+    .lp-table { width: 100%; border-collapse: collapse; min-width: 560px; }
+    .lp-table th { font-family: "JetBrains Mono", monospace; font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.02em; color: var(--color-sub); text-align: left; padding: 14px 16px; border-bottom: var(--line-shadow); }
+    .lp-table td { padding: 14px 16px; border-bottom: var(--line-shadow); font-size: 15px; vertical-align: middle; }
+    .lp-table tbody tr:last-child td { border-bottom: none; }
+    .lp-table tbody tr:hover { background: var(--color-paper); }
+    .lp-table .lp-num { text-align: right; font-family: "JetBrains Mono", monospace; font-size: 13px; font-weight: 500; }
+    .lp-token { display: flex; align-items: center; gap: 12px; }
+    .lp-avatar { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-family: "Space Grotesk", sans-serif; font-weight: 700; flex-shrink: 0; }
+    .lp-name { font-weight: 600; }
+    .lp-sub { font-family: "JetBrains Mono", monospace; font-size: 11px; color: var(--color-sub); }
+    .lp-chain { font-family: "JetBrains Mono", monospace; font-size: 10px; font-weight: 700; text-transform: uppercase; padding: 3px 8px; background: var(--color-ink-soft); }
+    .lp-up { color: var(--color-green); }
+    .lp-down { color: var(--color-orange); }
+    .lp-bar { width: 120px; height: 6px; background: var(--color-paper); box-shadow: var(--line-shadow); }
+    .lp-bar i { display: block; height: 100%; background: var(--color-accent); }
+    @media (max-width: 760px) { .lp-col-md { display: none; } }
+    .lp-grid { display: grid; grid-template-columns: 1.5fr 1fr; gap: 24px; align-items: start; }
+    @media (max-width: 960px) { .lp-grid { grid-template-columns: 1fr; } }
+    .lp-stack { display: flex; flex-direction: column; gap: 24px; }
+    .lp-card { background: var(--color-white); box-shadow: var(--card-shadow); padding: 24px; }
+    .lp-h { font-family: "Space Grotesk", sans-serif; font-size: 20px; font-weight: 700; margin-bottom: 16px; }
+    .lp-two { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 560px) { .lp-two { grid-template-columns: 1fr; } }
+    .lp-drop { border: 1px dashed var(--color-line); padding: 16px; text-align: center; font-size: 13px; color: var(--color-sub); margin-bottom: 16px; }
+    .lp-details { margin-bottom: 16px; }
+    .lp-details summary { cursor: pointer; font-family: "JetBrains Mono", monospace; font-size: 12px; font-weight: 500; text-transform: uppercase; color: var(--color-sub); padding: 8px 0; }
+    .lp-details .field { margin-top: 12px; }
+    .lp-field-count { float: right; font-weight: 500; color: var(--color-sub); }
+    .lp-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-top: 12px; }
+    .lp-opt { text-align: left; background: var(--color-white); box-shadow: var(--line-shadow); padding: 14px; border: none; cursor: pointer; font: inherit; color: var(--color-ink); display: flex; flex-direction: column; gap: 4px; }
+    .lp-opt .t { font-weight: 600; }
+    .lp-opt .d { font-size: 13px; color: var(--color-sub); }
+    .lp-opt[aria-pressed="true"] { box-shadow: 0 0 0 2px var(--color-accent); }
+    .lp-rate { display: flex; justify-content: space-between; font-family: "JetBrains Mono", monospace; font-size: 12px; text-transform: uppercase; color: var(--color-sub); margin-bottom: 8px; }
+    .lp-rate output { color: var(--color-ink); font-weight: 700; }
+    input[type="range"] { width: 100%; accent-color: var(--color-accent); }
+    .lp-split { display: grid; grid-template-columns: 1fr 110px; gap: 12px; align-items: center; padding: 10px 0; border-top: var(--line-shadow); font-size: 15px; }
+    .lp-split input { width: 100%; font-family: "JetBrains Mono", monospace; font-size: 14px; text-align: right; padding: 8px 10px; border: none; outline: none; box-shadow: var(--line-shadow); background: var(--color-white); color: var(--color-ink); }
+    .lp-split input:focus { box-shadow: 0 0 0 2px var(--color-accent); }
+    .lp-total { margin-top: 12px; font-family: "JetBrains Mono", monospace; font-size: 12px; font-weight: 700; padding: 10px 12px; background: var(--color-paper); }
+    .lp-total.bad { color: var(--color-magenta); }
+    .lp-preview { position: sticky; top: 96px; background: var(--color-white); box-shadow: var(--card-shadow); }
+    @media (max-width: 960px) { .lp-preview { position: static; } }
+    .lp-preview-img { height: 240px; display: flex; align-items: center; justify-content: center; color: #fff; font-family: "Space Grotesk", sans-serif; font-size: 44px; font-weight: 900; letter-spacing: -0.02em; background: oklch(0.62 0.13 200); }
+    .lp-preview-body { padding: 20px; }
+    .lp-pv-title { font-family: "Space Grotesk", sans-serif; font-size: 24px; font-weight: 700; margin-bottom: 4px; }
+ 
+    /* === Motion + 3D layer === */
+    #architecture > :not(.net-bg), #roadmap > :not(.particle-bg), #modules > :not(.shader-card) { position: relative; z-index: 1; }
+    #architecture, #roadmap { position: relative; }
+    .hero > .hero-mark { position: absolute; right: 24px; top: 120px; width: 300px; height: 300px; pointer-events: none; }
+    @media (min-width: 1025px) { .hero > .hero-mark { width: 380px; height: 380px; top: 110px; } }
+    @media (max-width: 1024px) { .hero > .hero-mark { position: relative; right: auto; top: auto; width: 100%; height: 260px; margin: 24px 0; } }
+    .hero-mark canvas, .net-bg canvas, .particle-bg canvas, .ring-canvas canvas, .shader-card canvas { width: 100%; height: 100%; display: block; }
+    .net-bg, .particle-bg { position: absolute; inset: 0; z-index: 0; pointer-events: none; opacity: 0.6; }
+    .particle-bg { opacity: 0.5; }
+    .ring-stage { position: relative; height: 340px; margin-bottom: 48px; }
+    .ring-canvas { position: absolute; inset: 0; }
+    .ring-label { position: absolute; left: 50%; bottom: 8px; transform: translateX(-50%); margin: 0; font-family: "JetBrains Mono", monospace; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em; color: var(--color-ink); white-space: nowrap; }
+    .shader-card { position: relative; height: 360px; margin-top: 48px; background: var(--color-ink); box-shadow: var(--card-shadow); overflow: hidden; }
+    .marquee { overflow: hidden; border-top: var(--line-shadow); border-bottom: var(--line-shadow); padding: 18px 0; }
+    .marquee-track { display: flex; width: max-content; gap: 56px; font-family: "Space Grotesk", sans-serif; font-size: clamp(28px, 5vw, 56px); font-weight: 500; letter-spacing: -0.02em; white-space: nowrap; }
+    .marquee-track span { color: var(--color-sub); }
+    .marquee-track span:nth-child(3n+1) { color: var(--color-ink); }
+    .char, .word { display: inline-block; }
+    @media (prefers-reduced-motion: reduce) {
+      .hero > .hero-mark, .ring-stage { display: none; }
+      .shader-card { background: linear-gradient(120deg, var(--color-ink), var(--color-accent)); }
+    }
+ 
     /* === Footer === */
     footer { padding: 48px 24px; border-top: var(--line-shadow); font-family: "Space Grotesk", sans-serif; font-size: 14px; line-height: 1.6; color: var(--color-sub); }
     .footer-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; flex-wrap: wrap; gap: 16px; }
@@ -521,7 +609,7 @@
     .footer-column a:hover { color: var(--color-ink); }
     .footer-column a .soon { color: var(--color-line); }
     .copyright { margin-top: 32px; padding-top: 16px; border-top: var(--line-shadow); font-size: 11px; color: var(--color-sub); }
-
+ 
     /* === Responsive === */
     @media (max-width: 860px) {
       header {
@@ -582,17 +670,34 @@
     @media (min-width: 561px) {
       .status-text-short { display: none; }
     }
+    /* === Big logo that shrinks into the header on scroll === */
+    .brand-float { position: fixed; left: 24px; top: 96px; z-index: 60; display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--color-ink); transform-origin: 0 0; visibility: hidden; will-change: transform, top; }
+    .brand-float:hover, .brand-float:focus, .brand-float:visited, .brand-float:active { color: var(--color-ink); text-decoration: none; }
+    .brand-float .logo-badge { width: 26px; height: 26px; }
+    .brand-float .logo-badge svg { width: 15px; height: 15px; }
+    @media (max-width: 860px) { .brand-float { left: 16px; } }
   </style>
+  <link rel="stylesheet" href="https://unpkg.com/lenis@1.3.1/dist/lenis.css">
+  <link rel="stylesheet" href="https://unpkg.com/splitting@1.1.0/dist/splitting.css">
+  <link rel="stylesheet" href="https://unpkg.com/splitting@1.1.0/dist/splitting-cells.css">
+  <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js"}}</script>
+  <meta name="theme-color" content="#0e1012">
 </head>
 <body>
-
+ 
+  <!-- Big logo: starts large at the top of the page and shrinks into the header bar as you scroll -->
+  <a href="#hero" class="brand-float" id="brandFloat" aria-label="Seraph Protocol home">
+    <span class="logo-badge" aria-hidden="true">
+      <svg viewBox="0 0 200 200" aria-hidden="true" focusable="false"><polygon points="100,100 30.7,60 30.7,140 100,180" fill="currentColor"/><polygon points="100,100 169.3,60 169.3,140 100,180" fill="currentColor" fill-opacity="0.55"/><polygon points="100,100 30.7,60 100,20 169.3,60" fill="none" stroke="currentColor" stroke-width="7" stroke-linejoin="round"/></svg>
+    </span>
+    <span class="logo">SERAPH<span class="dot">.</span></span>
+  </a>
+ 
   <!-- ===== Navigation (shared) ===== -->
   <header id="siteHeader">
-    <a href="#hero" class="logo-cell">
+    <a href="#hero" class="logo-cell" id="headerBrand">
       <span class="logo-badge" aria-hidden="true">
-        <svg viewBox="0 0 24 24" fill="white">
-          <path d="M12 1L12.9 9.8L21 12L12.9 14.2L12 23L11.1 14.2L3 12L11.1 9.8L12 1Z" />
-        </svg>
+        <svg viewBox="0 0 200 200" aria-hidden="true" focusable="false"><polygon points="100,100 30.7,60 30.7,140 100,180" fill="currentColor"/><polygon points="100,100 169.3,60 169.3,140 100,180" fill="currentColor" fill-opacity="0.55"/><polygon points="100,100 30.7,60 100,20 169.3,60" fill="none" stroke="currentColor" stroke-width="7" stroke-linejoin="round"/></svg>
       </span>
       <span class="logo">SERAPH<span class="dot">.</span></span>
     </a>
@@ -607,6 +712,7 @@
       <a href="#docs" class="nav-link" data-view="home" data-section="docs"><span class="bracket">[ 07 ]</span> DOCS</a>
       <a href="#governance" class="nav-link" data-view="home" data-section="governance"><span class="bracket">[ 08 ]</span> GOVERNANCE</a>
       <a href="#presale" class="nav-link" data-view="presale" data-section="presale"><span class="bracket">[ 09 ]</span> PRESALE</a>
+      <a href="#launch" class="nav-link" data-view="launch" data-section="launch"><span class="bracket">[ 10 ]</span> LAUNCHPAD</a>
     </div>
     <div class="status-cell">
       <span class="status-dot"></span>
@@ -617,12 +723,27 @@
     </div>
     <button class="nav-toggle" id="navToggle" aria-label="Menu">☰</button>
   </header>
-
+ 
   <!-- ============ HOME ============ -->
   <div id="view-home" class="view active">
-
+ 
+    <!-- Launchpad entry -->
+    <div style="max-width:1200px; margin:0 auto; padding:24px 24px 0;">
+      <div class="presale-status" style="margin:0; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:16px;">
+        <div style="display:flex; align-items:flex-start; gap:16px;">
+          <span class="pdot" style="background:var(--color-green);"></span>
+          <div>
+            <strong>Launchpad</strong>
+            <p>Create and trade tokens on Base and Arc.</p>
+          </div>
+        </div>
+        <a href="#launch" class="cta-split" style="margin-bottom:0;"><span class="cta-arrow">→</span><span class="cta-label">OPEN LAUNCHPAD APP</span></a>
+      </div>
+    </div>
+ 
     <!-- Hero -->
     <div id="hero" class="hero">
+      <div class="hero-mark" id="heroMark" aria-hidden="true"></div>
       <div class="hero-sub">A full-stack privacy protocol. In active research &amp; development since 2024.</div>
       <div class="meta">§ 00 — THE PRIVACY CONTINUUM</div>
       <h1>
@@ -641,7 +762,7 @@
       </div>
       <div class="struct-line-accent"></div>
     </div>
-
+ 
     <!-- Stats -->
     <div class="stats-grid">
       <div class="stat-cell">
@@ -665,7 +786,9 @@
         <div class="stat-label">first-party modules</div>
       </div>
     </div>
-
+ 
+    <div class="marquee" aria-hidden="true"><div class="marquee-track"><span>Privacy continuum</span><span>Private EVM</span><span>XMR base layer</span><span>FCMP++</span><span>Bulletproofs++</span><span>Stealth addresses</span><span>Privacy continuum</span><span>Private EVM</span><span>XMR base layer</span><span>FCMP++</span><span>Bulletproofs++</span><span>Stealth addresses</span></div></div>
+ 
     <!-- § 01 Privacy Continuum -->
     <div id="privacy" class="section">
       <div class="section-header">
@@ -674,6 +797,10 @@
           <h2 class="section-title">Privacy is a spectrum, not a switch.</h2>
           <p class="section-desc">Every transaction chooses its level — transparent when it must be, fully private by default when it can be. No one is forced to disclose; compliance paths exist only where explicitly chosen. Level 2 is the default for base-layer value movement.</p>
         </div>
+      </div>
+      <div class="ring-stage" id="ringStage">
+        <div class="ring-canvas" id="ringCanvas" aria-hidden="true"></div>
+        <p class="ring-label" id="ringLabel" aria-live="polite">Level 0 · Transparent</p>
       </div>
       <div class="cont-grid reveal">
         <div class="cont-level" style="--c: var(--color-ink);">
@@ -698,9 +825,10 @@
         </div>
       </div>
     </div>
-
+ 
     <!-- § 02 Architecture -->
     <div id="architecture" class="section">
+      <div class="net-bg" id="netBg" aria-hidden="true"></div>
       <div class="section-header">
         <div>
           <div class="meta">§ 02 — ARCHITECTURE</div>
@@ -708,7 +836,7 @@
           <p class="section-desc">A Monero-inspired base layer for settlement, two specialized private EVMs, and shared components that keep every layer in the same anonymity set. One seed controls all accounts.</p>
         </div>
       </div>
-
+ 
       <div class="arch-diagram reveal">
         <div class="arch-top">
           <div class="arch-box">
@@ -754,13 +882,14 @@
         </div>
       </div>
     </div>
-
+ 
     <!-- § 03 Modules -->
     <div id="modules" class="section">
+      <div class="shader-card" id="shaderCard" aria-hidden="true"></div>
       <div class="meta">§ 03 — FIRST-PARTY MODULES</div>
       <h2 class="section-title">Built-in privacy primitives.</h2>
       <p class="section-desc">Each module ships as a privacy-aware contract suite with first-party wallet integration. All share the same note pool and key hierarchy.</p>
-
+ 
       <div class="module-grid">
         <div class="module-card reveal">
           <div class="module-bar bar-magenta"></div>
@@ -809,7 +938,7 @@
         </div>
       </div>
     </div>
-
+ 
     <!-- § 04 Tokenomics -->
     <div id="tokenomics" class="section">
       <div class="section-header">
@@ -819,7 +948,7 @@
           <p class="section-desc">Fixed supply of 100,000,000 SER. No inflation. SER is the gas, stake, and governance asset across the base layer and both EVMs; allocation follows the whitepaper.</p>
         </div>
       </div>
-
+ 
       <div class="token-two reveal">
         <div>
           <div class="alloc-row">
@@ -861,13 +990,14 @@
         </div>
       </div>
     </div>
-
+ 
     <!-- § 05 Roadmap -->
     <div id="roadmap" class="section">
+      <div class="particle-bg" id="particleBg" aria-hidden="true"></div>
       <div class="meta">§ 05 — ROADMAP</div>
       <h2 class="section-title">From PoC to mainnet.</h2>
       <p class="section-desc">Honest, phase-gated delivery. Nothing ships before its exit criteria pass — and the earlier phases deliberately exclude features that don't belong yet.</p>
-
+ 
       <div class="roadmap reveal">
         <div class="road-item">
           <span class="road-dot"></span>
@@ -901,7 +1031,7 @@
         </div>
       </div>
     </div>
-
+ 
     <!-- § 06 Security -->
     <div id="security" class="section">
       <div class="section-header">
@@ -911,7 +1041,7 @@
           <p class="section-desc">The privacy guarantees come from cryptography, not policy. Here is exactly how each class of attack is handled, and what we commit to before any mainnet.</p>
         </div>
       </div>
-
+ 
       <div style="font-family:'JetBrains Mono',monospace; font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.02em; color:var(--color-magenta); box-shadow: var(--line-shadow); padding:16px 20px; margin-bottom:24px; background:var(--color-magenta-soft);">
         No mainnet until two independent audits + formal verification of the core circuits are complete.
       </div>
@@ -941,7 +1071,7 @@
           <p>Time-weighted, decentralized oracles with delay and challenge windows.</p>
         </div>
       </div>
-
+ 
       <div class="struct-line"></div>
       <ul class="sec-list reveal">
         <li><span class="m">Selective disclosure</span><span>Incoming view keys scan for received notes; optional outgoing view keys prove a nullifier was spent by a party — compliance without breaking default privacy.</span></li>
@@ -950,13 +1080,13 @@
         <li><span class="m">Bug bounty</span><span>Audit-grade bounty covering base-layer consensus, EVM circuits, and first-party modules — rewards in SER + XMR.</span></li>
       </ul>
     </div>
-
+ 
     <!-- § 07 Docs -->
     <div id="docs" class="section">
       <div class="meta">§ 07 — DOCUMENTATION</div>
       <h2 class="section-title">Build in private.</h2>
       <p class="section-desc">The whitepaper, brand system, and contracts are public today. SDK reference and circuit guides land with their roadmap phases.</p>
-
+ 
       <div class="deck">
         <div class="deck-card">
           <div class="deck-face">
@@ -1011,7 +1141,7 @@
         </div>
       </div>
     </div>
-
+ 
     <!-- § 08 Governance -->
     <div id="governance" class="section">
       <div class="section-header">
@@ -1051,7 +1181,7 @@
         Governance decentralizes progressively: launch under a multi-sig, then transition to token voting with private ZK ballots over roughly six months after mainnet — the same selective-disclosure rails the protocol uses everywhere else.
       </p>
     </div>
-
+ 
     <!-- § 09 Presale teaser -->
     <div id="presale-teaser" class="section">
       <div class="section-header">
@@ -1062,7 +1192,7 @@
         </div>
         <a href="#presale" class="view-all">VIEW PRESALE PAGE →</a>
       </div>
-
+ 
       <div style="display:flex; flex-wrap:wrap; gap:24px; align-items:center; justify-content:space-between; box-shadow: var(--card-shadow); padding:24px;">
         <div style="font-family:'JetBrains Mono',monospace; font-size:12px; font-weight:500; text-transform:uppercase; letter-spacing:0.02em; color:var(--color-sub); line-height:2;">
           Strategic · $0.02 · 3.75M SER<br>
@@ -1079,11 +1209,11 @@
       </div>
     </div>
   </div>
-
+ 
   <!-- ============ PRESALE PAGE ============ -->
   <div id="view-presale" class="view">
     <div class="section">
-
+ 
       <div class="presale-status">
         <span class="pdot"></span>
         <div>
@@ -1091,7 +1221,7 @@
           <p>The launch date and final terms will be announced here, and nothing is sold until the contracts are deployed and audited. When the sale opens, this page connects your wallet and buys SER directly against the deployed presale contract — real balances, real progress, real prices. No placeholder numbers: every figure shown is a true contract parameter.</p>
         </div>
       </div>
-
+ 
       <div class="section-header">
         <div>
           <div class="meta">§ 09 — PRESALE</div>
@@ -1099,7 +1229,7 @@
           <p class="section-desc">SERAPH ($SER) tier-based presale on seraphprotocol.tech. Strategic and Private tiers are allowlisted; Public is open. Terms below come straight from the presale contract.</p>
         </div>
       </div>
-
+ 
       <div class="target-row">
         <div class="target-cell reveal">
           <div class="num text-accent">25<span class="unit">M</span></div>
@@ -1114,7 +1244,7 @@
           <div class="lbl">Funded so far · updates at launch</div>
         </div>
       </div>
-
+ 
       <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.02em; color: var(--color-sub); margin: -24px 0 48px; max-width: 760px; line-height: 1.7;">
         This presale offers the 25M SER the whitepaper earmarks for Early Contributors (15M) and Public Sale + Initial Liquidity (10M). The remaining 75M — ecosystem 40M, team 20M, foundation 15M — is not for sale.
       </div>
@@ -1160,9 +1290,9 @@
           <div class="tp-labels"><span>0 / 10M SER</span><span>at launch</span></div>
         </div>
       </div>
-
+ 
       <div class="struct-line-magenta"></div>
-
+ 
       <div class="meta">Buy SER</div>
       <div class="purchase-panel">
         <div class="purchase-controls">
@@ -1187,7 +1317,7 @@
           <div class="spec-row"><span class="k">Est. SER</span><span class="v accent" id="sumSER">—</span></div>
         </div>
       </div>
-
+ 
       <div class="struct-line"></div>
       <div class="meta">Accepted currencies</div>
       <div style="display: flex; gap: 16px; flex-wrap: wrap;">
@@ -1207,13 +1337,13 @@
       <div style="font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:500; text-transform:uppercase; letter-spacing:0.02em; color:var(--color-sub); margin-top:12px;">
         XMR acceptance requires additional infrastructure and is subject to launch readiness.
       </div>
-
+ 
       <div class="struct-line"></div>
       <div style="display: flex; align-items: center; gap: 8px; font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.02em; color: var(--color-sub);">
         <span class="metal-text">●</span>
         <span>0.5% presale fee · 1% transfer tax post-TGE · 50% auto-burn · 50% to treasury</span>
       </div>
-
+ 
       <div class="struct-line"></div>
       <div class="meta">FAQ</div>
       <div class="faq">
@@ -1256,15 +1386,210 @@
       </div>
     </div>
   </div>
-
+ 
+  <!-- ============ LAUNCHPAD PAGE ============ -->
+  <div id="view-launch" class="view">
+    <div class="section">
+      <div style="margin-bottom:24px;"><a href="#hero" class="view-all">← SERAPH PROTOCOL HOME</a></div>
+ 
+      <div class="section-header">
+        <div>
+          <div class="meta">§ 10 — LAUNCHPAD</div>
+          <h2 class="section-title">Launch a token.</h2>
+          <p class="section-desc">Anyone can launch, starting on Base, then Arc. Every launch is public on-chain and its creator sets the fees. Read a token's contract before you trade it.</p>
+        </div>
+        <a href="#lp-create" class="cta-split" style="margin-bottom:0;"><span class="cta-arrow">+</span><span class="cta-label">CREATE A TOKEN</span></a>
+      </div>
+ 
+      <div class="lp-toolbar">
+        <div class="lp-chips" id="lpStatus" role="group" aria-label="Sort tokens">
+          <button type="button" class="lp-chip" aria-pressed="true" data-status="trending">Trending</button>
+          <button type="button" class="lp-chip" aria-pressed="false" data-status="new">New</button>
+          <button type="button" class="lp-chip" aria-pressed="false" data-status="near">Near graduation</button>
+          <button type="button" class="lp-chip" aria-pressed="false" data-status="graduated">Graduated</button>
+        </div>
+        <div class="lp-chips" id="lpNetwork" role="group" aria-label="Filter by network">
+          <button type="button" class="lp-chip" aria-pressed="true" data-net="all">All networks</button>
+          <button type="button" class="lp-chip" aria-pressed="false" data-net="Base">Base</button>
+          <button type="button" class="lp-chip" aria-pressed="false" data-net="Arc">Arc</button>
+        </div>
+      </div>
+ 
+      <div class="lp-table-wrap">
+        <table class="lp-table">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Token</th>
+              <th scope="col" class="lp-col-md">Network</th>
+              <th scope="col" class="lp-num">Market cap</th>
+              <th scope="col" class="lp-num lp-col-md">24h</th>
+              <th scope="col" class="lp-col-md">Graduation</th>
+            </tr>
+          </thead>
+          <tbody id="lpRows"></tbody>
+        </table>
+      </div>
+      <div id="lpEmpty" class="presale-status" style="margin-top:16px;">
+        <span class="pdot"></span>
+        <div>
+          <strong>No tokens yet</strong>
+          <p>Tokens appear here after they launch on-chain. Seraph does not rank, promote, or add tokens by hand.</p>
+        </div>
+      </div>
+      <p id="lpPreviewNote" class="connect-note" hidden>SAMPLE DATA. These rows are placeholders for layout review, not tokens. The live site shows only on-chain launches.</p>
+ 
+      <div class="struct-line"></div>
+ 
+      <div class="section-header" style="margin-bottom:32px;">
+        <div>
+          <div class="meta" id="lp-create">§ 10b — CREATE A TOKEN</div>
+          <h2 class="section-title" style="font-size:44px;">Set it up, then launch.</h2>
+          <p class="section-desc">Name it, pick a network and a model, and set the fees. The preview on the right updates as you type.</p>
+        </div>
+      </div>
+ 
+      <div class="lp-grid">
+        <div class="lp-stack">
+ 
+          <div class="lp-card">
+            <div class="lp-h">Coin details</div>
+            <div class="lp-two">
+              <label class="field"><span>Name</span><input type="text" id="lpName" maxlength="32" placeholder="My Token" autocomplete="off"></label>
+              <label class="field"><span>Ticker</span><input type="text" id="lpTicker" maxlength="10" placeholder="MTK" autocomplete="off"></label>
+            </div>
+            <label class="field"><span>Description <em style="font-style:normal;">optional</em> <b class="lp-field-count" id="lpDescCount">0/280</b></span><textarea id="lpDesc" rows="3" maxlength="280" placeholder="What is this token for?"></textarea></label>
+            <div class="lp-drop">Image upload turns on with the launch build. PNG, JPG, GIF, or WebP. Square, 64px or larger.</div>
+            <details class="lp-details">
+              <summary>Add social links (optional)</summary>
+              <label class="field"><span>Website</span><input type="url" placeholder="https://"></label>
+              <label class="field"><span>X</span><input type="text" placeholder="@handle"></label>
+              <label class="field"><span>Telegram</span><input type="text" placeholder="@handle"></label>
+            </details>
+ 
+            <div class="meta">Network</div>
+            <div class="lp-chips" id="lpChainChips" role="group" aria-label="Network">
+              <button type="button" class="lp-chip" aria-pressed="true" data-chain="Base">Base</button>
+              <button type="button" class="lp-chip" aria-pressed="false" data-chain="Arc">Arc</button>
+            </div>
+ 
+            <div class="meta" style="margin-top:16px;">Launch model</div>
+            <div class="lp-chips" id="lpModelChips" role="group" aria-label="Launch model">
+              <button type="button" class="lp-chip" aria-pressed="true" data-model="fixed">Fixed supply</button>
+              <button type="button" class="lp-chip" aria-pressed="false" data-model="curve">Bonding curve</button>
+            </div>
+            <p class="connect-note" id="lpModelNote"></p>
+ 
+            <label class="field" style="margin-top:16px;"><span>Total supply</span><input type="text" id="lpSupply" inputmode="numeric" placeholder="1000000000" autocomplete="off"></label>
+          </div>
+ 
+          <div class="lp-card">
+            <div class="lp-h">Fees</div>
+            <label class="field"><span>Fee wallet</span><input type="text" id="lpFeeWallet" placeholder="0x... (blank uses your connected wallet)" autocomplete="off"></label>
+            <p class="connect-note" style="margin:-8px 0 12px;">Where the creator share is paid. Set at launch.</p>
+            <div class="meta">Where the creator fee goes</div>
+            <div class="lp-cards" id="lpPresets" role="group" aria-label="Where the tax goes">
+              <button type="button" class="lp-opt" aria-pressed="true" data-preset="creator"><span class="t">Creator-backed</span><span class="d">100% to the creator</span></button>
+              <button type="button" class="lp-opt" aria-pressed="false" data-preset="dividends"><span class="t">Diamond hands</span><span class="d">100% to holders</span></button>
+              <button type="button" class="lp-opt" aria-pressed="false" data-preset="buyback"><span class="t">Deflationary</span><span class="d">100% to buyback and burn</span></button>
+              <button type="button" class="lp-opt" aria-pressed="false" data-preset="liquidity"><span class="t">Auto-LP</span><span class="d">100% back into the pool</span></button>
+              <button type="button" class="lp-opt" aria-pressed="false" data-preset="platform"><span class="t">Send to Seraph</span><span class="d">100% to the platform</span></button>
+              <button type="button" class="lp-opt" aria-pressed="false" data-preset="custom"><span class="t">Custom</span><span class="d">Your own split</span></button>
+            </div>
+ 
+            <p class="connect-note" style="margin-top:12px;"><b>Locked at launch.</b> The split is written when the token is created and cannot be changed afterward.</p>
+ 
+            <div class="lp-two" style="margin-top:20px;">
+              <div>
+                <div class="lp-rate"><span>Buy fee</span><output id="lpBuyOut">3%</output></div>
+                <input type="range" id="lpBuyRange" min="0" max="2.5" step="0.5" value="2.5" aria-label="Buy fee">
+              </div>
+              <div>
+                <div class="lp-rate"><span>Sell fee</span><output id="lpSellOut">3%</output></div>
+                <input type="range" id="lpSellRange" min="0" max="2.5" step="0.5" value="2.5" aria-label="Sell fee">
+              </div>
+            </div>
+            <p class="connect-note">The creator fee is capped at 2.5% per side. Every launch also pays a fixed 1% platform fee on each buy and sell, so the most a trade pays is 3.5%.</p>
+ 
+            <div id="lpCustom" hidden>
+              <div class="meta" style="margin-top:16px;">Custom split</div>
+              <div class="lp-split"><span>Creator</span><input type="number" min="0" max="100" step="1" value="100" data-split="creator" aria-label="Creator share, percent"></div>
+              <div class="lp-split"><span>Buyback and burn</span><input type="number" min="0" max="100" step="1" value="0" data-split="buyback" aria-label="Buyback and burn share, percent"></div>
+              <div class="lp-split"><span>Holders</span><input type="number" min="0" max="100" step="1" value="0" data-split="dividends" aria-label="Holders share, percent"></div>
+              <div class="lp-split"><span>Pool</span><input type="number" min="0" max="100" step="1" value="0" data-split="liquidity" aria-label="Pool share, percent"></div>
+              <div class="lp-split"><span>Seraph</span><input type="number" min="0" max="100" step="1" value="0" data-split="platform" aria-label="Seraph share, percent"></div>
+              <div class="lp-total" id="lpTotal">Total 100% · ready</div>
+            </div>
+ 
+            <div class="meta" style="margin-top:20px;">Dev buy at launch</div>
+            <div class="lp-chips" id="lpDevChips" role="group" aria-label="Dev buy">
+              <button type="button" class="lp-chip" aria-pressed="true" data-dev="0">None</button>
+              <button type="button" class="lp-chip" aria-pressed="false" data-dev="1">1%</button>
+              <button type="button" class="lp-chip" aria-pressed="false" data-dev="2">2%</button>
+              <button type="button" class="lp-chip" aria-pressed="false" data-dev="5">5%</button>
+              <button type="button" class="lp-chip" aria-pressed="false" data-dev="10">10%</button>
+            </div>
+            <p class="connect-note">Dev buys and fee splits appear on the token page before anyone trades.</p>
+          </div>
+ 
+          <div class="lp-card">
+            <label class="check"><input type="checkbox" id="lpAck"><span>I understand I am launching this token myself. Seraph does not review, endorse, or guarantee it, and it may lose all of its value.</span></label>
+            <button class="wallet-btn" type="button" id="lpLaunchBtn"><span class="metal">●</span> LAUNCH TOKEN</button>
+            <div class="connect-note">Connect a wallet to launch on the selected network.</div>
+          </div>
+        </div>
+ 
+        <aside>
+          <div class="lp-preview">
+            <div class="lp-preview-img" id="lpPvImg"><span id="lpPvTick">TICK</span></div>
+            <div class="lp-preview-body">
+              <div class="lp-pv-title"><span id="lpPvSym">$TICKER</span> <span class="connect-note" style="font-family:'Space Grotesk',sans-serif;font-size:14px;">Your token</span></div>
+              <div class="connect-note" id="lpPvName">Name</div>
+              <div class="spec-row"><span class="k">Market cap</span><span class="v">—</span></div>
+              <div class="spec-row"><span class="k">Network</span><span class="v" id="lpPvNet">Base</span></div>
+              <div class="spec-row"><span class="k">Creator-chosen fee</span><span class="v" id="lpPvTax">3% / 3%</span></div>
+              <div class="spec-row"><span class="k">Platform fee</span><span class="v">1% / 1%</span></div>
+              <div class="spec-row"><span class="k">Total per trade</span><span class="v accent" id="lpPvTotal">4% / 4%</span></div>
+              <div class="spec-row"><span class="k">Tax goes to</span><span class="v" id="lpPvSplit">Creator 100%</span></div>
+              <div class="spec-row"><span class="k">Dev buy</span><span class="v" id="lpPvDev">None</span></div>
+              <div class="spec-row"><span class="k">Fee split</span><span class="v">Locked at launch</span></div>
+            </div>
+            <p class="connect-note" style="padding:0 20px 20px;">Market cap and price update after launch.</p>
+          </div>
+        </aside>
+      </div>
+ 
+      <div class="struct-line"></div>
+      <div class="meta">Launch policy</div>
+      <ul class="sec-list">
+        <li><span class="m">Open access</span><span>Anyone with a wallet on the selected network can launch. No allowlist.</span></li>
+        <li><span class="m">Locked fees</span><span>The creator fee split and fee wallet are written on-chain when a token is created and cannot be changed afterward.</span></li>
+        <li><span class="m">Fees on the page</span><span>The creator fee is capped at 2.5% per side. Every launch pays a fixed 1% platform fee on each buy and sell, set by Seraph and not removable by the launcher. The fee split, tax rates, platform fee, and dev buy appear on the token page before anyone trades.</span></li>
+        <li><span class="m">No exemptions</span><span>The form has no option to exempt wallets from taxes, so no launch can give some buyers a tax-free entry.</span></li>
+        <li><span class="m">Not endorsed</span><span>Launchers are responsible for their tokens. Seraph does not audit, vet, or promote launches.</span></li>
+        <li><span class="m">Reports</span><span>Report impersonation, malicious contracts, or fraud to security@seraphprotocol.tech. Listings on this site can be hidden. On-chain tokens cannot be removed from the chain.</span></li>
+      </ul>
+ 
+      <div class="struct-line"></div>
+      <div class="meta">FAQ</div>
+      <div class="faq">
+        <details class="faq-item"><summary>Is Seraph vetting these tokens?</summary><p>No. Tokens are created by their launchers. Seraph does not audit, endorse, or guarantee them. Check the contract and the team before you buy.</p></details>
+        <details class="faq-item"><summary>Who gets the fees?</summary><p>The creator fee (up to 2.5% per side) goes to whichever split the launcher picks: the creator, holders, buyback and burn, the pool, or Seraph. Separately, every launch pays Seraph a fixed 1% on each buy and sell. Both are shown on the token page.</p></details>
+        <details class="faq-item"><summary>Can a creator change the fee split later?</summary><p>No. The split and fee wallet are locked when the token is created. Buyers can read them on the token page before trading.</p></details>
+        <details class="faq-item"><summary>Why cap the creator fee at 2.5%?</summary><p>High taxes are a common way new tokens trap buyers. A 2.5% creator fee plus the 1% platform fee keeps the most a trade can pay at 3.5%.</p></details>
+        <details class="faq-item"><summary>Do I need SER to launch?</summary><p>No. The launchpad is separate from the SER presale. Each network uses its own gas and trading assets.</p></details>
+        <details class="faq-item"><summary>Are launches private?</summary><p>No. Launches and trades are public on-chain. Private tokens are a later phase, after the privacy protocol is ready.</p></details>
+        <details class="faq-item"><summary>What if a token is a scam?</summary><p>Report it to security@seraphprotocol.tech. We can hide the listing on this site, but we cannot remove an on-chain token. Read the contract and the holders before you trade.</p></details>
+      </div>
+    </div>
+  </div>
+ 
   <!-- ===== Footer ===== -->
   <footer>
     <div class="footer-top">
       <span style="display:inline-flex; align-items:center; gap:8px;">
         <span class="logo-badge" aria-hidden="true" style="width:22px; height:22px;">
-          <svg viewBox="0 0 24 24" fill="white" style="width:13px; height:13px;">
-            <path d="M12 1L12.9 9.8L21 12L12.9 14.2L12 23L11.1 14.2L3 12L11.1 9.8L12 1Z" />
-          </svg>
+          <svg viewBox="0 0 200 200" aria-hidden="true" focusable="false" style="width:13px; height:13px;"><polygon points="100,100 30.7,60 30.7,140 100,180" fill="currentColor"/><polygon points="100,100 169.3,60 169.3,140 100,180" fill="currentColor" fill-opacity="0.55"/><polygon points="100,100 30.7,60 100,20 169.3,60" fill="none" stroke="currentColor" stroke-width="7" stroke-linejoin="round"/></svg>
         </span>
         <span class="logo">SERAPH<span class="dot">.</span></span>
       </span>
@@ -1275,6 +1600,7 @@
         <h4>Product</h4>
         <ul>
           <li><a href="#presale">Presale</a></li>
+          <li><a href="#launch">Launchpad</a></li>
           <li><a href="#">Wallet <span class="soon">(soon)</span></a></li>
           <li><a href="#">Explorer <span class="soon">(soon)</span></a></li>
           <li><a href="https://github.com/0xfuckian/seraph/blob/main/whitepaper/seraph_whitepaper.md" target="_blank" rel="noopener">Whitepaper</a></li>
@@ -1316,7 +1642,7 @@
       MIT License · Seraph Protocol v0.1.0-dev · Phase 0 — PoC. Nothing on this site is financial advice; the presale is not yet open.
     </div>
   </footer>
-
+ 
   <script>
     /* ===== Hash router: home ↔ presale ===== */
     function clearNavActive() {
@@ -1324,32 +1650,62 @@
     }
     function setNavActiveByView(view) {
       clearNavActive();
-      if (view === 'presale') {
-        var link = document.querySelector('a[data-view="presale"]');
+      if (view === 'presale' || view === 'launch') {
+        var link = document.querySelector('a[data-view="' + view + '"]');
         if (link) link.classList.add('active');
       }
     }
-    function route() {
-      var hash = location.hash || '#hero';
-      var isPresale = hash === '#presale';
+    function viewFromHash(hash) {
+      if (!hash || hash === '#') return 'home';
+      if (hash === '#launch') return 'launch';
+      if (hash === '#presale') return 'presale';
+      var el = document.getElementById(hash.slice(1));
+      if (el && el.closest('#view-launch')) return 'launch';
+      if (el && el.closest('#view-presale')) return 'presale';
+      return 'home';
+    }
+    function route(forced) {
+      var current = typeof forced === 'string' ? forced : location.hash;
+      var hash = current || '#hero';
+      var viewName = viewFromHash(current);
       var prev = document.querySelector('.view.active');
-      var next = document.getElementById(isPresale ? 'view-presale' : 'view-home');
-      if (prev !== next) {
+      var next = document.getElementById('view-' + viewName);
+      var changed = prev !== next;
+      if (changed) {
         if (prev) prev.classList.remove('active');
         next.classList.add('active');
       }
-      setNavActiveByView(isPresale ? 'presale' : 'home');
+      setNavActiveByView(viewName);
+      if (window.ScrollTrigger) ScrollTrigger.refresh();
       // Deep link (e.g. #tokenomics): highlight that section's nav entry directly.
-      if (!isPresale && hash.length > 1) {
+      if (viewName === 'home' && hash.length > 1) {
         var secLink = document.querySelector('a[data-section="' + hash.slice(1) + '"]');
         if (secLink) { clearNavActive(); secLink.classList.add('active'); }
       }
-      if (prev !== next && !document.getElementById(hash.slice(1))) {
+      var target = document.getElementById(hash.slice(1));
+      if (target && target.closest('#view-' + viewName)) {
+        target.scrollIntoView({ block: 'start' });
+      } else if (changed) {
         window.scrollTo(0, 0);
       }
     }
     window.addEventListener('hashchange', route);
-
+    window.addEventListener('popstate', route);
+    // Nav and in-page links switch views directly, so a view change never depends on the browser's own hash scroll.
+    document.addEventListener('click', function (e) {
+      var a = e.target.closest('a[href^="#"]');
+      if (!a) return;
+      var href = a.getAttribute('href');
+      if (href === '#') return;
+      e.preventDefault();
+      if (location.hash !== href) {
+        try { history.pushState(null, '', href); }
+        catch (err) { try { location.hash = href; } catch (err2) { /* hash changes blocked; route() below still switches the view */ } }
+      }
+      route(href);
+      if (navArea) navArea.classList.remove('open');
+    });
+ 
     /* ===== Scrollspy (home sections) ===== */
     var homeSections = ['hero', 'privacy', 'architecture', 'modules', 'tokenomics', 'roadmap', 'security', 'docs', 'governance', 'presale-teaser'];
     function onScroll() {
@@ -1366,7 +1722,7 @@
       if (link) link.classList.add('active');
     }
     window.addEventListener('scroll', onScroll, { passive: true });
-
+ 
     /* ===== Mobile nav toggle ===== */
     var navToggle = document.getElementById('navToggle');
     var navArea = document.getElementById('navArea');
@@ -1376,7 +1732,7 @@
     navArea.addEventListener('click', function (e) {
       if (e.target.closest('.nav-link')) navArea.classList.remove('open');
     });
-
+ 
     /* ===== Scroll reveal ===== */
     var revealObserver = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
@@ -1387,7 +1743,7 @@
       });
     }, { threshold: 0.08 });
     document.querySelectorAll('.reveal').forEach(function (el) { revealObserver.observe(el); });
-
+ 
     /* ===== Safety net: never leave content hidden =====
        IntersectionObserver can fail to fire inside embedded preview frames,
        webviews, or old browsers — so force-reveal everything shortly after
@@ -1395,11 +1751,11 @@
     setTimeout(function () {
       document.querySelectorAll('.reveal').forEach(function (el) { el.classList.add('visible'); });
     }, 1200);
-
+ 
     /* ===== Presale flow (static shell — live wallet calls come later) ===== */
     var currentCur = 'USDT';
     var activeTier = { name: 'Private', price: 0.03 };
-
+ 
     function fmt(n) {
       if (!isFinite(n)) return '—';
       return n.toLocaleString('en-US', { maximumFractionDigits: n >= 1000 ? 0 : 2 });
@@ -1417,7 +1773,7 @@
       document.getElementById('sumSER').textContent = fmt(ser) + (currentCur === 'ETH' ? '' : ' SER');
     }
     document.getElementById('amountInput').addEventListener('input', updateOrder);
-
+ 
     document.querySelectorAll('#currencyTabs .currency-tab').forEach(function (btn) {
       btn.addEventListener('click', function () {
         document.querySelectorAll('#currencyTabs .currency-tab').forEach(function (b) { b.classList.remove('active'); });
@@ -1427,7 +1783,7 @@
         updateOrder();
       });
     });
-
+ 
     document.querySelectorAll('#tierGrid .tier-card').forEach(function (card) {
       card.addEventListener('click', function () {
         document.querySelectorAll('#tierGrid .tier-card').forEach(function (c) { c.classList.remove('active'); });
@@ -1436,10 +1792,493 @@
         updateOrder();
       });
     });
-
+ 
+    /* ===== Launchpad ===== */
+    /* Mandatory platform fee on every launch, charged on each buy and each sell on top of the creator's tax.
+       Set by Seraph. Launchers cannot change or remove it. Recipient is configured at deploy, not here. */
+    var LP_PLATFORM_FEE = 1;
+    var LP = { chain: 'Base', model: 'fixed', status: 'trending', net: 'all', preset: 'creator', dev: 0 };
+    var LP_SPLIT_TEXT = { creator: 'Creator 100%', dividends: 'Holders 100%', buyback: 'Buyback and burn 100%', liquidity: 'Pool 100%', platform: 'Seraph 100%' };
+    var LP_MODEL_NOTE = {
+      fixed: 'Fixed supply: the full supply is minted at launch and trades on a Uniswap V3 pool.',
+      curve: 'Bonding curve: the token trades on a curve from its first trade and moves to a pool when the curve completes.'
+    };
+    /* Sample rows, shown only with ?preview=1. They are layout placeholders, not tokens. */
+    var LP_SAMPLE = [
+      { name: 'Example Alpha', sym: 'ALPHA', net: 'Base', age: 2, mcap: 1500000, chg: 6.8, prog: 100 },
+      { name: 'Example Beta', sym: 'BETA', net: 'Base', age: 1, mcap: 420000, chg: -3.2, prog: 72 },
+      { name: 'Example Gamma', sym: 'GAMMA', net: 'Arc', age: 5, mcap: 98000, chg: 12.4, prog: 35 },
+      { name: 'Example Delta', sym: 'DELTA', net: 'Arc', age: 0, mcap: 14000, chg: -8.1, prog: 8 },
+      { name: 'Example Epsilon', sym: 'EPS', net: 'Base', age: 9, mcap: 2200000, chg: 0.4, prog: 100 }
+    ];
+    var lpPreview = new URLSearchParams(location.search).get('preview') === '1';
+ 
+    function lpEsc(s) {
+      return String(s).replace(/[&<>"']/g, function (c) {
+        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+      });
+    }
+    function lpHue(s) {
+      var h = 0;
+      for (var i = 0; i < s.length; i++) { h = (h * 31 + s.charCodeAt(i)) % 360; }
+      return h;
+    }
+    function lpMcap(n) {
+      if (n >= 1e6) return '$' + (n / 1e6).toFixed(1) + 'M';
+      if (n >= 1e3) return '$' + (n / 1e3).toFixed(1) + 'K';
+      return '$' + n.toFixed(0);
+    }
+    function lpRenderRows() {
+      var rows = lpPreview ? LP_SAMPLE : [];
+      var list = rows.filter(function (t) {
+        if (LP.net !== 'all' && t.net !== LP.net) return false;
+        if (LP.status === 'new') return t.age <= 2;
+        if (LP.status === 'near') return t.prog >= 70 && t.prog < 100;
+        if (LP.status === 'graduated') return t.prog >= 100;
+        return true;
+      });
+      if (LP.status === 'new') list.sort(function (a, b) { return a.age - b.age; });
+      else if (LP.status === 'near') list.sort(function (a, b) { return b.prog - a.prog; });
+      else list.sort(function (a, b) { return b.mcap - a.mcap; });
+ 
+      document.getElementById('lpRows').innerHTML = list.map(function (t, i) {
+        var hue = lpHue(t.sym);
+        var chg = t.chg >= 0
+          ? '<span class="lp-up">+' + t.chg.toFixed(1) + '%</span>'
+          : '<span class="lp-down">' + t.chg.toFixed(1) + '%</span>';
+        return '<tr>' +
+          '<td class="lp-num">' + (i + 1) + '</td>' +
+          '<td><div class="lp-token">' +
+            '<span class="lp-avatar" style="background:oklch(0.62 0.13 ' + hue + ')">' + lpEsc(t.sym.charAt(0)) + '</span>' +
+            '<div><div class="lp-name">' + lpEsc(t.name) + ' <span class="lp-sub">$' + lpEsc(t.sym) + '</span></div>' +
+            '<div class="lp-sub">' + t.age + 'd old</div></div></div></td>' +
+          '<td class="lp-col-md"><span class="lp-chain">' + lpEsc(t.net) + '</span></td>' +
+          '<td class="lp-num">' + lpMcap(t.mcap) + '</td>' +
+          '<td class="lp-num lp-col-md">' + chg + '</td>' +
+          '<td class="lp-col-md"><div class="lp-bar"><i style="width:' + Math.min(100, t.prog) + '%"></i></div></td>' +
+          '</tr>';
+      }).join('');
+      document.getElementById('lpEmpty').hidden = rows.length > 0;
+      document.getElementById('lpPreviewNote').hidden = !lpPreview;
+    }
+ 
+    function lpBindChips(groupId, attr, onPick) {
+      var group = document.getElementById(groupId);
+      group.querySelectorAll('button').forEach(function (b) {
+        b.addEventListener('click', function () {
+          group.querySelectorAll('button').forEach(function (o) {
+            o.setAttribute('aria-pressed', o === b ? 'true' : 'false');
+          });
+          onPick(b.getAttribute(attr));
+        });
+      });
+    }
+ 
+    function lpSplitTotal() {
+      var total = 0;
+      document.querySelectorAll('#lpCustom input[data-split]').forEach(function (i) {
+        total += parseFloat(i.value) || 0;
+      });
+      return total;
+    }
+    function lpSplitSummary() {
+      if (LP.preset !== 'custom') return LP_SPLIT_TEXT[LP.preset];
+      var parts = [];
+      document.querySelectorAll('#lpCustom input[data-split]').forEach(function (i) {
+        var v = parseFloat(i.value) || 0;
+        if (v > 0) parts.push(i.closest('.lp-split').querySelector('span').textContent + ' ' + v + '%');
+      });
+      return parts.length ? parts.join(' · ') : 'Custom split';
+    }
+ 
+    function lpUpdate() {
+      var name = document.getElementById('lpName').value.trim();
+      var ticker = document.getElementById('lpTicker').value.replace(/[^A-Za-z0-9]/g, '').toUpperCase();
+      var desc = document.getElementById('lpDesc').value;
+      var buy = parseFloat(document.getElementById('lpBuyRange').value);
+      var sell = parseFloat(document.getElementById('lpSellRange').value);
+      var total = lpSplitTotal();
+ 
+      document.getElementById('lpDescCount').textContent = desc.length + '/280';
+      document.getElementById('lpBuyOut').textContent = buy + '%';
+      document.getElementById('lpSellOut').textContent = sell + '%';
+      document.getElementById('lpModelNote').textContent = LP_MODEL_NOTE[LP.model];
+ 
+      var totalEl = document.getElementById('lpTotal');
+      var diff = Math.round(total - 100);
+      if (diff === 0) { totalEl.textContent = 'Total 100% · ready'; totalEl.classList.remove('bad'); }
+      else if (diff < 0) { totalEl.textContent = 'Total ' + total + '% · add ' + (-diff) + '% more'; totalEl.classList.add('bad'); }
+      else { totalEl.textContent = 'Total ' + total + '% · remove ' + diff + '%'; totalEl.classList.add('bad'); }
+ 
+      var tick = ticker || 'TICK';
+      var hue = lpHue(tick);
+      document.getElementById('lpPvImg').style.background = 'oklch(0.62 0.13 ' + hue + ')';
+      document.getElementById('lpPvTick').textContent = tick;
+      document.getElementById('lpPvSym').textContent = '$' + (ticker || 'TICKER');
+      document.getElementById('lpPvName').textContent = name || 'Name';
+      document.getElementById('lpPvNet').textContent = LP.chain;
+      document.getElementById('lpPvTax').textContent = buy + '% / ' + sell + '%';
+      document.getElementById('lpPvTotal').textContent = (buy + LP_PLATFORM_FEE) + '% / ' + (sell + LP_PLATFORM_FEE) + '%';
+      document.getElementById('lpPvSplit').textContent = lpSplitSummary();
+      document.getElementById('lpPvDev').textContent = LP.dev === 0 ? 'None' : LP.dev + '% of supply';
+    }
+ 
+    lpBindChips('lpStatus', 'data-status', function (v) { LP.status = v; lpRenderRows(); });
+    lpBindChips('lpNetwork', 'data-net', function (v) { LP.net = v; lpRenderRows(); });
+    lpBindChips('lpChainChips', 'data-chain', function (v) { LP.chain = v; lpUpdate(); });
+    lpBindChips('lpModelChips', 'data-model', function (v) { LP.model = v; lpUpdate(); });
+    lpBindChips('lpDevChips', 'data-dev', function (v) { LP.dev = parseFloat(v); lpUpdate(); });
+    lpBindChips('lpPresets', 'data-preset', function (v) {
+      LP.preset = v;
+      document.getElementById('lpCustom').hidden = v !== 'custom';
+      if (v !== 'custom') {
+        var presetTarget = { creator: 'creator', dividends: 'dividends', buyback: 'buyback', liquidity: 'liquidity', platform: 'platform' }[v];
+        document.querySelectorAll('#lpCustom input[data-split]').forEach(function (i) {
+          i.value = i.getAttribute('data-split') === presetTarget ? 100 : 0;
+        });
+      }
+      lpUpdate();
+    });
+    ['lpName', 'lpTicker', 'lpDesc', 'lpSupply'].forEach(function (id) {
+      document.getElementById(id).addEventListener('input', lpUpdate);
+    });
+    document.querySelectorAll('#lpCustom input[data-split]').forEach(function (i) {
+      i.addEventListener('input', lpUpdate);
+    });
+    ['lpBuyRange', 'lpSellRange'].forEach(function (id) {
+      document.getElementById(id).addEventListener('input', lpUpdate);
+    });
+ 
+    lpRenderRows();
+    lpUpdate();
+ 
     /* Init */
     route();
     onScroll();
   </script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/ScrollTrigger.min.js"></script>
+  <script src="https://unpkg.com/lenis@1.3.1/dist/lenis.min.js"></script>
+  <script src="https://unpkg.com/splitting@1.1.0/dist/splitting.min.js"></script>
+  <script type="module">
+import * as THREE from 'three';
+ 
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const allScenes = [];
+ 
+function createScene(el) {
+  const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  el.appendChild(renderer.domElement);
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 100);
+  camera.position.z = 5;
+  const state = { el, renderer, scene, camera, visible: false, tick: null, lastW: 0, lastH: 0 };
+  state.checkSize = () => {
+    const w = el.clientWidth, h = el.clientHeight;
+    if (!w || !h || (w === state.lastW && h === state.lastH)) return;
+    state.lastW = w; state.lastH = h;
+    renderer.setSize(w, h, false);
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+  };
+  new IntersectionObserver((entries) => { state.visible = entries[0].isIntersecting; }).observe(el);
+  allScenes.push(state);
+  return state;
+}
+ 
+function safeScene(el) {
+  if (!el) return null;
+  try { return createScene(el); }
+  catch (err) { el.style.display = 'none'; return null; }
+}
+ 
+function loop(t) {
+  requestAnimationFrame(loop);
+  for (const s of allScenes) {
+    if (!s.visible || !s.tick) continue;
+    s.checkSize();
+    s.tick(t);
+  }
+}
+requestAnimationFrame(loop);
+ 
+// Big logo: at the top of the page it is large; it moves up and shrinks into the header bar as you scroll
+const brandFloat = document.getElementById('brandFloat');
+const headerBrand = document.getElementById('headerBrand');
+const smallScreen = window.innerWidth < 860;
+const BIG_SCALE = smallScreen ? 2.0 : 2.4;
+const START_Y = smallScreen ? 66 : 96;
+const END_Y = 16;
+const SCROLL_RANGE = 160;
+function updateBrand() {
+  const p = Math.min(1, Math.max(0, window.scrollY / SCROLL_RANGE));
+  brandFloat.style.transform = `scale(${BIG_SCALE - (BIG_SCALE - 1) * p})`;
+  brandFloat.style.top = (START_Y - (START_Y - END_Y) * p) + 'px';
+  const done = p >= 1;
+  brandFloat.style.visibility = done ? 'hidden' : 'visible';
+  headerBrand.style.opacity = done ? '1' : '0';
+}
+window.addEventListener('scroll', updateBrand, { passive: true });
+window.addEventListener('resize', updateBrand);
+updateBrand();
+ 
+if (!reduceMotion) {
+  gsap.registerPlugin(ScrollTrigger);
+ 
+  // Smooth scroll, synced with GSAP
+  const lenis = new Lenis({ lerp: 0.1 });
+  lenis.on('scroll', ScrollTrigger.update);
+  gsap.ticker.add((time) => lenis.raf(time * 1000));
+  gsap.ticker.lagSmoothing(0);
+ 
+  // Hero headline: letters rise in
+  const heroH1 = document.querySelector('.hero h1');
+  if (heroH1) {
+    Splitting({ target: heroH1, by: 'chars' });
+    gsap.from(heroH1.querySelectorAll('.char'), {
+      yPercent: 110, opacity: 0, duration: 0.9, ease: 'power4.out', stagger: 0.02, delay: 0.1
+    });
+  }
+ 
+  // Section titles: letters scramble into place once
+  const SCRAMBLE = '!<>-_/[]{}=+*^?#';
+  function scramble(el) {
+    const finalText = el.textContent;
+    const total = 24;
+    let frame = 0;
+    (function step() {
+      frame++;
+      const revealed = Math.floor((frame / total) * finalText.length);
+      el.textContent = finalText.split('').map((ch, i) => (
+        ch === ' ' || i < revealed ? ch : SCRAMBLE[Math.floor(Math.random() * SCRAMBLE.length)]
+      )).join('');
+      if (frame < total) requestAnimationFrame(step);
+      else el.textContent = finalText;
+    })();
+  }
+  document.querySelectorAll('.section-title').forEach((el) => {
+    ScrollTrigger.create({ trigger: el, start: 'top 85%', once: true, onEnter: () => scramble(el) });
+  });
+ 
+  // Privacy description: words light up as you scroll (desktop)
+  const desc = document.querySelector('#privacy .section-desc');
+  if (desc && window.innerWidth >= 900) {
+    Splitting({ target: desc, by: 'words' });
+    gsap.fromTo(desc.querySelectorAll('.word'), { opacity: 0.2 }, {
+      opacity: 1, ease: 'none', stagger: 0.1,
+      scrollTrigger: { trigger: desc, start: 'top 80%', end: 'bottom 45%', scrub: true }
+    });
+  }
+ 
+  // Marquee moves with scroll
+  const marqueeTrack = document.querySelector('.marquee-track');
+  if (marqueeTrack) {
+    gsap.to(marqueeTrack, {
+      xPercent: -50, ease: 'none',
+      scrollTrigger: { trigger: marqueeTrack, start: 'top bottom', end: 'bottom top', scrub: 1 }
+    });
+  }
+ 
+  // 1. Hero: the logo as a real 3D cube. It rests at the logo's angle, sways gently,
+  //    and turns a full circle when the visitor clicks it.
+  const hero = safeScene(document.getElementById('heroMark'));
+  if (hero) {
+    const { scene, camera, renderer } = hero;
+    camera.position.set(3, 3, 3);
+    camera.lookAt(0, 0, 0);
+ 
+    scene.add(new THREE.AmbientLight(0xffffff, 0.9));
+    const key = new THREE.DirectionalLight(0xffffff, 2.2);
+    key.position.set(4, 6, 3);
+    scene.add(key);
+ 
+    const cube = new THREE.Group();
+    scene.add(cube);
+ 
+    const size = 1.5;
+    // Flat colours with no shading: black left face, grey right face, white top face
+    const black = new THREE.MeshBasicMaterial({ color: 0x0e1012 });
+    const grey = new THREE.MeshBasicMaterial({ color: 0x8a8f98 });
+    const white = new THREE.MeshBasicMaterial({ color: 0xffffff });
+    // BoxGeometry face order: +x (right), -x, +y (top), -y, +z (left), -z
+    cube.add(new THREE.Mesh(new THREE.BoxGeometry(size, size, size), [grey, black, white, black, black, black]));
+ 
+    // Hairline around the white top face so it stays visible on the white page
+    const h = size / 2, t = 0.04;
+    const hairline = new THREE.MeshBasicMaterial({ color: 0xd9dadd });
+    const edge = (w, d, x, z) => {
+      const bar = new THREE.Mesh(new THREE.BoxGeometry(w, t, d), hairline);
+      bar.position.set(x, h + 0.001, z);
+      cube.add(bar);
+    };
+    edge(size + t, t, 0, h);
+    edge(size + t, t, 0, -h);
+    edge(t, size + t, h, 0);
+    edge(t, size + t, -h, 0);
+ 
+    let px = 0, py = 0, pxS = 0, pyS = 0, spin = 0, spinTarget = 0;
+    window.addEventListener('pointermove', (e) => {
+      px = e.clientX / window.innerWidth - 0.5;
+      py = e.clientY / window.innerHeight - 0.5;
+    });
+    hero.el.addEventListener('pointerdown', () => { spinTarget += Math.PI * 2; });
+ 
+    hero.tick = (t) => {
+      spin += (spinTarget - spin) * 0.06;
+      pxS += (px - pxS) * 0.08;
+      pyS += (py - pyS) * 0.08;
+      cube.rotation.y = spin + Math.sin(t * 0.0005) * 0.35 + pxS * Math.PI * 2;
+      cube.rotation.x = pyS * 1.0;
+      renderer.render(scene, camera);
+    };
+  }
+ 
+  // 2. Privacy continuum ring: changes colour through the four levels as you scroll
+  const ring = safeScene(document.getElementById('ringCanvas'));
+  const ringLabel = document.getElementById('ringLabel');
+  if (ring) {
+    const LEVELS = [
+      { label: 'Level 0 · Transparent', hex: 0x0e1012 },
+      { label: 'Level 1 · Optional Shielding', hex: 0xa21caf },
+      { label: 'Level 2 · Default Strong', hex: 0x2f4cff },
+      { label: 'Level 3 · Private Compute', hex: 0x047857 }
+    ];
+    const outerRing = new THREE.Mesh(new THREE.TorusGeometry(1, 0.05, 24, 180), new THREE.MeshBasicMaterial({ color: LEVELS[0].hex }));
+    const innerRing = new THREE.Mesh(new THREE.TorusGeometry(0.6, 0.02, 16, 180), new THREE.MeshBasicMaterial({ color: LEVELS[0].hex, transparent: true, opacity: 0.5 }));
+    innerRing.rotation.x = Math.PI / 2;
+    ring.scene.add(outerRing, innerRing);
+    ring.camera.position.z = 4;
+ 
+    let progress = 0, lastLevel = -1;
+    const colour = new THREE.Color();
+    const nextColour = new THREE.Color();
+    ring.tick = (t) => {
+      const pos = Math.min(progress, 1) * (LEVELS.length - 1);
+      const idx = Math.min(LEVELS.length - 2, Math.floor(pos));
+      colour.setHex(LEVELS[idx].hex).lerp(nextColour.setHex(LEVELS[idx + 1].hex), pos - idx);
+      outerRing.material.color.copy(colour);
+      innerRing.material.color.copy(colour);
+      outerRing.rotation.y = progress * Math.PI * 2;
+      innerRing.rotation.z = progress * Math.PI * 1.5 + t * 0.0003;
+      const level = Math.round(Math.min(progress, 1) * (LEVELS.length - 1));
+      if (level !== lastLevel && ringLabel) { lastLevel = level; ringLabel.textContent = LEVELS[level].label; }
+      ring.renderer.render(ring.scene, ring.camera);
+    };
+ 
+    // Hold on Level 0 for the first part of the pin so it is actually seen
+    const onProgress = (self) => { progress = Math.max(0, Math.min(1, (self.progress - 0.12) / 0.88)); };
+    if (window.innerWidth >= 900) {
+      ScrollTrigger.create({ trigger: '#ringStage', start: 'top 30%', end: '+=300%', pin: true, scrub: 0.6, onUpdate: onProgress });
+    } else {
+      ScrollTrigger.create({ trigger: '#ringStage', start: 'top 70%', end: 'bottom 35%', scrub: true, onUpdate: onProgress });
+    }
+  }
+ 
+  // 3. Architecture: node network that drifts and pulses with scroll
+  const net = safeScene(document.getElementById('netBg'));
+  if (net) {
+    const N = 90;
+    const pts = [];
+    for (let i = 0; i < N; i++) {
+      pts.push(new THREE.Vector3((Math.random() - 0.5) * 8, (Math.random() - 0.5) * 5, (Math.random() - 0.5) * 2));
+    }
+    const points = new THREE.Points(new THREE.BufferGeometry().setFromPoints(pts), new THREE.PointsMaterial({ color: 0x2f4cff, size: 0.06 }));
+    const linePts = [];
+    for (let i = 0; i < N; i++) {
+      for (let j = i + 1; j < N; j++) {
+        if (pts[i].distanceTo(pts[j]) < 1.5) linePts.push(pts[i], pts[j]);
+      }
+    }
+    const lines = new THREE.LineSegments(
+      new THREE.BufferGeometry().setFromPoints(linePts),
+      new THREE.LineBasicMaterial({ color: 0x2f4cff, transparent: true, opacity: 0.25 })
+    );
+    const netGroup = new THREE.Group();
+    netGroup.add(points, lines);
+    net.scene.add(netGroup);
+    net.camera.position.z = 6;
+    net.tick = (t) => {
+      const s = window.scrollY * 0.0004;
+      netGroup.rotation.y = t * 0.00005 + s;
+      netGroup.rotation.x = s * 0.5;
+      lines.material.opacity = 0.2 + 0.15 * Math.sin(t * 0.002 + s * 4);
+      net.renderer.render(net.scene, net.camera);
+    };
+  }
+ 
+  // 4. Roadmap: particle field that drifts and reacts to scroll speed
+  const particles = safeScene(document.getElementById('particleBg'));
+  if (particles) {
+    const COUNT = 1200;
+    const arr = new Float32Array(COUNT * 3);
+    for (let i = 0; i < arr.length; i++) arr[i] = (Math.random() - 0.5) * 12;
+    const pGeo = new THREE.BufferGeometry();
+    pGeo.setAttribute('position', new THREE.BufferAttribute(arr, 3));
+    const field = new THREE.Points(pGeo, new THREE.PointsMaterial({ color: 0x0e1012, size: 0.03, transparent: true, opacity: 0.55 }));
+    particles.scene.add(field);
+    particles.camera.position.z = 6;
+    let lastY = window.scrollY, speed = 0;
+    particles.tick = (t) => {
+      const y = window.scrollY;
+      speed += ((y - lastY) - speed) * 0.1;
+      lastY = y;
+      field.rotation.y = t * 0.00003;
+      field.rotation.z += speed * 0.00005;
+      field.position.y = ((y * 0.0012) % 2) - 1;
+      particles.renderer.render(particles.scene, particles.camera);
+    };
+  }
+ 
+  // 5. Modules: shader field that ripples around the cursor
+  const shader = safeScene(document.getElementById('shaderCard'));
+  if (shader) {
+    const uniforms = {
+      uTime: { value: 0 },
+      uMouse: { value: new THREE.Vector2(0.5, 0.5) },
+      uRes: { value: new THREE.Vector2(1, 1) }
+    };
+    const material = new THREE.ShaderMaterial({
+      uniforms,
+      vertexShader: `
+        varying vec2 vUv;
+        void main() {
+          vUv = uv;
+          gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+        }`,
+      fragmentShader: `
+        uniform float uTime;
+        uniform vec2 uMouse;
+        uniform vec2 uRes;
+        varying vec2 vUv;
+        void main() {
+          vec2 aspect = vec2(uRes.x / uRes.y, 1.0);
+          vec2 p = (vUv - 0.5) * aspect;
+          vec2 m = (uMouse - 0.5) * aspect;
+          float d = length(p - m);
+          float wave = sin(d * 48.0 - uTime * 3.0) * exp(-d * 3.5);
+          vec3 ink = vec3(0.055, 0.063, 0.071);
+          vec3 blue = vec3(0.184, 0.298, 1.0);
+          vec3 magenta = vec3(0.635, 0.110, 0.686);
+          vec3 col = mix(ink, blue, clamp(wave * 0.5 + 0.5, 0.0, 1.0));
+          col = mix(col, magenta, smoothstep(0.3, 1.0, vUv.x) * 0.3);
+          gl_FragColor = vec4(col, 1.0);
+        }`
+    });
+    shader.scene.add(new THREE.Mesh(new THREE.PlaneGeometry(2, 2), material));
+    shader.tick = (t) => {
+      uniforms.uTime.value = t * 0.001;
+      uniforms.uRes.value.set(shader.el.clientWidth, shader.el.clientHeight);
+      shader.scene.children[0].scale.set(shader.camera.aspect * 2.1, 2.1, 1);
+      shader.renderer.render(shader.scene, shader.camera);
+    };
+    shader.el.addEventListener('pointermove', (e) => {
+      const r = shader.el.getBoundingClientRect();
+      uniforms.uMouse.value.set((e.clientX - r.left) / r.width, 1 - (e.clientY - r.top) / r.height);
+    });
+  }
+}
+  </script>
 </body>
 </html>
+ 
