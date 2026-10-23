@@ -1,3 +1,4 @@
+pub mod assets;
 pub mod note;
 pub mod tree;
 pub mod ledger;
@@ -6,60 +7,47 @@ pub mod wallet;
 #[cfg(test)]
 mod tests {
     use super::*;
+    use assets::AssetId;
     use ledger::Ledger;
+    use note::Note;
     use wallet::Wallet;
 
     #[test]
     fn test_phase0_end_to_end_privacy_flow() {
         let mut ledger = Ledger::new();
 
-        // 1. Setup Alice and Bob wallets
-        let alice_spend_key = [1u8; 32];
-        let bob_spend_key = [2u8; 32];
+        let mut alice = Wallet::new([1u8; 32]);
+        let mut bob = Wallet::new([2u8; 32]);
 
-        let mut alice = Wallet::new(alice_spend_key);
-        let mut bob = Wallet::new(bob_spend_key);
-
-        // 2. Fund Alice's transparent balance with 1,000 SER
         ledger.set_balance(alice.pubkey, 1000);
         assert_eq!(ledger.get_balance(&alice.pubkey), 1000);
 
-        // 3. Alice SHIELDS 1,000 SER into the private pool
         let (shield_tx, alice_initial_note) = alice.create_shield(1000, [10u8; 32]);
         assert_eq!(ledger.apply(shield_tx), Ok(()));
         assert_eq!(ledger.get_balance(&alice.pubkey), 0);
-        alice.add_note(alice_initial_note, 0); // leaf_index 0 in tree
+        alice.add_note(alice_initial_note, 0);
         assert_eq!(alice.total_private_balance(), 1000);
 
-        // 4. Alice executes a PRIVATE TRANSFER of 600 SER to Bob (400 SER change to Alice)
         let root = ledger.tree.get_last_root();
         let (transfer_tx, bob_note, alice_change_note) = alice
             .create_private_transfer(600, bob.pubkey, [20u8; 32], [30u8; 32], root)
             .expect("Transfer creation failed");
 
-        // Clone transfer_tx for double-spend testing later
         let replay_tx = transfer_tx.clone();
-
-        // Apply private transfer to ledger
         assert_eq!(ledger.apply(transfer_tx), Ok(()));
-
-        // Ledger leaf count is now 3 (1 initial + 2 outputs)
         assert_eq!(ledger.tree.next_leaf_index, 3);
 
-        // Update wallets
-        bob.add_note(bob_note, 1); // leaf_index 1
-        alice.add_note(alice_change_note.unwrap(), 2); // leaf_index 2
+        bob.add_note(bob_note, 1);
+        alice.add_note(alice_change_note.unwrap(), 2);
 
         assert_eq!(alice.total_private_balance(), 400);
         assert_eq!(bob.total_private_balance(), 600);
 
-        // 5. DOUBLE SPEND ATTEMPT: Replaying Alice's transfer must fail
         assert_eq!(
             ledger.apply(replay_tx),
             Err("Double-spend detected: nullifier already spent")
         );
 
-        // 6. Bob UNSHIELDS his 600 SER to a transparent address
         let bob_transparent_addr = [99u8; 32];
         let root_after_transfer = ledger.tree.get_last_root();
         let unshield_tx = bob
@@ -68,15 +56,53 @@ mod tests {
 
         let replay_unshield = unshield_tx.clone();
         assert_eq!(ledger.apply(unshield_tx), Ok(()));
-
-        // Bob's transparent balance is now 600 SER
         assert_eq!(ledger.get_balance(&bob_transparent_addr), 600);
         assert_eq!(bob.total_private_balance(), 0);
 
-        // Replaying unshield must fail
         assert_eq!(
             ledger.apply(replay_unshield),
             Err("Double-spend detected: nullifier already spent")
         );
+    }
+
+    #[test]
+    fn test_native_xmr_shared_anonymity_pool_and_view_key_memo() {
+        let mut ledger = Ledger::new();
+        let mut alice = Wallet::new([7u8; 32]);
+        let mut bob = Wallet::new([8u8; 32]);
+
+        // Fund Alice with 50 XMR and 500 SER in the same ledger
+        ledger.set_asset_balance(alice.pubkey, AssetId::Xmr, 50);
+        ledger.set_asset_balance(alice.pubkey, AssetId::Seraph, 500);
+
+        // Shield both SER and XMR into the same shared Merkle tree
+        let (ser_shield, ser_note) = alice.create_asset_shield(AssetId::Seraph, 500, [11u8; 32]);
+        let (xmr_shield, xmr_note) = alice.create_asset_shield(AssetId::Xmr, 50, [12u8; 32]);
+
+        assert_eq!(ledger.apply(ser_shield), Ok(()));
+        alice.add_note(ser_note, 0);
+        assert_eq!(ledger.apply(xmr_shield), Ok(()));
+        alice.add_note(xmr_note, 1);
+
+        // Transfer 20 XMR privately to Bob
+        let root = ledger.tree.get_last_root();
+        let (xmr_tx, bob_xmr, alice_xmr_change) = alice
+            .create_asset_private_transfer(AssetId::Xmr, 20, bob.pubkey, [21u8; 32], [22u8; 32], root)
+            .expect("XMR private transfer failed");
+
+        assert_eq!(ledger.apply(xmr_tx), Ok(()));
+        bob.add_note(bob_xmr, 2);
+        alice.add_note(alice_xmr_change.unwrap(), 3);
+
+        assert_eq!(alice.private_balance_of(AssetId::Xmr), 30);
+        assert_eq!(bob.private_balance_of(AssetId::Xmr), 20);
+        assert_eq!(alice.private_balance_of(AssetId::Seraph), 500);
+
+        // Test view-key memo encryption/decryption
+        let memo_plain = b"Invoice #1042 settled in XMR";
+        let cipher = Note::xor_memo(&bob.view_key, &[21u8; 32], memo_plain);
+        assert_ne!(&cipher[..], &memo_plain[..]);
+        let decrypted = Note::xor_memo(&bob.view_key, &[21u8; 32], &cipher);
+        assert_eq!(&decrypted[..], &memo_plain[..]);
     }
 }

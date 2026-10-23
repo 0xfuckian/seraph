@@ -1,9 +1,11 @@
 use std::collections::{HashMap, HashSet};
+use crate::assets::AssetId;
 use crate::tree::IncrementalMerkleTree;
 
 #[derive(Clone, Debug)]
 pub enum Transaction {
     Shield {
+        asset: AssetId,
         from: [u8; 32],
         amount: u64,
         commitment: [u8; 32],
@@ -14,6 +16,7 @@ pub enum Transaction {
         root: [u8; 32],
     },
     Unshield {
+        asset: AssetId,
         nullifier: [u8; 32],
         amount: u64,
         recipient: [u8; 32],
@@ -24,7 +27,7 @@ pub enum Transaction {
 pub struct Ledger {
     pub tree: IncrementalMerkleTree,
     pub nullified: HashSet<[u8; 32]>,
-    pub transparent_balances: HashMap<[u8; 32], u64>,
+    pub transparent_balances: HashMap<([u8; 32], AssetId), u64>,
 }
 
 impl Ledger {
@@ -37,21 +40,29 @@ impl Ledger {
     }
 
     pub fn set_balance(&mut self, account: [u8; 32], amount: u64) {
-        self.transparent_balances.insert(account, amount);
+        self.set_asset_balance(account, AssetId::Seraph, amount);
+    }
+
+    pub fn set_asset_balance(&mut self, account: [u8; 32], asset: AssetId, amount: u64) {
+        self.transparent_balances.insert((account, asset), amount);
     }
 
     pub fn get_balance(&self, account: &[u8; 32]) -> u64 {
-        *self.transparent_balances.get(account).unwrap_or(&0)
+        self.get_asset_balance(account, AssetId::Seraph)
+    }
+
+    pub fn get_asset_balance(&self, account: &[u8; 32], asset: AssetId) -> u64 {
+        *self.transparent_balances.get(&(*account, asset)).unwrap_or(&0)
     }
 
     pub fn apply(&mut self, tx: Transaction) -> Result<(), &'static str> {
         match tx {
-            Transaction::Shield { from, amount, commitment } => {
-                let bal = self.get_balance(&from);
+            Transaction::Shield { asset, from, amount, commitment } => {
+                let bal = self.get_asset_balance(&from, asset);
                 if bal < amount {
                     return Err("Insufficient transparent balance to shield");
                 }
-                self.transparent_balances.insert(from, bal - amount);
+                self.transparent_balances.insert((from, asset), bal - amount);
                 self.tree.insert(commitment)?;
                 Ok(())
             }
@@ -75,7 +86,7 @@ impl Ledger {
                 }
                 Ok(())
             }
-            Transaction::Unshield { nullifier, amount, recipient, root } => {
+            Transaction::Unshield { asset, nullifier, amount, recipient, root } => {
                 if !self.tree.is_known_root(&root) {
                     return Err("Invalid or expired Merkle root");
                 }
@@ -83,8 +94,8 @@ impl Ledger {
                     return Err("Double-spend detected: nullifier already spent");
                 }
                 self.nullified.insert(nullifier);
-                let current_bal = self.get_balance(&recipient);
-                self.transparent_balances.insert(recipient, current_bal + amount);
+                let current_bal = self.get_asset_balance(&recipient, asset);
+                self.transparent_balances.insert((recipient, asset), current_bal + amount);
                 Ok(())
             }
         }
