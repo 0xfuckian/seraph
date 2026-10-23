@@ -191,6 +191,8 @@ contract SeraphPresale is ReentrancyGuard {
         payable
         nonReentrant
     {
+        require(!tgeExecuted, "Presale: sale ended");
+        require(stablecoinAmount > 0, "Presale: zero amount");
         require(tiers[tierId].active, "Presale: tier inactive");
         require(isWhitelisted(msg.sender, tierId), "Presale: not whitelisted");
         require(currency == usdt || currency == usdc, "Presale: invalid currency");
@@ -205,7 +207,9 @@ contract SeraphPresale is ReentrancyGuard {
         IERC20(currency).safeTransferFrom(msg.sender, address(this), stablecoinAmount);
 
         // Send fee to treasury
-        IERC20(currency).safeTransfer(treasury, fee);
+        if (fee > 0) {
+            IERC20(currency).safeTransfer(treasury, fee);
+        }
 
         // Track fees
         if (currency == usdt) feesCollectedUSDT += fee;
@@ -215,9 +219,10 @@ contract SeraphPresale is ReentrancyGuard {
 
         // Calculate tokens from net amount (after fee)
         uint256 tokens = (netAmount * 1e18) / tier.price;
+        require(tokens > 0, "Presale: zero tokens");
         require(tier.sold + tokens <= tier.hardCap, "Presale: tier cap exceeded");
 
-        // Record vesting
+        // Record vesting (accumulates if buyer purchases multiple times)
         _setupVesting(msg.sender, tierId, tokens);
 
         tier.sold += tokens;
@@ -237,9 +242,15 @@ contract SeraphPresale is ReentrancyGuard {
      *      Uses ethUsdPrice to convert ETH value to USD-equivalent token price.
      */
     function buyWithETH(uint256 tierId) external payable nonReentrant {
+        _buyWithETH(msg.sender, tierId);
+    }
+
+    function _buyWithETH(address buyer, uint256 tierId) internal {
+        require(!tgeExecuted, "Presale: sale ended");
+        require(msg.value > 0, "Presale: zero ETH");
         require(tierId == 3, "Presale: ETH only for Public tier");
         require(tiers[tierId].active, "Presale: tier inactive");
-        require(isWhitelisted(msg.sender, tierId), "Presale: not whitelisted");
+        require(isWhitelisted(buyer, tierId), "Presale: not whitelisted");
         require(ethUsdPrice > 0, "Presale: ethUsdPrice not set");
 
         PresaleTier storage tier = tiers[tierId];
@@ -248,55 +259,43 @@ contract SeraphPresale is ReentrancyGuard {
         uint256 fee = (msg.value * PRESALE_FEE_BPS) / BPS;
         uint256 netValue = msg.value - fee;
 
-        // Send fee to treasury
+        // Send fee to treasury (supports multisig/contract treasuries)
         if (fee > 0) {
-            payable(treasury).transfer(fee);
+            (bool ok, ) = payable(treasury).call{value: fee}("");
+            require(ok, "Presale: ETH fee transfer failed");
             feesCollectedETH += fee;
-            emit FeeCollected(msg.sender, fee, address(0));
+            emit FeeCollected(buyer, fee, address(0));
         }
 
-        // Convert netValue (wei) to token amount:
-        // tier.price is in USD * 1e6 (6-decimal stablecoin units)
-        // 1 token costs tier.price / 1e6 USD
-        // 1 token costs (tier.price / 1e6) / ethUsdPrice ETH = (tier.price / 1e6) / ethUsdPrice * 1e18 wei
-        // tokens = netValue / ((tier.price / 1e6) / ethUsdPrice * 1e18)
-        //        = netValue * ethUsdPrice * 1e6 / (tier.price * 1e18)
-        //        = netValue * ethUsdPrice * 1e6 / (tier.price * 1e18)
         uint256 tokens = (netValue * ethUsdPrice * 1e6) / tier.price;
+        require(tokens > 0, "Presale: zero tokens");
         require(tier.sold + tokens <= tier.hardCap, "Presale: tier cap exceeded");
 
-        _setupVesting(msg.sender, tierId, tokens);
+        _setupVesting(buyer, tierId, tokens);
 
         tier.sold += tokens;
         totalTokensSold += tokens;
         totalRaisedETH += netValue;
 
-        emit Purchased(msg.sender, tierId, tokens, netValue, address(0));
+        emit Purchased(buyer, tierId, tokens, netValue, address(0));
     }
 
     function updateEthUsdPrice(uint256 _ethUsdPrice) external onlyTreasury {
+        require(_ethUsdPrice > 0, "Presale: invalid ETH price");
         ethUsdPrice = _ethUsdPrice;
     }
 
     /* ── Vesting ──────────────────────────────────────────── */
-    function _setupVesting(address buyer, uint256 tierId, uint256 total) internal {
+    function _setupVesting(address buyer, uint256 tierId, uint256 tokensToAdd) internal {
+        Vesting storage v = vesting[buyer][tierId];
+        uint256 newTotal = v.total + tokensToAdd;
         uint256 lockupBps = tiers[tierId].lockupBps;
-        uint256 tgeAmount = (total * lockupBps) / BPS;
-        uint256 vestedAmount = total - tgeAmount;
+        uint256 tgeAmount = (newTotal * lockupBps) / BPS;
+        uint256 vestedAmount = newTotal - tgeAmount;
 
-        // Mint TGE portion immediately (or mark as claimable at TGE)
-        if (tgeAmount > 0) {
-            // We don't mint yet — tokens are claimable at TGE
-        }
-
-        vesting[buyer][tierId] = Vesting({
-            total: total,
-            released: 0,
-            startTime: 0, // set on TGE execution
-            cliffSeconds: vestedAmount > 0 ? VESTING_CLIFF : 0,
-            duration: vestedAmount > 0 ? tiers[tierId].vestingDuration : 0,
-            claimed: false
-        });
+        v.total = newTotal;
+        v.cliffSeconds = vestedAmount > 0 ? VESTING_CLIFF : 0;
+        v.duration = vestedAmount > 0 ? tiers[tierId].vestingDuration : 0;
     }
 
     /**
@@ -308,7 +307,7 @@ contract SeraphPresale is ReentrancyGuard {
         tgeExecuted = true;
     }
 
-    function claimInitialAllocation(uint256 tierId) external {
+    function claimInitialAllocation(uint256 tierId) external nonReentrant {
         require(tgeExecuted, "Presale: TGE not executed");
         Vesting storage v = vesting[msg.sender][tierId];
         require(!v.claimed, "Presale: already claimed");
@@ -318,11 +317,10 @@ contract SeraphPresale is ReentrancyGuard {
         require(tgeAmount > 0, "Presale: no TGE allocation");
 
         v.released += tgeAmount;
-        // Schedule vesting start time
         v.startTime = block.timestamp;
+        v.claimed = true;
 
         token.mint(msg.sender, tgeAmount);
-        v.claimed = true;
 
         emit VestingReleased(msg.sender, tgeAmount);
     }
@@ -330,7 +328,7 @@ contract SeraphPresale is ReentrancyGuard {
     /**
      * @dev Claim vested tokens after cliff period.
      */
-    function claimVested(uint256 tierId) external {
+    function claimVested(uint256 tierId) external nonReentrant {
         Vesting storage v = vesting[msg.sender][tierId];
         require(v.claimed, "Presale: claim TGE first");
         require(v.startTime > 0, "Presale: vesting not started");
@@ -339,9 +337,15 @@ contract SeraphPresale is ReentrancyGuard {
         if (elapsed <= v.cliffSeconds) return; // still in cliff
         if (v.duration == 0) revert("Presale: no vesting"); // fully-liquid tier has nothing to claim
 
-        uint256 vestedTotal = v.total - ((v.total * tiers[tierId].lockupBps) / BPS); // vested portion
-        uint256 releasable = (vestedTotal * (elapsed - v.cliffSeconds)) / v.duration;
-        releasable = releasable > v.released ? releasable - v.released : 0;
+        uint256 vestElapsed = elapsed - v.cliffSeconds;
+        if (vestElapsed > v.duration) {
+            vestElapsed = v.duration;
+        }
+
+        uint256 tgeAmount = (v.total * tiers[tierId].lockupBps) / BPS;
+        uint256 vestedTotal = v.total - tgeAmount;
+        uint256 totalUnlocked = tgeAmount + (vestedTotal * vestElapsed) / v.duration;
+        uint256 releasable = totalUnlocked > v.released ? totalUnlocked - v.released : 0;
 
         require(releasable > 0, "Presale: nothing to claim");
 
@@ -351,15 +355,16 @@ contract SeraphPresale is ReentrancyGuard {
     }
 
     /* ── Withdrawals ──────────────────────────────────────── */
-    function withdrawStable(uint256 amount, address currency) external onlyTreasury {
+    function withdrawStable(uint256 amount, address currency) external onlyTreasury nonReentrant {
         require(currency == usdt || currency == usdc, "Presale: invalid currency");
         IERC20(currency).safeTransfer(treasury, amount);
         emit Withdrawal(treasury, amount, currency);
     }
 
-    function withdrawETH() external onlyTreasury {
+    function withdrawETH() external onlyTreasury nonReentrant {
         uint256 amount = address(this).balance;
-        payable(treasury).transfer(amount);
+        (bool ok, ) = payable(treasury).call{value: amount}("");
+        require(ok, "Presale: ETH withdrawal failed");
         // Guard against underflow if the contract ever holds stray (donated) ETH
         totalRaisedETH = amount > totalRaisedETH ? 0 : totalRaisedETH - amount;
         emit Withdrawal(treasury, amount, address(0));
@@ -417,15 +422,19 @@ contract SeraphPresale is ReentrancyGuard {
         tgeClaimed = v.claimed ? v.released : 0;
 
         if (v.startTime > 0 && v.duration > 0 && block.timestamp > v.startTime + v.cliffSeconds) {
-            uint256 elapsed = block.timestamp - v.startTime;
-            uint256 vestedTotal = v.total - ((v.total * tiers[tierId].lockupBps) / BPS);
-            uint256 vested = (vestedTotal * (elapsed - v.cliffSeconds)) / v.duration;
-            releasable = vested > v.released ? vested - v.released : 0;
+            uint256 vestElapsed = block.timestamp - v.startTime - v.cliffSeconds;
+            if (vestElapsed > v.duration) {
+                vestElapsed = v.duration;
+            }
+            uint256 tgeAmount = (v.total * tiers[tierId].lockupBps) / BPS;
+            uint256 vestedTotal = v.total - tgeAmount;
+            uint256 totalUnlocked = tgeAmount + (vestedTotal * vestElapsed) / v.duration;
+            releasable = totalUnlocked > v.released ? totalUnlocked - v.released : 0;
         }
     }
 
     /* ── Fallback ─────────────────────────────────────────── */
-    receive() external payable {
-        this.buyWithETH{value: msg.value}(3); // Public tier default
+    receive() external payable nonReentrant {
+        _buyWithETH(msg.sender, 3); // Public tier default — credits msg.sender directly
     }
 }

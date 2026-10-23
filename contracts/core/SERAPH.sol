@@ -27,6 +27,7 @@ contract SeraphToken is ERC20, ERC20Burnable, ERC20Permit {
     }
 
     uint256 private constant PRECISION = 1e18; // 18 decimals
+    uint256 public constant MAX_SUPPLY = 100_000_000 * 1e18; // Fixed 100M SER max supply
 
     /* === Presale tax (active during and after presale) === */
     bool public sellTaxEnabled = true;
@@ -54,6 +55,7 @@ contract SeraphToken is ERC20, ERC20Burnable, ERC20Permit {
     /* ------------------------------------------------------------------ */
 
     function mint(address to, uint256 amount) external onlyMinter {
+        require(totalSupply() + amount <= MAX_SUPPLY, "SeraphToken: max supply exceeded");
         _mint(to, amount);
     }
 
@@ -169,6 +171,7 @@ contract SeraphToken is ERC20, ERC20Burnable, ERC20Permit {
     }
 
     function receiveFromBridge(address to, uint256 amount) external onlyMinter {
+        require(totalSupply() + amount <= MAX_SUPPLY, "SeraphToken: max supply exceeded");
         _mint(to, amount);
         emit BridgeReceived(to, amount, msg.sender);
     }
