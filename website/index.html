@@ -1477,6 +1477,7 @@
             <div class="lp-chips" id="lpModelChips" role="group" aria-label="Launch model">
               <button type="button" class="lp-chip" aria-pressed="true" data-model="fixed">Fixed supply</button>
               <button type="button" class="lp-chip" aria-pressed="false" data-model="curve">Bonding curve</button>
+              <button type="button" class="lp-chip" aria-pressed="false" data-model="seraph">Seraph pool</button>
             </div>
             <p class="connect-note" id="lpModelNote"></p>
  
@@ -1535,7 +1536,7 @@
           <div class="lp-card">
             <label class="check"><input type="checkbox" id="lpAck"><span>I understand I am launching this token myself. Seraph does not review, endorse, or guarantee it, and it may lose all of its value.</span></label>
             <button class="wallet-btn" type="button" id="lpLaunchBtn"><span class="metal">●</span> LAUNCH TOKEN</button>
-            <div class="connect-note">Connect a wallet to launch on the selected network.</div>
+            <div class="connect-note" id="lpLaunchStatus">Connect a wallet to launch on the selected network.</div>
           </div>
         </div>
  
@@ -1801,7 +1802,8 @@
     var LP_SPLIT_TEXT = { creator: 'Creator 100%', dividends: 'Holders 100%', buyback: 'Buyback and burn 100%', liquidity: 'Pool 100%', platform: 'Seraph 100%' };
     var LP_MODEL_NOTE = {
       fixed: 'Fixed supply: the full supply is minted at launch and trades on a Uniswap V3 pool.',
-      curve: 'Bonding curve: the token trades on a curve from its first trade and moves to a pool when the curve completes.'
+      curve: 'Bonding curve: the token trades on a curve from its first trade and moves to a pool when the curve completes.',
+      seraph: 'Seraph pool: trades on a native Seraph pool where fees are taken in the quote asset on each buy and sell.'
     };
     /* Sample rows, shown only with ?preview=1. They are layout placeholders, not tokens. */
     var LP_SAMPLE = [
@@ -1948,7 +1950,32 @@
     ['lpBuyRange', 'lpSellRange'].forEach(function (id) {
       document.getElementById(id).addEventListener('input', lpUpdate);
     });
- 
+
+    var LP_CONTRACTS = { Base: '', Arc: '' };
+    document.getElementById('lpLaunchBtn').addEventListener('click', async function () {
+      var statusEl = document.getElementById('lpLaunchStatus');
+      var name = document.getElementById('lpName').value.trim();
+      var ticker = document.getElementById('lpTicker').value.replace(/[^A-Za-z0-9]/g, '').toUpperCase();
+      if (!name || !ticker) { statusEl.textContent = 'Enter a token name and ticker before launching.'; return; }
+      if (Math.round(lpSplitTotal()) !== 100) { statusEl.textContent = 'Creator fee split must total exactly 100%.'; return; }
+      if (!document.getElementById('lpAck').checked) { statusEl.textContent = 'Confirm the launch acknowledgment checkbox first.'; return; }
+      if (!window.ethereum) { statusEl.textContent = 'No Web3 wallet detected. Open in MetaMask, Rabby, or Coinbase Wallet.'; return; }
+      try {
+        var accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+        if (LP.chain === 'Base') {
+          try { await window.ethereum.request({ method: 'wallet_switchEthereumChain', params: [{ chainId: '0x2105' }] }); } catch (_) {}
+        }
+        var target = LP_CONTRACTS[LP.chain];
+        if (!target) {
+          statusEl.textContent = 'Wallet connected (' + accounts[0].slice(0, 6) + '…' + accounts[0].slice(-4) + '). SeraphLaunchpad contract on ' + LP.chain + ' is awaiting mainnet deployment address.';
+          return;
+        }
+        statusEl.textContent = 'Ready to submit launch transaction from ' + accounts[0].slice(0, 6) + '…' + accounts[0].slice(-4) + '.';
+      } catch (err) {
+        statusEl.textContent = (err && err.message) ? err.message : 'Wallet request cancelled.';
+      }
+    });
+
     lpRenderRows();
     lpUpdate();
  

@@ -1,0 +1,18 @@
+[package]
+name = "seraph-base-layer"
+version = "0.1.0"
+edition = "2021"
+description = "Seraph Protocol — Monero-inspired Base Layer PoC (Phase 0)"
+
+[dependencies]
+sha3 = "0.10"
+hex = "0.4"
+rand = "0.8"
+
+[[bin]]
+name = "seraph-cli"
+path = "src/main.rs"
+
+[lib]
+name = "seraph_core"
+path = "src/lib.rs"

@@ -161,12 +161,47 @@ The design goal is that moving between SERAPH and XMR never forces a user out of
 
 Planned modules built on the core protocol:
 
+- **Seraph Launchpad** — permissionless multi-chain token launchpad with bonding-curve graduation, locked liquidity, and future privacy-token launches (detailed in Section 7.1)
 - **Private Stablecoins** — over-collateralized, private mint/burn
 - **AI Agent Payment Rails** — unlinkable, metered payments
 - **Private Messaging + Payments** — encrypted messaging with native private tips and invoices
 - **RWA Privacy Interfaces** (later) — selective disclosure for regulated assets
 
 These modules are designed to expand the usefulness of the continuum without weakening the base privacy guarantees.
+
+### 7.1 Seraph Launchpad
+
+The **Seraph Launchpad** (`SeraphLaunchpad` and `LaunchToken`) is a permissionless on-chain token creation and liquidity bootstrapping protocol that generates sustainable protocol revenue while enforcing transparent, immutable market rules.
+
+#### Launch Models
+
+Creators select one of three execution models at deployment:
+
+1. **Bonding Curve (Curve-to-Pool Graduation)**: 100% of the token supply is minted directly into a virtual-reserve constant-product bonding curve $(R_{\text{quote}} + Q_{\text{phantom}}) \cdot R_{\text{token}} = k$. A deterministic portion of supply is held back for graduation liquidity (`reservedTokens`). Once the curve collects the target `graduationThreshold` (or `sellableTokens` reaches zero), the launch automatically graduates inside the completing purchase—clamping any excess buy amount, refunding unused quote currency in the same transaction, and unlocking the reserved supply into a permanently locked constant-product pool.
+2. **Fixed Supply Pool**: The full supply is minted at launch directly into an instant locked pool with zero pre-allocation or team bags held outside the pool.
+3. **Seraph Native Pool**: Trades continuously on a self-contained Seraph constant-product pool where all protocol and creator fees are settled directly in the quote asset on every buy and sell without external DEX router dependencies.
+
+#### Immutable Fee & Split Architecture
+
+Every launch enforces strict, non-upgradeable fee bounds written at token creation:
+
+- **Mandatory Platform Fee (1.0% / 100 bps)**: Charged on every buy and every sell in the quote asset and routed to the Seraph platform fee recipient. Launchers cannot disable or reduce this fee.
+- **Creator Buy & Sell Fees (0% to 2.5% / 0 to 250 bps per side)**: Configured at launch and permanently locked. Combined with the 1% platform fee, the maximum total fee any trade can pay is **3.5%**.
+- **Five-Way Immutable Fee Split**: The creator fee is partitioned at launch (summing to 100%) across five autonomous on-chain destinations:
+  1. **Creator (`creatorShareBps`)** — credited to the creator's designated `feeWallet` via pull-escrow (`claimFees()`) so a reverting recipient contract can never block trading.
+  2. **Buyback & Burn (`buybackShareBps`)** — swaps collected quote fee directly against the reserve and permanently burns the acquired tokens (`ERC20Burnable.burn`), reducing total supply.
+  3. **Holder Dividends (`dividendsShareBps`)** — distributed in $O(1)$ time to circulating holders via a magnified dividend accumulator (`accDividendPerShare`, excluding the launchpad reserve).
+  4. **Auto-LP (`liquidityShareBps`)** — injected directly into `realQuoteReserve`, permanently deepening pool liquidity and raising the floor price.
+  5. **Send to Seraph (`platformShareBps`)** — donated to the Seraph protocol treasury alongside the 1% base fee.
+- **No Tax Exemptions & Capped Atomic Dev Buy**: No wallet can be exempted from trading fees. Creators may optionally execute an atomic dev buy at launch capped at `10%` (`1000 bps`) of supply (`0%`, `1%`, `2%`, `5%`, or `10%`), paying the exact same fee schedule as public buyers.
+
+#### Multi-Chain Rollout & Privacy Token Launches (Roadmap Integration)
+
+The Launchpad rolls out across three progressive stages aligned with the Privacy Continuum:
+
+- **Stage 1 — Public Multi-Chain Launchpad (Base & Arc → Broader EVM/L1 Expansion)**: Launches initially on **Base** and **Arc**, followed by expansion to additional high-throughput EVM and non-EVM chains. All cross-chain deployments settle platform fees to the Seraph ecosystem treasury to fund core protocol R&D and `SERAPH` buyback/burn.
+- **Stage 2 — Optional Shielding Wrapper (`Level 1` Continuum)**: Any graduated Launchpad token can be registered with a companion `PrivacyPool` instance, enabling holders to `shield`, `privateTransfer` (via Groth16 / UltraPlonk ZK proofs over the depth-20 Poseidon Merkle tree), and `unshield` their launched tokens without fragmenting public AMM liquidity.
+- **Stage 3 — Native Privacy Token Launches (`Level 2–3` Continuum on Seraph EVM & XMR EVM)**: Once the Seraph Base Layer and private EVMs are live, creators will be able to launch **Native Privacy Tokens** directly from the Launchpad UI—featuring confidential holder balances (Pedersen commitments), stealth recipient addresses, unlinkable dividend claims, and optional view-key disclosure for compliant launches.
 
 ---
 

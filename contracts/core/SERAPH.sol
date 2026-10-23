@@ -118,6 +118,10 @@ contract SeraphToken is ERC20, ERC20Burnable, ERC20Permit {
         minters[_presale] = true; // presale remains able to mint TGE + vesting claims
     }
 
+    function setPrivacyPool(address _privacyPool) external onlyTreasury {
+        privacyPool = _privacyPool;
+    }
+
     /* ------------------------------------------------------------------ */
     /* Privacy hooks                                                      */
     /* ------------------------------------------------------------------ */
@@ -127,16 +131,31 @@ contract SeraphToken is ERC20, ERC20Burnable, ERC20Permit {
      *         then call shield. Convenience wrapper.
      */
     function approveAndShield(uint256 amount, bytes32 commitment) external {
+        require(privacyPool != address(0), "SeraphToken: privacyPool not set");
         _approve(msg.sender, privacyPool, amount);
-        // PrivacyPool.shield(amount, commitment, "");
+        (bool success, ) = privacyPool.call(
+            abi.encodeWithSignature("shieldFor(address,uint256,bytes32,bytes)", msg.sender, amount, commitment, "")
+        );
+        require(success, "SeraphToken: shield call failed");
         emit PrivacyHook(msg.sender, "shield", amount);
     }
 
     /**
      * @notice Unshield tokens from the privacy pool back to a public address.
      */
-    function unshield(uint256 amount, address recipient) external {
-        // PrivacyPool.unshield(nullifier, amount, recipient, proof);
+    function unshield(bytes32 nullifier, uint256 amount, address recipient, bytes32 root, bytes calldata proof) external {
+        require(privacyPool != address(0), "SeraphToken: privacyPool not set");
+        (bool success, ) = privacyPool.call(
+            abi.encodeWithSignature(
+                "unshield(bytes32,uint256,address,bytes32,bytes)",
+                nullifier,
+                amount,
+                recipient,
+                root,
+                proof
+            )
+        );
+        require(success, "SeraphToken: unshield call failed");
         emit PrivacyHook(msg.sender, "unshield", amount);
     }
 
