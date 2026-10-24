@@ -1,0 +1,112 @@
+[THREAD: 1/10] — INTRODUCING SERAPH PROTOCOL 🕊️
+
+Privacy isn't a toggle. It's a continuum.
+
+Today, we're unveiling Seraph: a modular privacy protocol uniting a Monero-inspired settlement layer with dual private EVMs sharing a unified zero-knowledge anonymity set.
+
+Strong privacy is default.
+Smart contracts are native.
+$XMR is a first-class citizen. 🧵👇
+
+---
+
+[THREAD: 2/10] — THE FUNDAMENTAL CRYPTO DILEMMA
+
+Until now, Web3 was fractured into two broken extremes:
+
+1. UTXO privacy chains (Monero): Unmatched anonymity, but zero programmable DeFi or composability.
+2. Account-based EVMs (Ethereum): Turing-complete smart contracts, but your entire net worth and transaction history are broadcast to surveillance firms and MEV bots.
+
+Seraph breaks this false dichotomy.
+
+---
+
+[THREAD: 3/10] — THE PRIVACY CONTINUUM (LEVELS 0 TO 3)
+
+Different transactions require different privacy guarantees:
+
+🔹 Level 0 (Public EVM): 100% transparent for DEX pools and public audits.
+🔹 Level 1 (Shielded Pool): Conceal balances while retaining EVM composability.
+🔹 Level 2 (Full Stealth): Unlinkable P2P routing over depth-20 Merkle trees ($2^{20}$ anonymity set).
+🔹 Level 3 (Private Compute): Confidential smart contract execution with encrypted state slots.
+
+---
+
+[THREAD: 4/10] — DUAL PRIVATE EVMS
+
+Seraph deploys two purpose-built execution environments:
+
+⚡ Seraph EVM: General-purpose confidential EVM with gas settled in native $SER. Full Solidity & Foundry tooling parity.
+⚡ XMR EVM: Native Monero gas execution with tight base-layer coupling. Spend $XMR directly across decentralized finance without centralized wrapped bridges.
+
+---
+
+[THREAD: 5/10] — MEV-SHIELDED SEQUENCING
+
+Tired of sandwich attacks and front-running bots?
+
+Seraph implements Threshold Encrypted Mempools:
+- User transactions are encrypted with a threshold key before broadcast.
+- The sequencer commits to an immutable batch order.
+- Decryption occurs only AFTER the order is locked on-chain.
+
+Predatory MEV is mathematically neutralized.
+
+---
+
+[THREAD: 6/10] — FAIR-LAUNCH PRIVACY LAUNCHPAD
+
+Token launches on public blockchains expose buyers to sniper bots and rug pulls.
+
+The Seraph Launchpad introduces:
+• Continuous mathematical bonding curves ($x \cdot y = k$).
+• Customizable 5-way fee splits (Holder Dividends, Auto-LP, Buyback & Burn, Creator).
+• Atomic Dev Buys up to 10% to defeat snipers.
+• Instant opt-in shielding directly into private notes.
+
+---
+
+[THREAD: 7/10] — AUTONOMOUS AI AGENT PAYMENTS
+
+Autonomous AI agents transacting on-chain cannot afford to broadcast their operational budgets.
+
+Using Seraph's `UsageVault`:
+- AI agents deposit credits anonymously.
+- Agents stream high-frequency compute micro-payments via one-time cryptographic tickets.
+- Zero linkability between the agent's wallet and the compute provider.
+
+---
+
+[THREAD: 8/10] — INSTITUTIONAL-GRADE COMPLIANCE
+
+Privacy does NOT mean regulatory non-compliance.
+
+Seraph implements Asymmetric Key Separation:
+• Incoming View Key ($\mathcal{K}_{\text{in}}$): Scans and decrypts incoming balances.
+• Outgoing View Key ($\mathcal{K}_{\text{out}}$): Generates mathematically verifiable tax disclosures proving exact unshielded amounts to accountants without compromising spending keys.
+
+---
+
+[THREAD: 9/10] — BATTLE-TESTED SECURITY & TESTNET LIVE
+
+Seraph is NOT vaporware. The protocol is live and verified on Base Sepolia (`Chain ID 84532`):
+
+✅ 155+ Foundry Unit & Integration Tests (100% passing)
+✅ 896,000 Stateful Invariant Checks with 0 Reverts
+✅ 17 Rust Base-Layer Cryptographic Adversarial Pentests
+✅ 43 Automated Node.js SDK & Verification Tests
+✅ Open-source Satoshi-style whitepaper & complete BookStack docs
+
+---
+
+[THREAD: 10/10] — JOIN THE REVOLUTION
+
+Ready to experience programmable privacy?
+
+🌐 Website & Live Privacy Station: https://seraphprotocol.tech
+📄 Whitepaper: https://seraphprotocol.tech/#whitepaper
+📚 Complete Documentation: https://seraphprotocol.tech/#docs
+💻 GitHub: https://github.com/0xfuckian/seraph
+💬 Join our community and build on the Privacy Continuum today.
+
+RT and spread the word! 🕊️⚡

@@ -1,0 +1,62 @@
+[THREAD: THE SERAPH LAUNCHPAD — DECENTRALIZED FAIR LAUNCHES WITH REAL TOKENOMICS]
+
+Tired of predatory memecoin launchpads where:
+❌ Insiders snipe 40% of the supply on block 0?
+❌ Creators dump all their tokens and vanish?
+❌ 100% of the platform fees disappear into centralized pockets?
+
+The Seraph Launchpad completely re-architects token launches from first principles.
+
+Here's how we solved fair launches: 🧵👇
+
+---
+
+1/6: THREE MATHEMATICAL LAUNCH MODELS
+Choose the model that fits your community:
+• Fixed Pool (Model 0): Equal fixed pricing with a hard cap.
+• Bonding Curve (Model 1): Constant product AMM ($x \cdot y = k$) with monotonic pricing.
+• Seraph Pool (Model 2): Hybrid bonding curve with instant one-click privacy shielding into private notes.
+
+---
+
+2/6: THE 5-WAY FEE REVENUE SPLIT
+Creators don't just extract fees—they configure automated tokenomic flywheels:
+1. Creator Share: Sent to creator wallet via pull-escrow.
+2. Holder Dividends: Streamed automatically to all holders in ETH via `accDividendPerShare`.
+3. Buyback & Burn: Automatically market-buys tokens from the curve and burns them permanently.
+4. Auto-Liquidity (LP): Deepens curve quote reserves to accelerate graduation.
+5. Mandatory Platform Fee: 1.00% fixed fee powering the Seraph DAO treasury.
+
+---
+
+3/6: SIX ONE-CLICK UI PRESETS
+Not a tokenomics expert? Launch with battle-tested presets:
+👑 Creator-Backed: 100% creator share (artists, builders, founders).
+💎 Diamond Hands: 100% holder dividends (ETH passive income for community).
+🔥 Deflationary: 100% buyback and burn (aggressive supply contraction).
+💧 Auto-LP: 100% pool liquidity (deep liquidity, rapid graduation).
+🕊️ Send to Seraph: 100% to protocol treasury (charity and ecosystem grants).
+⚙️ Custom: Configure arbitrary splits across all 5 destinations summing to 100%.
+
+---
+
+4/6: ATOMIC DEV BUYS (DEFEAT SNIPERS)
+Creators can atomically bundle up to 10% dev buy in the exact same transaction that creates the token.
+Snipers cannot front-run the creator. The creator gets the best price on curve initialization.
+
+---
+
+5/6: MATHEMATICAL DIVIDEND CONSERVATION
+Our smart contracts use an $O(1)$ constant-time accumulator:
+accDividendPerShare += (dividendEth * 1e18) / eligibleSupply
+
+Our fuzz test suite verified across 256 random runs that transferring tokens across 10 sybil addresses never extracts an extra wei of dividends. Zero rounding exploits.
+
+---
+
+6/6: LIVE ON BASE SEPOLIA
+The Seraph Launchpad is live, verified, and active on Base Sepolia (`0xe0349E4cC431329207e98C5205062776e058A846`).
+
+Launch your privacy-native token today:
+🚀 https://seraphprotocol.tech/#launch
+Documentation: https://seraphprotocol.tech/#docs

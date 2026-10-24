@@ -1,0 +1,63 @@
+================================================================================
+SERAPH PROTOCOL — TELEGRAM & DISCORD COMMUNITY ANNOUNCEMENT PACK
+================================================================================
+
+[PINNED MESSAGE 1: WELCOME TO SERAPH PROTOCOL]
+
+🕊️ WELCOME TO THE SERAPH PROTOCOL COMMUNITY 🕊️
+
+Seraph is a modular privacy continuum uniting a Monero-inspired settlement layer with dual private EVMs sharing a unified cryptographic anonymity set.
+
+📌 OFFICIAL LINKS & RESOURCES
+• Official Website: https://seraphprotocol.tech
+• Live Privacy Station: https://seraphprotocol.tech/#privacy-pool
+• Token Launchpad: https://seraphprotocol.tech/#launch
+• Token Presale: https://seraphprotocol.tech/#presale
+• Satoshi-Style Whitepaper: https://seraphprotocol.tech/#whitepaper
+• Comprehensive BookStack Docs: https://seraphprotocol.tech/#docs
+• Official GitHub: https://github.com/0xfuckian/seraph
+
+📌 CONTRACT REGISTRY (Base Sepolia Testnet - Chain ID: 84532)
+• SeraphToken ($SER): 0x1d734185220Bd4024c60fC8C1897Aefc08Bcb16F
+• PrivacyPool: 0x06fA7CAfC96Bf988F3d601138976a448e8B99aE6
+• SeraphPresale: 0x2c4156e4bFE0bE6A4e683C7Be521E1cC10B798bE
+• SeraphLaunchpad: 0xe0349E4cC431329207e98C5205062776e058A846
+• CrossEVMBridge: 0x10f135b8004fB99eec3d7e7E4f652b477A14b0bF
+• GasRelayer: 0x8b5F2A84c7E1a37c0245a4944c6691c94488b394
+• InvoiceRegistry: 0x5FbDB2315678afecb367f032d93F642f64180aa3
+• UsageVault (AI Credits): 0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512
+• CollateralVault (xUSD): 0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0
+
+🛡️ COMMUNITY RULES:
+1. Admins will NEVER DM you first or ask for private keys / seed phrases.
+2. Only trust links listed in this pinned message.
+3. Keep discussion constructive, technical, and respectful.
+
+---
+
+[COMMUNITY FAQ COPY]
+
+Q1: What is the total supply of $SER?
+A: Strictly fixed at 100,000,000 SER. There is no mint function beyond the 100M cap.
+
+Q2: How does the sell tax work?
+A: Sells incur a 1.00% tax. 50% is permanently burned (reducing total supply), and 50% goes to the DAO Treasury. Shielding into the PrivacyPool and unshielding out have 0% tax!
+
+Q3: Can I test the privacy features right now?
+A: Yes! Head to https://seraphprotocol.tech/#privacy-pool, grab free testnet SER from the built-in faucet, and test shielding, private transfers, and unshielding on Base Sepolia.
+
+Q4: What is the presale structure?
+A: Three tiers:
+- Strategic: $0.02 (25% TGE, 14-day cliff, 12-month linear vesting)
+- Private: $0.03 (20% TGE, 14-day cliff, 12-month linear vesting)
+- Public: $0.04 (100% unlocked at TGE, no KYC required)
+
+---
+
+[DISCORD ROLE ANNOUNCEMENT]
+
+🎉 ROLE VERIFICATION ACTIVE!
+Connect your wallet to claim your early tester roles:
+• @Voyager: Shielded tokens in the Phase 0 Privacy Pool.
+• @Pioneer: Created or traded a token on the Seraph Launchpad.
+• @Validator: Ran a local Seraph node or relayer test.

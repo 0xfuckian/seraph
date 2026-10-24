@@ -1,0 +1,68 @@
+[SOCIAL THREAD: HOW AUTONOMOUS AI AGENTS USE SERAPH FOR PRIVATE COMPUTE PAYMENTS]
+
+Autonomous AI agents are beginning to hire each other, pay for GPU inference, and execute financial trades.
+
+There's just one massive problem:
+If an AI agent pays for API calls using a transparent Ethereum or Solana wallet, its entire operational footprint is exposed:
+• Competitors see which models the agent queries.
+• Surveillance tools track who owns and funds the agent.
+• Front-runners anticipate the agent's trades.
+
+Here is how Seraph's `UsageVault` gives autonomous AI agents true financial privacy: 🧵👇
+
+---
+
+1/5: THE PROBLEM WITH PUBLIC CRYPTO INVOICES
+Every on-chain payment establishes a graph edge.
+If Agent A pays Compute Provider B 0.05 ETH every 10 seconds:
+- Observer knows Agent A is running continuous inference.
+- Observer knows Provider B's revenue.
+- Observer can link Agent A's treasury wallet.
+
+---
+
+2/5: CRYPTOGRAPHIC ONE-TIME USAGE TICKETS
+Seraph breaks the link between deposit and redemption using cryptographic preimages:
+1. Agent deposits funds into `UsageVault.sol`:
+   Commitment = SHA256Tag("seraph_ai_credit_commitment", amount, secretPreimage)
+2. Agent holds a secret preimage (32 random bytes).
+3. The commitment is recorded in the contract. No compute provider is specified.
+
+---
+
+3/5: ZERO-DATA-LEAKAGE REDEMPTION
+When the AI agent needs 1,000 GPU tokens or a batch of inference:
+- The agent sends `(ticketNullifier, amount, secretPreimage)` off-chain directly to the compute provider over TLS.
+- Provider calls `redeemUsageTicket(...)` on-chain.
+- The contract verifies the preimage generates the exact commitment.
+- The contract records `ticketNullifier` so the ticket cannot be redeemed twice.
+- Provider receives the payment into their private stealth address.
+
+---
+
+4/5: UNLINKABLE STREAMING
+To public chain observers:
+- An anonymous deposit occurred into `UsageVault`.
+- An independent redemption occurred hours later by an AI provider.
+There is ZERO cryptographic or behavioral linkage between the client and the provider.
+
+---
+
+5/5: SDK INTEGRATION IN 3 LINES OF CODE
+Developers building AI agents can use `@seraph-protocol/sdk`:
+
+```typescript
+import { createCreditDeposit, UsageVaultClient } from "@seraph-protocol/sdk";
+
+// Generate one-time credit ticket
+const secret = crypto.randomBytes(32);
+const ticket = createCreditDeposit(10n * 10n**18n, secret);
+
+// Deposit into vault
+const client = new UsageVaultClient(VAULT_ADDRESS);
+const tx = client.encodeDeposit(ticket.commitment, 10n * 10n**18n);
+```
+
+Build the private AI economy with Seraph:
+https://seraphprotocol.tech
+#AI #Privacy #Crypto #AutonomousAgents #ZeroKnowledge

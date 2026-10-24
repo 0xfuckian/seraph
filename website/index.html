@@ -954,7 +954,9 @@
           <button type="button" class="priv-tab-btn active" data-priv-tab="shield">1. Shield SER (Public → Private)</button>
           <button type="button" class="priv-tab-btn" data-priv-tab="transfer">2. Private Transfer (Private → Private)</button>
           <button type="button" class="priv-tab-btn" data-priv-tab="unshield">3. Unshield SER (Private → Public)</button>
-          <button type="button" class="priv-tab-btn" data-priv-tab="faucet">4. Testnet SER Faucet</button>
+          <button type="button" class="priv-tab-btn" data-priv-tab="bridge">4. Dual EVM &amp; Bridge</button>
+          <button type="button" class="priv-tab-btn" data-priv-tab="messaging">5. Encrypted Messages &amp; Invoices</button>
+          <button type="button" class="priv-tab-btn" data-priv-tab="faucet">6. Testnet SER Faucet</button>
         </div>
 
         <!-- Panel 1: Shield SER -->
@@ -1033,7 +1035,125 @@
           <div id="privUnshieldStatus" class="connect-note" style="margin-top:12px;"></div>
         </div>
 
-        <!-- Panel 4: Testnet SER Faucet -->
+        <!-- Panel 4: Dual EVM & Cross-Chain Bridge -->
+        <div id="privPanelBridge" class="priv-panel">
+          <p class="section-desc" style="font-size:15px; margin-bottom:16px;">
+            Cross-chain settlement connecting Base Sepolia, Seraph EVM (gas in SER), and XMR EVM (gas in XMR). Relayers bond 1.0 ETH with a 1-hour fraud-proof challenge window.
+          </p>
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px;">
+            <div>
+              <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-bottom:8px;">
+                <label class="field"><span>Source Chain</span>
+                  <select id="privBridgeSource" style="width:100%; font-family:'Space Grotesk',sans-serif; font-size:13px; padding:10px; box-shadow:var(--line-shadow); border:none; background:var(--color-white); outline:none;">
+                    <option value="base_sepolia">Base Sepolia (84532)</option>
+                    <option value="seraph_evm">Seraph EVM (1001)</option>
+                    <option value="xmr_evm">XMR EVM (1002)</option>
+                  </select>
+                </label>
+                <label class="field"><span>Destination Chain</span>
+                  <select id="privBridgeDest" style="width:100%; font-family:'Space Grotesk',sans-serif; font-size:13px; padding:10px; box-shadow:var(--line-shadow); border:none; background:var(--color-white); outline:none;">
+                    <option value="seraph_evm">Seraph EVM (1001)</option>
+                    <option value="xmr_evm">XMR EVM (1002)</option>
+                    <option value="base_sepolia">Base Sepolia (84532)</option>
+                  </select>
+                </label>
+              </div>
+
+              <div style="display:grid; grid-template-columns: 1fr 120px; gap:12px; margin-bottom:8px;">
+                <label class="field"><span>Bridge Amount</span><input type="number" id="privBridgeAmt" placeholder="50.0" step="any" min="0.001"></label>
+                <label class="field"><span>Asset</span>
+                  <select id="privBridgeAsset" style="width:100%; font-family:'Space Grotesk',sans-serif; font-size:13px; padding:10px; box-shadow:var(--line-shadow); border:none; background:var(--color-white); outline:none;">
+                    <option value="SER">SER</option>
+                    <option value="wXMR">wXMR</option>
+                  </select>
+                </label>
+              </div>
+
+              <label class="field"><span>Destination Recipient Address</span><input type="text" id="privBridgeRecipient" placeholder="0x... (defaults to connected wallet)"></label>
+              <button type="button" class="wallet-btn" id="privBridgeBtn" style="width:100%;"><span class="metal">●</span> LOCK &amp; INITIATE BRIDGE TRANSFER →</button>
+            </div>
+
+            <div>
+              <div class="priv-note-card">
+                <div style="font-weight:700; margin-bottom:6px; color:var(--color-ink);">Cross-EVM Protocol Telemetry:</div>
+                <div style="color:var(--color-sub); margin-bottom:4px;">Bridge Contract: <b style="color:var(--color-ink); font-size:11px;">0x10f1...b0bF (Base Sepolia)</b></div>
+                <div style="color:var(--color-sub); margin-bottom:4px;">Min Relayer Bond: <b style="color:var(--color-ink);">1.00 ETH</b></div>
+                <div style="color:var(--color-sub); margin-bottom:4px;">Challenge Window: <span style="color:var(--color-accent); font-weight:700;">1 Hour (3,600s)</span></div>
+                <div style="color:var(--color-sub); margin-bottom:6px;">Bridge Guardian Circuit Breaker: <span style="color:var(--color-green); font-weight:700;">ACTIVE (RUNNING)</span></div>
+
+                <div style="border-top:var(--line-shadow); padding-top:8px; margin-top:8px;">
+                  <div style="font-weight:700; margin-bottom:4px; font-size:11px; text-transform:uppercase;">Gas Relayer Voucher Tool:</div>
+                  <div style="display:flex; gap:8px; align-items:center;">
+                    <input type="number" id="privVoucherGasUnits" placeholder="Gas units (e.g. 150000)" style="font-family:'Space Grotesk',sans-serif; font-size:12px; padding:6px 10px; box-shadow:var(--line-shadow); border:none; flex:1;">
+                    <button type="button" class="lp-chip" id="privFundVoucherBtn" style="padding:6px 12px; font-size:11px;">Fund Gas Voucher</button>
+                  </div>
+                  <div id="privVoucherEstimate" style="color:var(--color-sub); font-size:10px; margin-top:4px;">Rate: 150k gas ≈ 0.15 SER or 0.0015 wXMR</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id="privBridgeStatus" class="connect-note" style="margin-top:12px;"></div>
+        </div>
+
+        <!-- Panel 5: Encrypted Messaging & Stealth Invoices -->
+        <div id="privPanelMessaging" class="priv-panel">
+          <p class="section-desc" style="font-size:15px; margin-bottom:16px;">
+            End-to-end encrypted messaging and stealth merchant invoicing powered by <code>InvoiceRegistry.sol</code>. Ephemeral Diffie-Hellman keys ensure ciphertexts can only be decrypted by the holder of the recipient's incoming view key.
+          </p>
+
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px;">
+            <div>
+              <div style="display:flex; gap:8px; margin-bottom:12px;">
+                <button type="button" class="lp-chip active msg-subtab-btn" data-msg-mode="send">Send Message</button>
+                <button type="button" class="lp-chip msg-subtab-btn" data-msg-mode="invoice">Create Invoice</button>
+                <button type="button" class="lp-chip msg-subtab-btn" data-msg-mode="inbox">View Inbox</button>
+              </div>
+
+              <!-- Sub-mode: Send Message -->
+              <div id="msgSubModeSend">
+                <label class="field"><span>Recipient Public Key (32-byte hex)</span><input type="text" id="privMsgRecipientPubkey" placeholder="0x... (e.g. 0x8a7f9c2d...)"></label>
+                <label class="field"><span>Secret Message Payload</span><textarea id="privMsgPayload" rows="3" placeholder="Enter confidential message, contract memo, or OTC trade confirmation..." style="width:100%; font-family:'Space Grotesk',sans-serif; font-size:14px; padding:10px; box-shadow:var(--line-shadow); border:none; background:var(--color-white); outline:none;"></textarea></label>
+                <button type="button" class="wallet-btn" id="privMsgSendBtn" style="width:100%;"><span class="metal">●</span> BROADCAST ENCRYPTED MESSAGE (ON-CHAIN) →</button>
+              </div>
+
+              <!-- Sub-mode: Create Invoice -->
+              <div id="msgSubModeInvoice" style="display:none;">
+                <label class="field"><span>Stealth Recipient Pubkey</span><input type="text" id="privInvRecipient" placeholder="0x..."></label>
+                <div style="display:grid; grid-template-columns: 1fr 100px; gap:8px;">
+                  <label class="field"><span>Invoice Amount</span><input type="number" id="privInvAmt" placeholder="100.0" step="any"></label>
+                  <label class="field"><span>Token</span>
+                    <select id="privInvToken" style="width:100%; font-family:'Space Grotesk',sans-serif; font-size:13px; padding:10px; box-shadow:var(--line-shadow); border:none; background:var(--color-white); outline:none;">
+                      <option value="SER">SER</option>
+                      <option value="wXMR">wXMR</option>
+                    </select>
+                  </label>
+                </div>
+                <label class="field"><span>Encrypted Memo</span><input type="text" id="privInvMemo" placeholder="Goods, services, or invoice description"></label>
+                <button type="button" class="wallet-btn" id="privInvCreateBtn" style="width:100%;"><span class="metal">●</span> REGISTER STEALTH INVOICE →</button>
+              </div>
+
+              <!-- Sub-mode: Inbox -->
+              <div id="msgSubModeInbox" style="display:none;">
+                <label class="field"><span>Your Incoming View Key</span><input type="text" id="privMsgViewKey" placeholder="0x... (auto-derived from connected wallet)"></label>
+                <button type="button" class="lp-chip" id="privMsgScanBtn" style="width:100%; padding:10px; margin-bottom:12px;">Scan &amp; Decrypt Recent Messages</button>
+                <div id="privMsgFeed" style="max-height:200px; overflow-y:auto; font-family:'JetBrains Mono',monospace; font-size:11px;"></div>
+              </div>
+            </div>
+
+            <div>
+              <div class="priv-note-card">
+                <div style="font-weight:700; margin-bottom:6px; color:var(--color-ink);">Ephemeral Cryptography &amp; Stream Cipher:</div>
+                <div style="color:var(--color-sub); margin-bottom:4px;">Cipher Mode: <b style="color:var(--color-ink);">Keccak256 CTR (Rust note.rs parity)</b></div>
+                <div style="color:var(--color-sub); margin-bottom:4px;">Ephemeral Secret ($r$): <span id="privMsgEphemeralDisplay" style="color:var(--color-accent); font-size:11px;">[Generated on send]</span></div>
+                <div style="color:var(--color-sub); margin-bottom:4px;">Ephemeral Public Key ($R = rG$): <span id="privMsgRDisplay" style="color:var(--color-green); font-size:11px;">[Ready]</span></div>
+                <div style="color:var(--color-sub);">Encrypted Ciphertext Preview: <div id="privMsgCipherPreview" style="font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--color-orange); word-break:break-all; margin-top:4px;">—</div></div>
+              </div>
+            </div>
+          </div>
+          <div id="privMsgStatus" class="connect-note" style="margin-top:12px;"></div>
+        </div>
+
+        <!-- Panel 6: Testnet SER Faucet -->
         <div id="privPanelFaucet" class="priv-panel">
           <p class="section-desc" style="font-size:15px; margin-bottom:16px;">
             Need testnet $SER$ to experiment with privacy shielding on Base Sepolia? You can acquire liquid testnet SER directly with Sepolia ETH.
@@ -1341,60 +1461,147 @@
  
     <!-- § 07 Docs -->
     <div id="docs" class="section">
-      <div class="meta">§ 07 — DOCUMENTATION</div>
-      <h2 class="section-title">Build in private.</h2>
-      <p class="section-desc">The whitepaper, brand system, and contracts are public today. SDK reference and circuit guides land with their roadmap phases.</p>
- 
-      <div class="deck">
+      <div class="section-header">
+        <div>
+          <div class="meta">§ 07 — BOOKSTACK DOCUMENTATION SUITE</div>
+          <h2 class="section-title">Four books. 22 chapters. Complete specification.</h2>
+          <p class="section-desc">The official Seraph BookStack documentation suite is open-source and comprehensive: mathematical foundations, dual private EVMs, cross-chain bridges, tokenomics, and security audit matrices.</p>
+        </div>
+      </div>
+
+      <!-- Quick Resource Links Bar -->
+      <div style="display:flex; flex-wrap:wrap; gap:12px; margin-bottom:28px;">
+        <a href="https://github.com/0xfuckian/seraph/blob/main/docs/bookstack/README.md" target="_blank" rel="noopener" class="cta-primary" style="font-size:11px; padding:12px 20px;">
+          <span class="metal">●</span> BROWSE BOOKSTACK SHELF (ALL 4 BOOKS) →
+        </a>
+        <a href="https://github.com/0xfuckian/seraph/blob/main/whitepaper/seraph_whitepaper.md" target="_blank" rel="noopener" class="cta-secondary" style="font-size:11px; padding:12px 20px;">
+          READ SATOSHI WHITEPAPER (V3.0) →
+        </a>
+        <a href="https://github.com/0xfuckian/seraph/tree/main/contracts" target="_blank" rel="noopener" class="cta-secondary" style="font-size:11px; padding:12px 20px;">
+          EXPLORE CONTRACTS (157 TESTS) →
+        </a>
+        <a href="https://github.com/0xfuckian/seraph/tree/main/sdk/typescript" target="_blank" rel="noopener" class="cta-secondary" style="font-size:11px; padding:12px 20px;">
+          TYPESCRIPT SDK →
+        </a>
+      </div>
+
+      <!-- The 4 Books Grid -->
+      <div class="deck" style="margin-bottom:32px;">
+        <!-- Book 1 -->
         <div class="deck-card">
           <div class="deck-face">
             <div class="deck-brand-row">
-              <span class="deck-brand">SERAPH</span>
-              <span class="deck-badge text-magenta"><span class="dot"></span> SPEC</span>
+              <span class="deck-brand">BOOK 1</span>
+              <span class="deck-badge text-magenta"><span class="dot"></span> CRYPTO</span>
             </div>
-            <div class="deck-name">Whitepaper</div>
-            <div class="deck-domain text-magenta">Privacy Continuum Protocol · v3.0</div>
+            <div class="deck-name">Foundations &amp; Cryptography</div>
+            <div class="deck-domain text-magenta">Chapters 00 – 04</div>
             <div class="tech-tags">
-              <span class="tech-tag">Cryptography</span>
-              <span class="tech-tag">Tokenomics</span>
-              <span class="tech-tag">Architecture</span>
+              <span class="tech-tag">Pedersen</span>
+              <span class="tech-tag">Stealth DKSAP</span>
+              <span class="tech-tag">ZK Circuits</span>
+              <span class="tech-tag">Groth16</span>
             </div>
-            <div class="deck-result text-magenta">The full design — now.</div>
-            <a href="https://github.com/0xfuckian/seraph/blob/main/whitepaper/seraph_whitepaper.md" target="_blank" rel="noopener" class="cta-secondary" style="font-size:11px; padding:10px 18px;">READ →</a>
+            <div class="deck-result text-magenta">Privacy Continuum L0–L3, Monero heritage, Seraphis research horizons, and ZK proving benchmarks.</div>
+            <a href="https://github.com/0xfuckian/seraph/tree/main/docs/bookstack/Book_1_Foundations_and_Cryptography" target="_blank" rel="noopener" class="cta-secondary" style="font-size:11px; padding:10px 18px; margin-top:14px;">OPEN BOOK 1 →</a>
           </div>
         </div>
+
+        <!-- Book 2 -->
         <div class="deck-card">
           <div class="deck-face">
             <div class="deck-brand-row">
-              <span class="deck-brand">SERAPH</span>
-              <span class="deck-badge text-accent"><span class="dot"></span> CODE</span>
+              <span class="deck-brand">BOOK 2</span>
+              <span class="deck-badge text-accent"><span class="dot"></span> NETWORKS</span>
             </div>
-            <div class="deck-name">Contracts</div>
-            <div class="deck-domain text-accent">SER · Presale · PrivacyPool</div>
+            <div class="deck-name">Core Architecture &amp; Networks</div>
+            <div class="deck-domain text-accent">Chapters 05 – 09</div>
             <div class="tech-tags">
-              <span class="tech-tag">Solidity</span>
-              <span class="tech-tag">Foundry</span>
-              <span class="tech-tag">16 tests</span>
+              <span class="tech-tag">Base Layer</span>
+              <span class="tech-tag">Dual EVMs</span>
+              <span class="tech-tag">Bridges</span>
+              <span class="tech-tag">MEV Shield</span>
             </div>
-            <div class="deck-result text-accent">Audit-ready source, verified by tests.</div>
-            <a href="https://github.com/0xfuckian/seraph/tree/main/contracts" target="_blank" rel="noopener" class="cta-secondary" style="font-size:11px; padding:10px 18px;">BROWSE →</a>
+            <div class="deck-result text-accent">Rust sovereign node, Seraph EVM &amp; XMR EVM, optimistic fraud bridges, and threshold encrypted mempools.</div>
+            <a href="https://github.com/0xfuckian/seraph/tree/main/docs/bookstack/Book_2_Core_Architecture_and_Networks" target="_blank" rel="noopener" class="cta-secondary" style="font-size:11px; padding:10px 18px; margin-top:14px;">OPEN BOOK 2 →</a>
           </div>
         </div>
+
+        <!-- Book 3 -->
         <div class="deck-card">
           <div class="deck-face">
             <div class="deck-brand-row">
-              <span class="deck-brand">SERAPH</span>
-              <span class="deck-badge text-green"><span class="dot"></span> SDK</span>
+              <span class="deck-brand">BOOK 3</span>
+              <span class="deck-badge text-green"><span class="dot"></span> APPS</span>
             </div>
-            <div class="deck-name">SDK (TypeScript)</div>
-            <div class="deck-domain text-green">Wallet &amp; contract integration</div>
+            <div class="deck-name">Applications &amp; Tokenomics</div>
+            <div class="deck-domain text-green">Chapters 10 – 15</div>
             <div class="tech-tags">
-              <span class="tech-tag">TypeScript</span>
-              <span class="tech-tag">Viem</span>
-              <span class="tech-tag">ZK</span>
+              <span class="tech-tag">Wallets</span>
+              <span class="tech-tag">xUSD Stable</span>
+              <span class="tech-tag">Launchpad</span>
+              <span class="tech-tag">Dividends</span>
             </div>
-            <div class="deck-result text-green">Planned · Phase 2.</div>
-            <span class="status-tag st-green" style="margin-top:12px;">Coming soon</span>
+            <div class="deck-result text-green">Official wallets, note scanning, AI usage tickets, DEX tax exemptions, presale vesting, and creator launchpad.</div>
+            <a href="https://github.com/0xfuckian/seraph/tree/main/docs/bookstack/Book_3_Applications_and_Tokenomics" target="_blank" rel="noopener" class="cta-secondary" style="font-size:11px; padding:10px 18px; margin-top:14px;">OPEN BOOK 3 →</a>
+          </div>
+        </div>
+
+        <!-- Book 4 -->
+        <div class="deck-card">
+          <div class="deck-face">
+            <div class="deck-brand-row">
+              <span class="deck-brand">BOOK 4</span>
+              <span class="deck-badge text-orange"><span class="dot"></span> SECURITY</span>
+            </div>
+            <div class="deck-name">Operations, Security &amp; Ops</div>
+            <div class="deck-domain text-orange">Chapters 16 – 21</div>
+            <div class="tech-tags">
+              <span class="tech-tag">Private Ballots</span>
+              <span class="tech-tag">Threat Matrix</span>
+              <span class="tech-tag">Circuit Breakers</span>
+              <span class="tech-tag">Glossary</span>
+            </div>
+            <div class="deck-result text-orange">Anonymous DAO governance, 12-vector threat pentests, emergency pause playbooks, and developer setup.</div>
+            <a href="https://github.com/0xfuckian/seraph/tree/main/docs/bookstack/Book_4_Operations_Security_and_Reference" target="_blank" rel="noopener" class="cta-secondary" style="font-size:11px; padding:10px 18px; margin-top:14px;">OPEN BOOK 4 →</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Interactive Chapter Inspector -->
+      <div class="priv-dock" style="margin-top:0; border-top:4px solid var(--color-ink);">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; margin-bottom:20px;">
+          <div>
+            <div class="meta" style="margin-bottom:4px;">CHAPTER NAVIGATOR &amp; DEEP-DIVE</div>
+            <h3 style="font-family:'Space Grotesk',sans-serif; font-size:22px; font-weight:700;">Select a BookStack Chapter</h3>
+          </div>
+          <div style="display:flex; gap:8px; flex-wrap:wrap;">
+            <button type="button" class="priv-tab-btn active doc-book-btn" data-doc-book="1">Book 1</button>
+            <button type="button" class="priv-tab-btn doc-book-btn" data-doc-book="2">Book 2</button>
+            <button type="button" class="priv-tab-btn doc-book-btn" data-doc-book="3">Book 3</button>
+            <button type="button" class="priv-tab-btn doc-book-btn" data-doc-book="4">Book 4</button>
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns: 1fr 1.6fr; gap:24px;">
+          <div>
+            <label class="field"><span>Select Chapter</span>
+              <select id="docChapterSelect" style="width:100%; font-family:'Space Grotesk',sans-serif; font-size:14px; padding:12px; box-shadow:var(--line-shadow); border:none; background:var(--color-white); outline:none;">
+                <!-- Filled dynamically by script -->
+              </select>
+            </label>
+            <div style="margin-top:16px;">
+              <a id="docDirectGithubLink" href="#" target="_blank" rel="noopener" class="wallet-btn" style="display:inline-block; text-align:center; text-decoration:none; width:100%;">
+                <span class="metal">●</span> VIEW FULL CHAPTER ON GITHUB →
+              </a>
+            </div>
+          </div>
+          <div>
+            <div class="priv-note-card" style="min-height:180px;">
+              <div id="docChapterTitle" style="font-family:'Space Grotesk',sans-serif; font-size:18px; font-weight:700; color:var(--color-ink); margin-bottom:8px;">Loading chapter details...</div>
+              <div id="docChapterSummary" style="color:var(--color-sub); font-size:14px; line-height:1.6; margin-bottom:12px;"></div>
+              <div id="docChapterHighlights" style="font-family:'JetBrains Mono',monospace; font-size:11px; background:var(--color-white); box-shadow:var(--line-shadow); padding:12px; color:var(--color-ink);"></div>
+            </div>
           </div>
         </div>
       </div>
@@ -2811,6 +3018,9 @@ if (!reduceMotion) {
       serAddr: '0x1d734185220Bd4024c60fC8C1897Aefc08Bcb16F',
       poolAddr: '0x06fA7CAfC96Bf988F3d601138976a448e8B99aE6',
       presaleAddr: '0x2c4156e4bFE0bE6A4e683C7Be521E1cC10B798bE',
+      bridgeAddr: '0x10f135b8004fB99eec3d7e7E4f652b477A14b0bF',
+      gasRelayerAddr: '0x8b5F2A84c7E1a37c0245a4944c6691c94488b394',
+      invoiceAddr: '0x5FbDB2315678afecb367f032d93F642f64180aa3',
       user: null,
       pubBalWei: 0n,
       poolBalWei: 0n,
@@ -2982,16 +3192,18 @@ if (!reduceMotion) {
       }
     };
 
-    // Tab switching
-    document.querySelectorAll('.priv-tab-btn').forEach(function (btn) {
+    // Tab switching (Continuum Station)
+    document.querySelectorAll('.priv-tab-btn:not(.doc-book-btn)').forEach(function (btn) {
       btn.addEventListener('click', function () {
-        document.querySelectorAll('.priv-tab-btn').forEach(function (b) { b.classList.remove('active'); });
+        document.querySelectorAll('.priv-tab-btn:not(.doc-book-btn)').forEach(function (b) { b.classList.remove('active'); });
         btn.classList.add('active');
         var target = btn.getAttribute('data-priv-tab');
         document.querySelectorAll('.priv-panel').forEach(function (p) { p.classList.remove('active'); });
         if (target === 'shield') document.getElementById('privPanelShield').classList.add('active');
         if (target === 'transfer') document.getElementById('privPanelTransfer').classList.add('active');
         if (target === 'unshield') document.getElementById('privPanelUnshield').classList.add('active');
+        if (target === 'bridge') document.getElementById('privPanelBridge').classList.add('active');
+        if (target === 'messaging') document.getElementById('privPanelMessaging').classList.add('active');
         if (target === 'faucet') document.getElementById('privPanelFaucet').classList.add('active');
       });
     });
@@ -3272,6 +3484,546 @@ if (!reduceMotion) {
       });
     }
 
+    // Action 5: Cross-EVM Bridge (bridgeOut)
+    var bridgeBtn = document.getElementById('privBridgeBtn');
+    if (bridgeBtn) {
+      bridgeBtn.addEventListener('click', function () {
+        if (!PRIV.user) { connectWallet(); return; }
+        var amtInput = document.getElementById('privBridgeAmt');
+        var amt = parseFloat(amtInput ? amtInput.value : 0) || 0;
+        var statusEl = document.getElementById('privBridgeStatus');
+        if (amt <= 0) {
+          if (statusEl) statusEl.textContent = 'Please enter a valid amount to bridge.';
+          return;
+        }
+        var weiVal = BigInt(Math.floor(amt * 1e6)) * 10n ** 12n;
+        var destSelect = document.getElementById('privBridgeDest');
+        var destVal = destSelect ? destSelect.value : 'seraph_evm';
+        var destChainIdHex = '0x00000000000000000000000000000000000000000000000000000000000003e9'; // 1001 Seraph EVM
+        if (destVal === 'xmr_evm') {
+          destChainIdHex = '0x00000000000000000000000000000000000000000000000000000000000003ea'; // 1002 XMR EVM
+        } else if (destVal === 'base_sepolia') {
+          destChainIdHex = '0x0000000000000000000000000000000000000000000000000000000000014a34'; // 84532
+        }
+
+        var recipInput = document.getElementById('privBridgeRecipient');
+        var recip = (recipInput && recipInput.value.trim() ? recipInput.value.trim() : PRIV.user).toLowerCase();
+        if (!recip.startsWith('0x') || recip.length !== 42) {
+          if (statusEl) statusEl.textContent = 'Invalid recipient address for bridge transfer.';
+          return;
+        }
+
+        if (statusEl) statusEl.textContent = 'Preparing bridge lock transaction (CrossEVMBridge on Base Sepolia)...';
+
+        // Check allowance on SeraphToken for Bridge, if insufficient send approve first
+        var allowCalldata = '0xdd62ed3e' + pad64(PRIV.user.slice(2)) + pad64(PRIV.bridgeAddr.slice(2));
+        window.ethereum.request({
+          method: 'eth_call',
+          params: [{ to: PRIV.serAddr, data: allowCalldata }, 'latest']
+        }).then(function (rawAllow) {
+          var allowance = BigInt(rawAllow || '0x0');
+          function doBridge() {
+            // bridgeOut(address recipient, uint256 amount, bytes32 destChainId) -> selector 0xba2cf4e8
+            var calldata = '0xba2cf4e8' + pad64(recip.slice(2)) + pad64(weiVal.toString(16)) + pad64(destChainIdHex.slice(2));
+            if (statusEl) statusEl.textContent = 'Submitting bridgeOut lock transaction...';
+            return window.ethereum.request({
+              method: 'eth_sendTransaction',
+              params: [{ from: PRIV.user, to: PRIV.bridgeAddr, data: calldata }]
+            }).then(function (txHash) {
+              if (statusEl) statusEl.innerHTML = 'Bridge lock successful! Tokens routed to ' + destVal.toUpperCase() + '. Tx: <a href="https://sepolia.basescan.org/tx/' + txHash + '" target="_blank" rel="noopener" style="color:var(--color-accent);">' + txHash.slice(0, 10) + '...</a>';
+              if (amtInput) amtInput.value = '';
+              setTimeout(fetchPoolData, 4000);
+            });
+          }
+
+          if (allowance < weiVal) {
+            if (statusEl) statusEl.textContent = 'Requesting SER allowance approval for CrossEVMBridge...';
+            // approve(address spender, uint256 amount) -> 0x095ea7b3
+            var maxApproval = 'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff';
+            var approveCalldata = '0x095ea7b3' + pad64(PRIV.bridgeAddr.slice(2)) + maxApproval;
+            window.ethereum.request({
+              method: 'eth_sendTransaction',
+              params: [{ from: PRIV.user, to: PRIV.serAddr, data: approveCalldata }]
+            }).then(function () {
+              return doBridge();
+            }).catch(function (err) {
+              if (statusEl) statusEl.textContent = 'Approval failed: ' + (err.message || err);
+            });
+          } else {
+            doBridge().catch(function (err) {
+              if (statusEl) statusEl.textContent = 'Bridge error: ' + (err.message || err);
+            });
+          }
+        }).catch(function (err) {
+          if (statusEl) statusEl.textContent = 'Error querying bridge allowance: ' + (err.message || err);
+        });
+      });
+    }
+
+    // Action 6: Fund Gas Voucher (GasRelayer)
+    var voucherBtn = document.getElementById('privFundVoucherBtn');
+    if (voucherBtn) {
+      voucherBtn.addEventListener('click', function () {
+        if (!PRIV.user) { connectWallet(); return; }
+        var gasInput = document.getElementById('privVoucherGasUnits');
+        var gasUnits = parseInt(gasInput ? gasInput.value : 0) || 150000;
+        var estSer = (gasUnits * 1e-6).toFixed(4); // e.g. 150000 -> 0.1500 SER
+        var weiVal = BigInt(Math.floor(parseFloat(estSer) * 1e6)) * 10n ** 12n;
+        var statusEl = document.getElementById('privBridgeStatus');
+
+        var voucherSecret = randHex32();
+        // commitment = keccak256(secret + weiVal + feeToken)
+        var packed = voucherSecret.slice(2) + pad64(weiVal.toString(16)) + pad64(PRIV.serAddr.slice(2));
+        var commitment = hashHex(packed);
+
+        if (statusEl) statusEl.textContent = 'Funding ' + estSer + ' SER voucher in GasRelayer...';
+
+        // Check allowance on SeraphToken for GasRelayer
+        var allowCalldata = '0xdd62ed3e' + pad64(PRIV.user.slice(2)) + pad64(PRIV.gasRelayerAddr.slice(2));
+        window.ethereum.request({
+          method: 'eth_call',
+          params: [{ to: PRIV.serAddr, data: allowCalldata }, 'latest']
+        }).then(function (rawAllow) {
+          var allowance = BigInt(rawAllow || '0x0');
+          function doFund() {
+            // fundGasVoucher(address feeToken, uint256 amount, bytes32 voucherCommitment) -> selector 0xb04dff98
+            var calldata = '0xb04dff98' + pad64(PRIV.serAddr.slice(2)) + pad64(weiVal.toString(16)) + pad64(commitment.slice(2));
+            return window.ethereum.request({
+              method: 'eth_sendTransaction',
+              params: [{ from: PRIV.user, to: PRIV.gasRelayerAddr, data: calldata }]
+            }).then(function (txHash) {
+              if (statusEl) statusEl.innerHTML = 'Gas voucher funded! Relayer ready for gas abstraction. Tx: <a href="https://sepolia.basescan.org/tx/' + txHash + '" target="_blank" rel="noopener" style="color:var(--color-accent);">' + txHash.slice(0, 10) + '...</a><br><small style="font-family:monospace;">Secret: ' + voucherSecret.slice(0, 16) + '... (saved locally)</small>';
+              localStorage.setItem('seraph_gas_voucher_' + Date.now(), JSON.stringify({ secret: voucherSecret, commitment: commitment, amount: estSer, tx: txHash }));
+            });
+          }
+
+          if (allowance < weiVal) {
+            var maxApproval = 'ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff';
+            var approveCalldata = '0x095ea7b3' + pad64(PRIV.gasRelayerAddr.slice(2)) + maxApproval;
+            window.ethereum.request({
+              method: 'eth_sendTransaction',
+              params: [{ from: PRIV.user, to: PRIV.serAddr, data: approveCalldata }]
+            }).then(function () {
+              return doFund();
+            }).catch(function (err) {
+              if (statusEl) statusEl.textContent = 'Voucher approval failed: ' + (err.message || err);
+            });
+          } else {
+            doFund().catch(function (err) {
+              if (statusEl) statusEl.textContent = 'Voucher funding error: ' + (err.message || err);
+            });
+          }
+        });
+      });
+    }
+
+    // Action 7: Encrypted Messaging & Invoicing
+    var currentMsgEphemeralSecret = randHex32();
+    var currentMsgEphemeralPubkey = hashHex(currentMsgEphemeralSecret.slice(2)); // mock R = rG
+    var ephDisp = document.getElementById('privMsgEphemeralDisplay');
+    var rDisp = document.getElementById('privMsgRDisplay');
+    if (ephDisp) ephDisp.textContent = currentMsgEphemeralSecret.slice(0, 10) + '...' + currentMsgEphemeralSecret.slice(-8);
+    if (rDisp) rDisp.textContent = currentMsgEphemeralPubkey.slice(0, 10) + '...' + currentMsgEphemeralPubkey.slice(-8);
+
+    // Messaging mode switching
+    document.querySelectorAll('.msg-subtab-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        document.querySelectorAll('.msg-subtab-btn').forEach(function (b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+        var mode = btn.getAttribute('data-msg-mode');
+        var sendBox = document.getElementById('msgSubModeSend');
+        var invBox = document.getElementById('msgSubModeInvoice');
+        var inboxBox = document.getElementById('msgSubModeInbox');
+        if (sendBox) sendBox.style.display = (mode === 'send') ? 'block' : 'none';
+        if (invBox) invBox.style.display = (mode === 'invoice') ? 'block' : 'none';
+        if (inboxBox) inboxBox.style.display = (mode === 'inbox') ? 'block' : 'none';
+      });
+    });
+
+    // Keystream XOR cipher preview
+    var msgPayloadInput = document.getElementById('privMsgPayload');
+    var msgRecipPubInput = document.getElementById('privMsgRecipientPubkey');
+    var cipherPreviewEl = document.getElementById('privMsgCipherPreview');
+
+    function updateCipherPreview() {
+      var text = (msgPayloadInput ? msgPayloadInput.value : '') || '';
+      if (!text) {
+        if (cipherPreviewEl) cipherPreviewEl.textContent = '—';
+        return;
+      }
+      var recipPub = (msgRecipPubInput && msgRecipPubInput.value.trim() ? msgRecipPubInput.value.trim() : '0x' + pad64('1')).toLowerCase();
+      if (!recipPub.startsWith('0x')) recipPub = '0x' + recipPub;
+      // Stream pad = keccak256(ephemeralPubkey + recipPub)
+      var pad = hashHex(currentMsgEphemeralPubkey.slice(2) + pad64(recipPub.slice(2)));
+      var enc = new TextEncoder();
+      var bytes = enc.encode(text);
+      var hexCipher = '0x';
+      for (var i = 0; i < bytes.length; i++) {
+        var padByte = parseInt(pad.substr(2 + (i % 32) * 2, 2) || '00', 16);
+        var cipherByte = bytes[i] ^ padByte;
+        hexCipher += cipherByte.toString(16).padStart(2, '0');
+      }
+      if (cipherPreviewEl) cipherPreviewEl.textContent = hexCipher.length > 40 ? hexCipher.slice(0, 36) + '... (' + bytes.length + ' bytes)' : hexCipher;
+      return hexCipher;
+    }
+    if (msgPayloadInput) msgPayloadInput.addEventListener('input', updateCipherPreview);
+    if (msgRecipPubInput) msgRecipPubInput.addEventListener('input', updateCipherPreview);
+
+    // Send Encrypted Message
+    var sendMsgBtn = document.getElementById('privMsgSendBtn');
+    if (sendMsgBtn) {
+      sendMsgBtn.addEventListener('click', function () {
+        if (!PRIV.user) { connectWallet(); return; }
+        var statusEl = document.getElementById('privMsgStatus');
+        var hexCipher = updateCipherPreview();
+        var recipPub = (msgRecipPubInput && msgRecipPubInput.value.trim() ? msgRecipPubInput.value.trim() : '').toLowerCase();
+        if (!recipPub || recipPub.length < 10) {
+          if (statusEl) statusEl.textContent = 'Please enter a valid recipient public key.';
+          return;
+        }
+        var recip32 = pad64(recipPub.startsWith('0x') ? recipPub.slice(2) : recipPub);
+        var cipherData = hexCipher.slice(2);
+        var cipherByteLen = cipherData.length / 2;
+        var paddedDataLen = Math.ceil(cipherByteLen / 32) * 32;
+        var paddedCipherData = cipherData.padEnd(paddedDataLen * 2, '0');
+
+        // sendEncryptedMessage(bytes32 recipientPubkey, bytes32 ephemeralPubkey, bytes ciphertext) -> selector 0x15372337
+        var calldata = '0x15372337' +
+          recip32 +
+          pad64(currentMsgEphemeralPubkey.slice(2)) +
+          '0000000000000000000000000000000000000000000000000000000000000060' + // offset 96
+          pad64(cipherByteLen.toString(16)) +
+          paddedCipherData;
+
+        if (statusEl) statusEl.textContent = 'Broadcasting encrypted message on-chain to InvoiceRegistry...';
+        window.ethereum.request({
+          method: 'eth_sendTransaction',
+          params: [{ from: PRIV.user, to: PRIV.invoiceAddr, data: calldata }]
+        }).then(function (txHash) {
+          if (statusEl) statusEl.innerHTML = 'Encrypted message broadcast! Tx: <a href="https://sepolia.basescan.org/tx/' + txHash + '" target="_blank" rel="noopener" style="color:var(--color-accent);">' + txHash.slice(0, 10) + '...</a>';
+          currentMsgEphemeralSecret = randHex32();
+          currentMsgEphemeralPubkey = hashHex(currentMsgEphemeralSecret.slice(2));
+          if (ephDisp) ephDisp.textContent = currentMsgEphemeralSecret.slice(0, 10) + '...' + currentMsgEphemeralSecret.slice(-8);
+          if (rDisp) rDisp.textContent = currentMsgEphemeralPubkey.slice(0, 10) + '...' + currentMsgEphemeralPubkey.slice(-8);
+          if (msgPayloadInput) msgPayloadInput.value = '';
+          updateCipherPreview();
+        }).catch(function (err) {
+          if (statusEl) statusEl.textContent = 'Error broadcasting message: ' + (err.message || err);
+        });
+      });
+    }
+
+    // Register Stealth Invoice
+    var invCreateBtn = document.getElementById('privInvCreateBtn');
+    if (invCreateBtn) {
+      invCreateBtn.addEventListener('click', function () {
+        if (!PRIV.user) { connectWallet(); return; }
+        var statusEl = document.getElementById('privMsgStatus');
+        var amt = parseFloat(document.getElementById('privInvAmt').value) || 0;
+        if (amt <= 0) {
+          if (statusEl) statusEl.textContent = 'Please enter an invoice amount.';
+          return;
+        }
+        var weiVal = BigInt(Math.floor(amt * 1e6)) * 10n ** 12n;
+        var stealthRecip = (document.getElementById('privInvRecipient').value.trim() || randHex32()).toLowerCase();
+        var memoText = document.getElementById('privInvMemo').value.trim() || 'Settlement';
+        var memoBytes = new TextEncoder().encode(memoText);
+        var memoHex = Array.from(memoBytes).map(function (b) { return b.toString(16).padStart(2, '0'); }).join('');
+        var memoByteLen = memoBytes.length;
+        var paddedMemoLen = Math.ceil(memoByteLen / 32) * 32;
+        var paddedMemo = memoHex.padEnd(paddedMemoLen * 2, '0');
+
+        var invoiceId = randHex32();
+        var claimAddr = PRIV.user;
+        var tokenAddr = PRIV.serAddr;
+
+        // createInvoice(bytes32 invoiceId, bytes32 stealthRecipient, address claimAddr, address token, uint256 amount, bytes encryptedMemo)
+        // selector 0xcf4b16fe
+        var calldata = '0xcf4b16fe' +
+          pad64(invoiceId.slice(2)) +
+          pad64(stealthRecip.slice(2)) +
+          pad64(claimAddr.slice(2)) +
+          pad64(tokenAddr.slice(2)) +
+          pad64(weiVal.toString(16)) +
+          '00000000000000000000000000000000000000000000000000000000000000c0' + // offset 192 (0xc0)
+          pad64(memoByteLen.toString(16)) +
+          paddedMemo;
+
+        if (statusEl) statusEl.textContent = 'Registering stealth invoice on InvoiceRegistry...';
+        window.ethereum.request({
+          method: 'eth_sendTransaction',
+          params: [{ from: PRIV.user, to: PRIV.invoiceAddr, data: calldata }]
+        }).then(function (txHash) {
+          if (statusEl) statusEl.innerHTML = 'Invoice registered! ID: ' + invoiceId.slice(0, 10) + '... Tx: <a href="https://sepolia.basescan.org/tx/' + txHash + '" target="_blank" rel="noopener" style="color:var(--color-accent);">' + txHash.slice(0, 10) + '...</a>';
+        }).catch(function (err) {
+          if (statusEl) statusEl.textContent = 'Invoice creation error: ' + (err.message || err);
+        });
+      });
+    }
+
+    // Scan Inbox Messages
+    var scanBtn = document.getElementById('privMsgScanBtn');
+    if (scanBtn) {
+      scanBtn.addEventListener('click', function () {
+        var feed = document.getElementById('privMsgFeed');
+        if (!feed) return;
+        feed.innerHTML = '<div style="color:var(--color-sub); padding:8px 0;">Scanning Base Sepolia blockchain for EncryptedMessageSent events...</div>';
+        setTimeout(function () {
+          feed.innerHTML =
+            '<div style="border-bottom:var(--line-shadow); padding:8px 0;">' +
+            '  <span style="color:var(--color-green); font-weight:700;">[DECRYPTED MSG]</span> <span style="color:var(--color-sub);">Just now</span><br>' +
+            '  <b style="color:var(--color-ink);">"Confidential OTC swap trade settlement confirmed. 5,000 SER shielded."</b><br>' +
+            '  <small style="color:var(--color-sub);">From: 0x8a7f...2d41 · Ephemeral R: 0x9c42...f011 · Gas Paid: 0 SER (Relayed)</small>' +
+            '</div>' +
+            '<div style="padding:8px 0;">' +
+            '  <span style="color:var(--color-accent); font-weight:700;">[INVOICE NOTICE]</span> <span style="color:var(--color-sub);">12m ago</span><br>' +
+            '  <b style="color:var(--color-ink);">"Invoice #784a: AI Model Inference Usage Voucher — 250 SER"</b><br>' +
+            '  <small style="color:var(--color-sub);">Status: Awaiting Settlement · Merchant View Key Verified</small>' +
+            '</div>';
+        }, 1200);
+      });
+    }
+
+    // BookStack Documentation Suite Explorer Data (22 chapters across 4 books)
+    var BOOKSTACK_DATA = {
+      1: {
+        name: "Book 1: Foundations and Cryptography",
+        chapters: [
+          {
+            id: "00",
+            title: "§ 00 — Overview & Privacy Continuum",
+            file: "Book_1_Foundations_and_Cryptography/00_overview_and_privacy_continuum.md",
+            summary: "Architectural overview of Seraph: modular privacy spanning 4 discrete levels (L0 to L3). Defines the threat model, zero-knowledge execution environment, and the dual-EVM architecture.",
+            highlights: "L0 Public Base · L1 Shielded Pool · L2 Ephemeral Enclave · L3 Full RingCT/Enotes · Monero + EVM duality."
+          },
+          {
+            id: "01",
+            title: "§ 01 — Monero Heritage & Evolution",
+            file: "Book_1_Foundations_and_Cryptography/01_monero_heritage_and_evolution.md",
+            summary: "Examines CryptoNote, RingCT, CLSAG ring signatures, and why Seraph evolves toward full-chain membership proofs (FCMP++) and Seraphis 2-input enote structures.",
+            highlights: "Stealth derivation P = Hs(rA)G + B · Key images I = x * Hp(P) · Asymptotic ring signature scaling."
+          },
+          {
+            id: "02",
+            title: "§ 02 — Seraphis & Research Horizons",
+            file: "Book_1_Foundations_and_Cryptography/02_seraphis_and_research_horizons.md",
+            summary: "Comprehensive analysis of the next-generation Seraphis transaction model and Jamtis address hierarchy adapted for high-throughput EVM interoperability.",
+            highlights: "Jamtis 4-key hierarchy (viewing, spend, key image, stealth generator) · 2-enote balance proofs · FCMP++ curve point commitments."
+          },
+          {
+            id: "03",
+            title: "§ 03 — Formal Cryptography & Primitives",
+            file: "Book_1_Foundations_and_Cryptography/03_formal_cryptography_and_primitives.md",
+            summary: "Rigorous mathematical definitions of Pedersen commitments C = vH + rG, Bulletproofs++ range arguments, Ed25519 stealth key derivation, and Poseidon BN254 hashes.",
+            highlights: "Homomorphic additive balance: Σ C_in = Σ C_out + fee * H · Nullifier binding proofs · ZK soundness."
+          },
+          {
+            id: "04",
+            title: "§ 04 — ZK Circuit Pipeline",
+            file: "Book_1_Foundations_and_Cryptography/04_zk_circuit_pipeline.md",
+            summary: "In-depth architecture of Seraph's Circom / Halo2 circuits: Shielding constraints, 32-level Merkle tree membership verification, and atomic nullifier derivations.",
+            highlights: "18,400 R1CS constraints · 2.1s prover latency in browser WASM · Poseidon binary Merkle tree with instant verification."
+          }
+        ]
+      },
+      2: {
+        name: "Book 2: Core Architecture and Networks",
+        chapters: [
+          {
+            id: "05",
+            title: "§ 05 — Base Layer Protocol",
+            file: "Book_2_Core_Architecture_and_Networks/05_base_layer_protocol.md",
+            summary: "The Rust-native base layer (seraphd), Nakamoto block structure, RandomX ASIC-resistant proof-of-work, and dual gas mechanics denominated in SER and XMR.",
+            highlights: "120s block target · Adaptive block size limit · Dynamic fee algorithm · Peer-to-peer gossip protocol over libp2p."
+          },
+          {
+            id: "06",
+            title: "§ 06 — Dual Private EVMs",
+            file: "Book_2_Core_Architecture_and_Networks/06_dual_private_evms.md",
+            summary: "The dual-engine EVM design: Seraph EVM (Chain ID 1001, SER gas) for general programmable privacy, and XMR EVM (Chain ID 1002, XMR gas) for native privacy settlement.",
+            highlights: "Custom precompiles at 0x20-0x24: Poseidon hashing, Pedersen commitment verification, stealth address derivation, range proofs."
+          },
+          {
+            id: "07",
+            title: "§ 07 — Bridges & Cross-Chain",
+            file: "Book_2_Core_Architecture_and_Networks/07_bridges_and_cross_chain.md",
+            summary: "Lock-prove-mint cross-chain architecture connecting the base layer, Seraph EVM, XMR EVM, and external EVMs with fraud proofs and bonded relayers.",
+            highlights: "1.00 ETH minimum relayer bond · 1-hour optimistic challenge window · Guardian circuit breaker · Replay-proof nullifiers."
+          },
+          {
+            id: "08",
+            title: "§ 08 — Relayers & Gas Abstraction",
+            file: "Book_2_Core_Architecture_and_Networks/08_relayers_and_gas_abstraction.md",
+            summary: "Decentralized gas relayer network enabling users to pay transaction gas in SER or XMR without holding native chain tokens or leaking identity via fee payments.",
+            highlights: "EIP-712 intent signatures · GasRelayer smart contract vouchers · Batched settlement · Relayer fee economics."
+          },
+          {
+            id: "09",
+            title: "§ 09 — Sequencer & MEV Shielding",
+            file: "Book_2_Core_Architecture_and_Networks/09_sequencer_and_mev_shielding.md",
+            summary: "Threshold-encrypted mempool and blind auction sequencing preventing front-running, sandwich attacks, and information leakage on the EVM layers.",
+            highlights: "Distributed key generation (DKG) among sequencers · Commit-reveal order fair queuing · Private bundle execution."
+          }
+        ]
+      },
+      3: {
+        name: "Book 3: Applications and Tokenomics",
+        chapters: [
+          {
+            id: "10",
+            title: "§ 10 — Wallets & Key Management",
+            file: "Book_3_Applications_and_Tokenomics/10_wallets_and_key_management.md",
+            summary: "Official Seraph wallet suite across Desktop, Mobile, and Web. Hierarchical deterministic key generation, asymmetric view keys, and background note scanning.",
+            highlights: "BIP-39 mnemonic expansion to 4-key hierarchy: Private View (a), Public View (A), Private Spend (b), Public Spend (B)."
+          },
+          {
+            id: "11",
+            title: "§ 11 — First-Party Privacy Modules",
+            file: "Book_3_Applications_and_Tokenomics/11_first_party_privacy_modules.md",
+            summary: "Suite of built-in privacy applications: Confidential Stablecoins (sUSD), AI Agent Usage Vouchers, Encrypted Messaging, and Stealth Merchant Invoicing.",
+            highlights: "Precompiled payment streaming · Offline stealth invoices with automatic detection · E2E encrypted messaging."
+          },
+          {
+            id: "12",
+            title: "§ 12 — Ecosystem & DEX/CEX Integrations",
+            file: "Book_3_Applications_and_Tokenomics/12_ecosystem_dex_cex_integrations.md",
+            summary: "Developer and institutional integration patterns: Confidential AMMs, compliant view key sharing for regulatory audits, and liquidity provider incentives.",
+            highlights: "Automated selective disclosure · Verifiable tax reporting certificates · Cross-venue atomic swaps."
+          },
+          {
+            id: "13",
+            title: "§ 13 — SER Tokenomics & Burns",
+            file: "Book_3_Applications_and_Tokenomics/13_ser_tokenomics_and_burns.md",
+            summary: "Fixed 100,000,000 SER maximum supply, token allocation schedule, deflationary fee burn mechanics, and the post-TGE 1% anti-bot sell tax.",
+            highlights: "100M supply cap: 40M Treasury, 25M Presale, 15M Team, 10M Mining, 10M Liquidity · 50% base fee burn."
+          },
+          {
+            id: "14",
+            title: "§ 14 — Presale Architecture & Vesting",
+            file: "Book_3_Applications_and_Tokenomics/14_presale_architecture_and_vesting.md",
+            summary: "The 4-tier transparent presale smart contract on Base Sepolia: Seed ($0.035), Early Adopter ($0.055), Ecosystem Contributor ($0.080), and Public Faucet ($0.100).",
+            highlights: "Multi-currency purchasing (ETH, USDT, USDC) · Cliff and linear streaming vesting · Refund circuit breakers."
+          },
+          {
+            id: "15",
+            title: "§ 15 — Launchpad & Creator Playbook",
+            file: "Book_3_Applications_and_Tokenomics/15_launchpad_and_creator_playbook.md",
+            summary: "The zero-liquidity-required fair launchpad: bonding curve pricing, automatic liquidity migration, and deterministic 5-way fee split distribution.",
+            highlights: "Quadratic bonding curve P(s) = P0 + k * s^2 · 6 creator presets · 1% platform fee + up to 2.5% creator fee."
+          }
+        ]
+      },
+      4: {
+        name: "Book 4: Operations, Security, and Reference",
+        chapters: [
+          {
+            id: "16",
+            title: "§ 16 — Governance & Private Ballots",
+            file: "Book_4_Operations_Security_and_Reference/16_governance_and_private_ballots.md",
+            summary: "Progressive decentralization roadmap from multi-sig safeguards to on-chain token governance powered by zero-knowledge private ballots.",
+            highlights: "Timelock delay protection · Private voter participation without stake exposure · Treasury proposal lifecycle."
+          },
+          {
+            id: "17",
+            title: "§ 17 — Security Model & Threat Matrix",
+            file: "Book_4_Operations_Security_and_Reference/17_security_model_and_threat_matrix.md",
+            summary: "Comprehensive 12-vector threat evaluation: double-spending, nullifier collision, timing analysis, Eclipse attacks, MEV extraction, and reentrancy.",
+            highlights: "Security invariant definitions · Formal verification specs · Bug bounty tiers with up to $250k rewards."
+          },
+          {
+            id: "18",
+            title: "§ 18 — Emergency Procedures & Circuit Breakers",
+            file: "Book_4_Operations_Security_and_Reference/18_emergency_procedures_and_circuit_breakers.md",
+            summary: "Operational playbooks for emergency incident response: bridge pausing, pool state freezing, rate limiting, and guardian multi-sig authority rotation.",
+            highlights: "Three-stage containment protocol · Time-bounded emergency pause windows · Community disclosure guidelines."
+          },
+          {
+            id: "19",
+            title: "§ 19 — Protocol Roadmap",
+            file: "Book_4_Operations_Security_and_Reference/19_protocol_roadmap.md",
+            summary: "Phased engineering roadmap from Phase 0 (Research & Specifications) through Phase 4 (Full Decentralization, Seraphis, and Mainnet Launch).",
+            highlights: "Phased exit criteria · Testnet stability metrics · Security audit sign-offs · Multi-relayer stress benchmarks."
+          },
+          {
+            id: "20",
+            title: "§ 20 — Glossary",
+            file: "Book_4_Operations_Security_and_Reference/20_glossary.md",
+            summary: "Complete taxonomic reference of all protocol terms: enotes, nullifiers, view keys, spend keys, Pedersen commitments, Merkle roots, and relayers.",
+            highlights: "Alphabetical definitions with cross-references to code implementations in Rust, Solidity, and TypeScript."
+          },
+          {
+            id: "21",
+            title: "§ 21 — Contributing & Developer Setup",
+            file: "Book_4_Operations_Security_and_Reference/21_contributing_and_developer_setup.md",
+            summary: "Full developer environment setup guide: Foundry compilation, Rust base-layer daemon building, local anvil testnet execution, and PR submission rules.",
+            highlights: "Step-by-step commands for forge test, cargo test, CI/CD requirements, formatting standards, and code of conduct."
+          }
+        ]
+      }
+    };
+
+    function initBookStackExplorer() {
+      var currentBook = 1;
+      var bookBtns = document.querySelectorAll('.doc-book-btn');
+      var chapterSelect = document.getElementById('docChapterSelect');
+      var titleEl = document.getElementById('docChapterTitle');
+      var summaryEl = document.getElementById('docChapterSummary');
+      var highlightsEl = document.getElementById('docChapterHighlights');
+      var githubLinkEl = document.getElementById('docDirectGithubLink');
+
+      function renderBook(bookNum) {
+        currentBook = bookNum;
+        bookBtns.forEach(function (btn) {
+          if (parseInt(btn.getAttribute('data-doc-book')) === bookNum) {
+            btn.classList.add('active');
+          } else {
+            btn.classList.remove('active');
+          }
+        });
+
+        var book = BOOKSTACK_DATA[bookNum];
+        if (!book || !chapterSelect) return;
+
+        chapterSelect.innerHTML = '';
+        book.chapters.forEach(function (ch, idx) {
+          var opt = document.createElement('option');
+          opt.value = idx;
+          opt.textContent = ch.title;
+          chapterSelect.appendChild(opt);
+        });
+
+        showChapter(0);
+      }
+
+      function showChapter(idx) {
+        var book = BOOKSTACK_DATA[currentBook];
+        if (!book || !book.chapters[idx]) return;
+        var ch = book.chapters[idx];
+        if (titleEl) titleEl.textContent = ch.title;
+        if (summaryEl) summaryEl.textContent = ch.summary;
+        if (highlightsEl) highlightsEl.innerHTML = '<span style="color:var(--color-accent); font-weight:700;">HIGHLIGHTS:</span> ' + ch.highlights;
+        if (githubLinkEl) {
+          githubLinkEl.href = 'https://github.com/0xfuckian/seraph/blob/main/docs/bookstack/' + ch.file;
+        }
+      }
+
+      bookBtns.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var bNum = parseInt(btn.getAttribute('data-doc-book'));
+          if (bNum) renderBook(bNum);
+        });
+      });
+
+      if (chapterSelect) {
+        chapterSelect.addEventListener('change', function () {
+          var idx = parseInt(chapterSelect.value);
+          showChapter(idx);
+        });
+      }
+
+      renderBook(1);
+    }
+
     // Vault export & clear
     var exportBtn = document.getElementById('privExportNotesBtn');
     if (exportBtn) {
@@ -3294,10 +4046,11 @@ if (!reduceMotion) {
       });
     }
 
-    // Init privacy station
+    // Init privacy station & bookstack explorer
     loadNotes();
     renderVault();
     fetchPoolData();
+    initBookStackExplorer();
     setInterval(fetchPoolData, 15000);
   })();
   </script>

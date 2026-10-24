@@ -1,0 +1,79 @@
+[DEV GUIDE: BUILDING ZERO-KNOWLEDGE APPS ON SERAPH IN 5 MINUTES]
+
+Are you a Solidity or TypeScript developer looking to build privacy-preserving dApps?
+You don't need a PhD in cryptography to build on Seraph.
+
+Here is the developer quickstart guide: 🧵👇
+
+---
+
+1. ZERO CONFIGURATION FOUNDRY SETUP
+Seraph smart contracts use standard Solidity 0.8.24 and OpenZeppelin v5.
+Clone and verify the complete repository:
+
+```bash
+git clone https://github.com/0xfuckian/seraph.git
+cd seraph
+forge test
+```
+All 155 unit tests, invariant checks, and pentests pass out of the box.
+
+---
+
+2. INSTALL THE TYPESCRIPT SDK
+Add `@seraph-protocol/sdk` to your project:
+
+```bash
+npm install @seraph-protocol/sdk
+```
+
+---
+
+3. GENERATING A STEALTH ADDRESS & PRIVATE NOTE
+Create confidential notes client-side without leaking entropy:
+
+```typescript
+import {
+  deriveWalletKeys,
+  computeNoteCommitment,
+  AssetId,
+  randomBytes32,
+} from "@seraph-protocol/sdk";
+
+// 1. Derive deterministic keys
+const spendKey = randomBytes32();
+const keys = deriveWalletKeys(spendKey);
+
+// 2. Formulate note commitment
+const note = {
+  asset: AssetId.Seraph,
+  amount: 100n * 10n**18n, // 100 SER
+  recipientPubkey: keys.pubkey,
+  blinding: randomBytes32(),
+};
+
+const commitment = computeNoteCommitment(note);
+// Output: 32-byte hash ready for PrivacyPool.shield()
+```
+
+---
+
+4. SHIELDING TOKENS VIA SOLIDITY
+In your smart contract or frontend:
+```solidity
+// Approve and shield in one step
+seraphToken.approveAndShield(100 ether, commitment);
+```
+
+---
+
+5. VERIFIED BASE SEPOLIA CONTRACT REGISTRY (`84532`)
+Integrate directly with our verified deployments:
+• SeraphToken: `0x1d734185220Bd4024c60fC8C1897Aefc08Bcb16F`
+• PrivacyPool: `0x06fA7CAfC96Bf988F3d601138976a448e8B99aE6`
+• SeraphPresale: `0x2c4156e4bFE0bE6A4e683C7Be521E1cC10B798bE`
+• SeraphLaunchpad: `0xe0349E4cC431329207e98C5205062776e058A846`
+
+Start building today:
+GitHub: https://github.com/0xfuckian/seraph
+Docs: https://seraphprotocol.tech/#docs
