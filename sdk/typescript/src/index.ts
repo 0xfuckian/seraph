@@ -418,8 +418,7 @@ export function createCreditDeposit(
   ticketNullifier: Uint8Array;
 } {
   if (secretPreimage.length !== 32) throw new Error("secretPreimage must be 32 bytes");
-  const amtBuf = Buffer.alloc(8);
-  amtBuf.writeBigUInt64BE(amount);
+  const amtBuf = Buffer.from(padHex64(amount.toString(16)), "hex");
   const commitment = sha256Tag("seraph_ai_credit_commitment", amtBuf, secretPreimage);
   const ticketNullifier = sha256Tag("seraph_ai_ticket_nullifier", secretPreimage);
   return {
@@ -439,9 +438,248 @@ export class UsageVaultClient {
   }
 
   encodeDeposit(commitment: Uint8Array, amount: bigint): { to: string; data: string } {
-    const amtBuf = Buffer.alloc(32);
-    amtBuf.writeBigUInt64BE(amount, 24);
-    const data = "0xd211e4f4" + Buffer.from(commitment).toString("hex") + amtBuf.toString("hex");
+    const data = "0xd211e4f4" + Buffer.from(commitment).toString("hex") + padHex64(amount.toString(16));
     return { to: this.vaultAddress, data };
+  }
+}
+
+function padHex64(hex: string): string {
+  const clean = hex.startsWith("0x") ? hex.slice(2) : hex;
+  return clean.padStart(64, "0");
+}
+
+/**
+ * Client helper for CrossEVMBridge operations (Lock, Prove, Mint, and Claim)
+ */
+export class CrossEVMBridgeClient {
+  bridgeAddress: string;
+
+  constructor(bridgeAddress: string) {
+    this.bridgeAddress = bridgeAddress;
+  }
+
+  computeBridgeLeaf(
+    nullifier: Uint8Array,
+    recipient: string,
+    amount: bigint,
+    destChainId: Uint8Array
+  ): Uint8Array {
+    const recipBuf = Buffer.alloc(32);
+    recipBuf.set(Buffer.from(recipient.replace(/^0x/, ""), "hex"), 12);
+    const amtBuf = Buffer.from(padHex64(amount.toString(16)), "hex");
+    return sha256Tag("seraph_bridge_leaf_v1", nullifier, recipBuf, amtBuf, destChainId);
+  }
+
+  encodeBridgeOut(
+    recipient: string,
+    amount: bigint,
+    destChainId: Uint8Array
+  ): { to: string; data: string } {
+    const recipClean = recipient.replace(/^0x/, "").toLowerCase();
+    const data =
+      "0x9d10f39d" +
+      padHex64(recipClean) +
+      padHex64(amount.toString(16)) +
+      padHex64(Buffer.from(destChainId).toString("hex"));
+    return { to: this.bridgeAddress, data };
+  }
+
+  encodeClaimBridged(
+    batchId: bigint,
+    nullifier: Uint8Array,
+    recipient: string,
+    amount: bigint,
+    merkleProof: Uint8Array[]
+  ): { to: string; data: string } {
+    const batchHex = padHex64(batchId.toString(16));
+    const recipClean = recipient.replace(/^0x/, "").toLowerCase();
+
+    // Dynamic ABI encoding: offset to proof array is at 5 * 32 = 160 (0xa0)
+    let proofData = padHex64(merkleProof.length.toString(16));
+    for (const p of merkleProof) {
+      proofData += padHex64(Buffer.from(p).toString("hex"));
+    }
+
+    const data =
+      "0x9a670cd4" +
+      batchHex +
+      padHex64(Buffer.from(nullifier).toString("hex")) +
+      padHex64(recipClean) +
+      padHex64(amount.toString(16)) +
+      padHex64("a0") +
+      proofData;
+
+    return { to: this.bridgeAddress, data };
+  }
+}
+
+/**
+ * Client helper for GasRelayer fee abstraction and pre-funded voucher commitments
+ */
+export class GasRelayerClient {
+  relayerAddress: string;
+
+  constructor(relayerAddress: string) {
+    this.relayerAddress = relayerAddress;
+  }
+
+  createVoucher(
+    feeToken: string,
+    amount: bigint,
+    secretPreimage?: Uint8Array
+  ): { secret: Uint8Array; commitment: Uint8Array } {
+    const secret = secretPreimage || randomBytes32();
+    const tokenClean = feeToken.replace(/^0x/, "").toLowerCase();
+    const tokenBuf = Buffer.alloc(32);
+    tokenBuf.set(Buffer.from(tokenClean, "hex"), 12);
+    const amtBuf = Buffer.from(padHex64(amount.toString(16)), "hex");
+
+    const commitment = sha256Tag("seraph_gas_voucher_v1", secret, amtBuf, tokenBuf);
+    return { secret, commitment };
+  }
+
+  encodeFundGasVoucher(
+    feeToken: string,
+    amount: bigint,
+    voucherCommitment: Uint8Array
+  ): { to: string; data: string } {
+    const tokenClean = feeToken.replace(/^0x/, "").toLowerCase();
+    const data =
+      "0x74629578" +
+      padHex64(tokenClean) +
+      padHex64(amount.toString(16)) +
+      padHex64(Buffer.from(voucherCommitment).toString("hex"));
+    return { to: this.relayerAddress, data };
+  }
+
+  encodeExecuteWithGasAbstraction(
+    voucherNullifier: Uint8Array,
+    feeToken: string,
+    feeAmount: bigint,
+    target: string,
+    callData: Uint8Array
+  ): { to: string; data: string } {
+    const tokenClean = feeToken.replace(/^0x/, "").toLowerCase();
+    const targetClean = target.replace(/^0x/, "").toLowerCase();
+
+    const dataLen = callData.length;
+    const paddedLen = Math.ceil(dataLen / 32) * 32;
+    const hexData = Buffer.from(callData).toString("hex").padEnd(paddedLen * 2, "0");
+
+    // Head is 5 words = 160 bytes (0xa0) for the dynamic bytes offset
+    const data =
+      "0xf289b0a9" +
+      padHex64(Buffer.from(voucherNullifier).toString("hex")) +
+      padHex64(tokenClean) +
+      padHex64(feeAmount.toString(16)) +
+      padHex64(targetClean) +
+      padHex64("a0") +
+      padHex64(dataLen.toString(16)) +
+      hexData;
+
+    return { to: this.relayerAddress, data };
+  }
+}
+
+/**
+ * Client helper for InvoiceRegistry encrypted messaging and stealth merchant invoicing
+ */
+export class InvoiceRegistryClient {
+  registryAddress: string;
+
+  constructor(registryAddress: string) {
+    this.registryAddress = registryAddress;
+  }
+
+  encryptMessage(
+    recipientPubkey: Uint8Array,
+    message: string,
+    ephemeralSecret?: Uint8Array
+  ): { ephemeralSecret: Uint8Array; ephemeralPubkey: Uint8Array; ciphertext: Uint8Array } {
+    const sec = ephemeralSecret || randomBytes32();
+    const ephPub = sha256Tag("seraph_ephemeral_pub", sec);
+    const pad = sha256Tag("seraph_msg_pad", ephPub, recipientPubkey);
+    const msgBytes = Buffer.from(message, "utf8");
+    const cipher = new Uint8Array(msgBytes.length);
+    for (let i = 0; i < msgBytes.length; i++) {
+      cipher[i] = msgBytes[i] ^ pad[i % 32];
+    }
+    return { ephemeralSecret: sec, ephemeralPubkey: ephPub, ciphertext: cipher };
+  }
+
+  decryptMessage(
+    incomingViewKey: Uint8Array,
+    ephemeralPubkey: Uint8Array,
+    ciphertext: Uint8Array
+  ): string {
+    const pad = sha256Tag("seraph_msg_pad", ephemeralPubkey, incomingViewKey);
+    const plain = new Uint8Array(ciphertext.length);
+    for (let i = 0; i < ciphertext.length; i++) {
+      plain[i] = ciphertext[i] ^ pad[i % 32];
+    }
+    return Buffer.from(plain).toString("utf8");
+  }
+
+  encodeSendMessage(
+    recipientPubkey: Uint8Array,
+    ephemeralPubkey: Uint8Array,
+    ciphertext: Uint8Array
+  ): { to: string; data: string } {
+    const cipherLen = ciphertext.length;
+    const paddedLen = Math.ceil(cipherLen / 32) * 32;
+    const hexCipher = Buffer.from(ciphertext).toString("hex").padEnd(paddedLen * 2, "0");
+
+    // Dynamic offset: 3 words = 96 bytes (0x60)
+    const data =
+      "0x4e94e35b" +
+      padHex64(Buffer.from(recipientPubkey).toString("hex")) +
+      padHex64(Buffer.from(ephemeralPubkey).toString("hex")) +
+      padHex64("60") +
+      padHex64(cipherLen.toString(16)) +
+      hexCipher;
+
+    return { to: this.registryAddress, data };
+  }
+
+  encodeCreateInvoice(
+    invoiceId: Uint8Array,
+    stealthRecipient: Uint8Array,
+    claimAddr: string,
+    token: string,
+    amount: bigint,
+    encryptedMemo: Uint8Array
+  ): { to: string; data: string } {
+    const claimClean = claimAddr.replace(/^0x/, "").toLowerCase();
+    const tokenClean = token.replace(/^0x/, "").toLowerCase();
+
+    const memoLen = encryptedMemo.length;
+    const paddedLen = Math.ceil(memoLen / 32) * 32;
+    const hexMemo = Buffer.from(encryptedMemo).toString("hex").padEnd(paddedLen * 2, "0");
+
+    // Dynamic offset: 6 words = 192 bytes (0xc0)
+    const data =
+      "0x4bba01b6" +
+      padHex64(Buffer.from(invoiceId).toString("hex")) +
+      padHex64(Buffer.from(stealthRecipient).toString("hex")) +
+      padHex64(claimClean) +
+      padHex64(tokenClean) +
+      padHex64(amount.toString(16)) +
+      padHex64("c0") +
+      padHex64(memoLen.toString(16)) +
+      hexMemo;
+
+    return { to: this.registryAddress, data };
+  }
+
+  encodeSettleInvoice(
+    invoiceId: Uint8Array,
+    paymentNullifier: Uint8Array
+  ): { to: string; data: string } {
+    const data =
+      "0x28ea8ccf" +
+      padHex64(Buffer.from(invoiceId).toString("hex")) +
+      padHex64(Buffer.from(paymentNullifier).toString("hex"));
+
+    return { to: this.registryAddress, data };
   }
 }

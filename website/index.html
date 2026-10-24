@@ -3523,8 +3523,8 @@ if (!reduceMotion) {
         }).then(function (rawAllow) {
           var allowance = BigInt(rawAllow || '0x0');
           function doBridge() {
-            // bridgeOut(address recipient, uint256 amount, bytes32 destChainId) -> selector 0xba2cf4e8
-            var calldata = '0xba2cf4e8' + pad64(recip.slice(2)) + pad64(weiVal.toString(16)) + pad64(destChainIdHex.slice(2));
+            // bridgeOut(address recipient, uint256 amount, bytes32 destChainId) -> selector 0x9d10f39d
+            var calldata = '0x9d10f39d' + pad64(recip.slice(2)) + pad64(weiVal.toString(16)) + pad64(destChainIdHex.slice(2));
             if (statusEl) statusEl.textContent = 'Submitting bridgeOut lock transaction...';
             return window.ethereum.request({
               method: 'eth_sendTransaction',
@@ -3586,8 +3586,8 @@ if (!reduceMotion) {
         }).then(function (rawAllow) {
           var allowance = BigInt(rawAllow || '0x0');
           function doFund() {
-            // fundGasVoucher(address feeToken, uint256 amount, bytes32 voucherCommitment) -> selector 0xb04dff98
-            var calldata = '0xb04dff98' + pad64(PRIV.serAddr.slice(2)) + pad64(weiVal.toString(16)) + pad64(commitment.slice(2));
+            // fundGasVoucher(address feeToken, uint256 amount, bytes32 voucherCommitment) -> selector 0x74629578
+            var calldata = '0x74629578' + pad64(PRIV.serAddr.slice(2)) + pad64(weiVal.toString(16)) + pad64(commitment.slice(2));
             return window.ethereum.request({
               method: 'eth_sendTransaction',
               params: [{ from: PRIV.user, to: PRIV.gasRelayerAddr, data: calldata }]
@@ -3687,8 +3687,8 @@ if (!reduceMotion) {
         var paddedDataLen = Math.ceil(cipherByteLen / 32) * 32;
         var paddedCipherData = cipherData.padEnd(paddedDataLen * 2, '0');
 
-        // sendEncryptedMessage(bytes32 recipientPubkey, bytes32 ephemeralPubkey, bytes ciphertext) -> selector 0x15372337
-        var calldata = '0x15372337' +
+        // sendEncryptedMessage(bytes32 recipientPubkey, bytes32 ephemeralPubkey, bytes ciphertext) -> selector 0x4e94e35b
+        var calldata = '0x4e94e35b' +
           recip32 +
           pad64(currentMsgEphemeralPubkey.slice(2)) +
           '0000000000000000000000000000000000000000000000000000000000000060' + // offset 96
@@ -3738,8 +3738,8 @@ if (!reduceMotion) {
         var tokenAddr = PRIV.serAddr;
 
         // createInvoice(bytes32 invoiceId, bytes32 stealthRecipient, address claimAddr, address token, uint256 amount, bytes encryptedMemo)
-        // selector 0xcf4b16fe
-        var calldata = '0xcf4b16fe' +
+        // selector 0x4bba01b6
+        var calldata = '0x4bba01b6' +
           pad64(invoiceId.slice(2)) +
           pad64(stealthRecip.slice(2)) +
           pad64(claimAddr.slice(2)) +

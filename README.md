@@ -1,10 +1,11 @@
 # Seraph: A Privacy Continuum Protocol
 
-[![Foundry Tests](https://img.shields.io/badge/Foundry-155%2F155%20Passing-brightgreen)](./contracts/test/)
+[![Foundry Tests](https://img.shields.io/badge/Foundry-204%2F204%20Passing-brightgreen)](./contracts/test/)
 [![Rust Tests](https://img.shields.io/badge/Rust%20Crate-17%2F17%20Passing-blue)](./base-layer/tests/)
-[![Node Tests](https://img.shields.io/badge/Node.js%20SDK-43%2F43%20Passing-success)](./sdk/typescript/test/)
-[![Invariants](https://img.shields.io/badge/Stateful%20Invariants-896k%20Checks%20(0%20Reverts)-darkgreen)](./contracts/test/)
+[![Node Tests](https://img.shields.io/badge/Node.js%20SDK-59%2F59%20Passing-success)](./sdk/typescript/test/)
+[![Invariants](https://img.shields.io/badge/Stateful%20Invariants-128k%20Calls%20(0%20Reverts)-darkgreen)](./contracts/test/)
 [![Base Sepolia](https://img.shields.io/badge/Base%20Sepolia-13%20Contracts%20Deployed-blueviolet)](https://sepolia.basescan.org)
+[![Documentation](https://img.shields.io/badge/BookStack-22%20Chapters%20(4%20Books)-orange)](./docs/bookstack/README.md)
 
 **Monero-grade default privacy + programmable confidential smart contracts.**
 
@@ -43,11 +44,11 @@ Seraph resolves this tension by treating privacy as a continuous mathematical sp
 
 ## 2. Current Implementation Status
 
-**Current Phase: Alpha (Phase 3 of 5) — ~75% Complete**
+**Current Phase: Alpha (Phase 3 of 5) — ~80% Complete**
 
 - [x] **Phase 1: Proof of Concept (PoC)** — 100% Complete (Rust note ledger, Circom circuits, CLI wallet).
 - [x] **Phase 2: Minimum Viable Product (MVP)** — 100% Complete (13 contracts deployed on Base Sepolia, interactive Web3 dApp, TypeScript SDK).
-- [x] **Phase 3: Alpha** — ~75% Complete (154 Foundry tests, 17 Rust tests, 40 Node tests, 896,000 stateful invariant checks with 0 reverts, 15 security vulnerabilities resolved).
+- [x] **Phase 3: Alpha** — ~80% Complete (204 Foundry tests, 17 Rust tests, 59 Node tests, 128,000 handler fuzz calls across invariant test suites with 0 reverts, 15 security vulnerabilities resolved, promotional artwork and media pack created).
 - [ ] **Phase 4: Beta (Mainnet Candidate)** — Upcoming (Client-side WASM ZK proving, Rust `seraphd` node daemon, relayer network, external tier-1 security audit).
 - [ ] **Phase 5: v1.0 Production Launch** — Target (Base mainnet deployment, liquidity pools, TGE).
 
@@ -113,18 +114,18 @@ All protocol modules are currently deployed, verified, and operational on Base S
 
 ---
 
-## 5. Verification & Testing Registry (211 Tests)
+## 5. Verification & Testing Registry (280 Tests)
 
 Seraph enforces strict mathematical verification across Foundry, Rust, and Node.js:
 
 ```bash
-# 1. Run Foundry Smart Contract Suites (154/154 tests + 896,000 invariant checks)
+# 1. Run Foundry Smart Contract Suites (204/204 tests + 128,000 invariant handler calls)
 forge test -vv
 
 # 2. Run Rust Base-Layer Cryptographic Pentests (17/17 tests)
 cargo test --manifest-path base-layer/Cargo.toml
 
-# 3. Run Node.js SDK & Website Security Suites (40/40 tests)
+# 3. Run Node.js SDK & Website Security Suites (59/59 tests)
 node --test sdk/typescript/test/*.test.mjs
 ```
 
@@ -137,10 +138,18 @@ The web application ([`website/index.html`](./website/index.html)) connects live
    - **Shield SER**: Deposits public $SER$ into `PrivacyPool`, generates client-side blinding $r$ and commitment $C$, executing `approveAndShield`.
    - **Private Transfer**: Spends a local shielded note via nullifier $N$, creating an unlinkable commitment for a recipient.
    - **Unshield SER**: Withdraws from the privacy pool back to public circulation with zero trading tax.
+   - **Dual EVM & Bridge**: Cross-chain settlement routing between Base Sepolia, Seraph EVM (gas in SER), and XMR EVM (gas in XMR) with bonded relayers.
+   - **Encrypted Messaging & Stealth Invoices**: End-to-end encrypted messaging and single-use stealth merchant invoices via `InvoiceRegistry.sol`.
+   - **Testnet SER Faucet**: Direct acquisition of liquid testnet $SER$ with Sepolia ETH via `SeraphPresale.sol`.
    - **Encrypted Note Vault**: Displays local notes in browser storage with status badges, backup export, and block explorer links.
-2. **Launchpad Feed & Trading Dock** (`#launch`):
+2. **BookStack Documentation Suite Explorer** (`#docs`):
+   - Interactive chapter deep-dive explorer covering all 22 chapters across 4 books.
+3. **Launchpad Feed & Trading Dock** (`#launch`):
    - Reads live on-chain token launches directly from `SeraphLaunchpad`.
    - Live trading dock for Buying, Selling, Claiming Creator/Platform Fees, and Claiming Holder Dividends.
+4. **Promotional Media Suite** ([`promotions/`](./promotions/)):
+   - High-impact promotional posts and threads (`promotions/posts/`)
+   - Official 16:9 promotional artwork visuals (`promotions/images/`)
 
 ---
 
