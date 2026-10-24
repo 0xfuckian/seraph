@@ -1,15 +1,17 @@
 import { createHash, randomBytes } from "node:crypto";
 
-export enum AssetId {
-  Seraph = 0,
-  Xmr = 1,
-}
+export const AssetId = {
+  Seraph: 0,
+  Xmr: 1,
+} as const;
+export type AssetId = (typeof AssetId)[keyof typeof AssetId];
 
-export enum LaunchModel {
-  FixedPool = 0,
-  BondingCurve = 1,
-  SeraphPool = 2,
-}
+export const LaunchModel = {
+  FixedPool: 0,
+  BondingCurve: 1,
+  SeraphPool: 2,
+} as const;
+export type LaunchModel = (typeof LaunchModel)[keyof typeof LaunchModel];
 
 export interface ShieldedNote {
   asset: AssetId;
@@ -59,11 +61,46 @@ export const SERAPH_LAUNCHPAD_ABI = [
 ] as const;
 
 export const PRIVACY_POOL_ABI = [
-  "function shield(uint256 amount, bytes32 commitment, bytes encryptedNote) returns (uint32 leafIndex)",
-  "function privateTransfer(bytes32[2] inputNullifiers, bytes32[2] outputCommitments, bytes32 root, bytes proof, bytes[2] encryptedNotes)",
+  "function shield(uint256 amount, bytes32 commitment, bytes proof) returns (uint32 leafIndex)",
+  "function shieldFor(address depositor, uint256 amount, bytes32 commitment, bytes proof) returns (uint32 leafIndex)",
+  "function privateTransfer(bytes32[] nullifiers, bytes32[] commitments, bytes32 root, bytes proof)",
   "function unshield(bytes32 nullifier, uint256 amount, address recipient, bytes32 root, bytes proof)",
   "function getLastRoot() view returns (bytes32)",
   "function isKnownRoot(bytes32 root) view returns (bool)",
+] as const;
+
+export const CROSS_EVM_BRIDGE_ABI = [
+  "function bondRelayer() payable",
+  "function unbondRelayer(uint256 amount)",
+  "function submitStateBatch(bytes32 sourceChainId, bytes32 stateRoot) returns (uint256 batchId)",
+  "function challengeBatch(uint256 batchId, address challenger)",
+  "function bridgeOut(address recipient, uint256 amount, bytes32 destChainId) returns (uint256 nonce)",
+  "function claimBridged(uint256 batchId, bytes32 nullifier, address recipient, uint256 amount, bytes32[] merkleProof)",
+] as const;
+
+export const GAS_RELAYER_ABI = [
+  "function fundGasVoucher(address feeToken, uint256 amount, bytes32 voucherCommitment)",
+  "function executeWithGasAbstraction(bytes32 voucherNullifier, address feeToken, uint256 feeAmount, address target, bytes data) returns (bytes result)",
+  "function setTokenGasRate(address feeToken, uint256 rate)",
+] as const;
+
+export const INVOICE_REGISTRY_ABI = [
+  "function sendEncryptedMessage(bytes32 recipientPubkey, bytes32 ephemeralPubkey, bytes ciphertext)",
+  "function createInvoice(bytes32 invoiceId, bytes32 stealthRecipient, address claimAddr, address token, uint256 amount, bytes encryptedMemo)",
+  "function settleInvoice(bytes32 invoiceId, bytes32 paymentNullifier)",
+] as const;
+
+export const USAGE_VAULT_ABI = [
+  "function depositCredits(bytes32 commitment, uint256 amount)",
+  "function redeemUsageTicket(bytes32 commitment, bytes32 ticketNullifier, uint256 amount, bytes32 secretPreimage)",
+  "function claimEarnings() returns (uint256 amount)",
+] as const;
+
+export const COLLATERAL_VAULT_ABI = [
+  "function depositAndMint(uint256 collateralAmount, uint256 mintAmount)",
+  "function burnAndWithdraw(uint256 burnAmount, uint256 withdrawCollateral)",
+  "function setCollateralPrice(uint256 newPriceUsd)",
+  "function positions(address user) view returns (uint256 collateral, uint256 debt)",
 ] as const;
 
 function sha256Tag(tag: string, ...chunks: Uint8Array[]): Uint8Array {
@@ -103,6 +140,104 @@ export function deriveNullifier(spendKey: Uint8Array, leafIndex: number): Uint8A
   const idxBuf = Buffer.alloc(4);
   idxBuf.writeUInt32BE(leafIndex >>> 0);
   return sha256Tag("seraph_nullifier_v1", spendKey, idxBuf);
+}
+
+/**
+ * Encrypts/decrypts a view-key memo using stream cipher matching base-layer Rust note::xor_memo
+ */
+export function xorViewKeyMemo(viewKey: Uint8Array, blinding: Uint8Array, data: Uint8Array): Uint8Array {
+  if (viewKey.length !== 32 || blinding.length !== 32) {
+    throw new Error("viewKey and blinding must be 32 bytes each");
+  }
+  const pad = sha256Tag("seraph_memo_stream", viewKey, blinding);
+  const out = new Uint8Array(data.length);
+  for (let i = 0; i < data.length; i++) {
+    out[i] = data[i] ^ pad[i % 32];
+  }
+  return out;
+}
+
+/**
+ * Pure client-side constant-product bonding curve buy quote calculator
+ */
+export function estimateBondingCurveBuy(
+  realQuoteReserve: bigint,
+  phantomQuote: bigint,
+  tokenReserve: bigint,
+  reservedTokens: bigint,
+  grossQuoteIn: bigint,
+  buyFeeBps: number,
+  graduated = false
+): {
+  tokensOut: bigint;
+  platformFee: bigint;
+  creatorFee: bigint;
+  netQuoteIn: bigint;
+  refund: bigint;
+  graduates: boolean;
+} {
+  const quoteReserve = realQuoteReserve + phantomQuote;
+  const platformFee = (grossQuoteIn * BigInt(PLATFORM_FEE_BPS)) / BigInt(BPS);
+  const creatorFee = (grossQuoteIn * BigInt(buyFeeBps)) / BigInt(BPS);
+  let netQuoteIn = grossQuoteIn - platformFee - creatorFee;
+
+  let tokensOut = (tokenReserve * netQuoteIn) / (quoteReserve + netQuoteIn);
+  const available = graduated
+    ? tokenReserve
+    : tokenReserve > reservedTokens
+    ? tokenReserve - reservedTokens
+    : 0n;
+
+  let refund = 0n;
+  const completesCurve = !graduated && tokensOut >= available;
+
+  if (tokensOut > available) {
+    tokensOut = available;
+    const denom = tokenReserve - tokensOut;
+    netQuoteIn = (quoteReserve * tokensOut + denom - 1n) / denom;
+    const netBps = BigInt(BPS - PLATFORM_FEE_BPS - buyFeeBps);
+    let grossUsed = (netQuoteIn * BigInt(BPS) + netBps - 1n) / netBps;
+    if (grossUsed > grossQuoteIn) grossUsed = grossQuoteIn;
+    refund = grossQuoteIn - grossUsed;
+  }
+
+  return {
+    tokensOut,
+    platformFee,
+    creatorFee,
+    netQuoteIn,
+    refund,
+    graduates: completesCurve,
+  };
+}
+
+/**
+ * Pure client-side constant-product bonding curve sell quote calculator
+ */
+export function estimateBondingCurveSell(
+  realQuoteReserve: bigint,
+  phantomQuote: bigint,
+  tokenReserve: bigint,
+  tokenAmount: bigint,
+  sellFeeBps: number
+): {
+  netQuoteOut: bigint;
+  platformFee: bigint;
+  creatorFee: bigint;
+} {
+  const quoteReserve = realQuoteReserve + phantomQuote;
+  let grossQuoteOut = (quoteReserve * tokenAmount) / (tokenReserve + tokenAmount);
+  if (grossQuoteOut > realQuoteReserve) grossQuoteOut = realQuoteReserve;
+
+  const platformFee = (grossQuoteOut * BigInt(PLATFORM_FEE_BPS)) / BigInt(BPS);
+  const creatorFee = (grossQuoteOut * BigInt(sellFeeBps)) / BigInt(BPS);
+  const netQuoteOut = grossQuoteOut - platformFee - creatorFee;
+
+  return {
+    netQuoteOut,
+    platformFee,
+    creatorFee,
+  };
 }
 
 export function validateLaunchConfig(cfg: LaunchConfig): void {
