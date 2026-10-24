@@ -3,6 +3,7 @@ pragma solidity ^0.8.24;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 
 /**
@@ -33,6 +34,8 @@ contract PrivateStablecoin is ERC20 {
  *         Over-collateralized CDP vault accepting SER or wXMR to mint xUSD at >= 150% CR.
  */
 contract CollateralVault is ReentrancyGuard {
+    using SafeERC20 for IERC20;
+
     uint256 public constant MIN_COLLATERAL_RATIO_BPS = 15_000; // 150%
     uint256 public constant BPS = 10_000;
     uint256 public constant PRICE_PRECISION = 1e18;
@@ -55,9 +58,11 @@ contract CollateralVault is ReentrancyGuard {
     event CollateralWithdrawn(address indexed user, uint256 amount);
 
     error InsufficientCollateralRatio();
+    error InvalidPrice();
     error Unauthorized();
 
     constructor(address _collateralToken, uint256 _initialPriceUsd) {
+        require(_collateralToken != address(0) && _initialPriceUsd > 0, "CollateralVault: invalid init");
         owner = msg.sender;
         collateralToken = IERC20(_collateralToken);
         collateralPriceUsd = _initialPriceUsd;
@@ -66,13 +71,14 @@ contract CollateralVault is ReentrancyGuard {
 
     function setCollateralPrice(uint256 newPriceUsd) external {
         if (msg.sender != owner) revert Unauthorized();
+        if (newPriceUsd == 0) revert InvalidPrice();
         collateralPriceUsd = newPriceUsd;
     }
 
     function depositAndMint(uint256 collateralAmount, uint256 mintAmount) external nonReentrant {
         Position storage pos = positions[msg.sender];
         if (collateralAmount > 0) {
-            collateralToken.transferFrom(msg.sender, address(this), collateralAmount);
+            collateralToken.safeTransferFrom(msg.sender, address(this), collateralAmount);
             pos.collateral += collateralAmount;
             emit CollateralDeposited(msg.sender, collateralAmount);
         }
@@ -94,7 +100,7 @@ contract CollateralVault is ReentrancyGuard {
         if (withdrawCollateral > 0) {
             pos.collateral -= withdrawCollateral;
             if (!_isHealthy(pos.collateral, pos.debt)) revert InsufficientCollateralRatio();
-            collateralToken.transfer(msg.sender, withdrawCollateral);
+            collateralToken.safeTransfer(msg.sender, withdrawCollateral);
             emit CollateralWithdrawn(msg.sender, withdrawCollateral);
         }
     }

@@ -228,9 +228,10 @@ contract LaunchpadMultiActorTest is Test {
         // Verify transfer checkpointed Buyer1's div1 into pendingDividends and set Buyer2's rewardDebt
         assertApproxEqAbs(token.claimableDividends(buyer1), div1, 1, "Buyer1 claimable unchanged after transfer");
         assertEq(token.claimableDividends(buyer2), 0, "Buyer2 must not retroactively earn div1");
-        assertEq(
+        assertApproxEqAbs(
             token.rewardDebt(buyer2),
             (token.balanceOf(buyer2) * token.accDividendPerShare()) / 1e36,
+            1,
             "Buyer2 rewardDebt must match current accDividendPerShare"
         );
 

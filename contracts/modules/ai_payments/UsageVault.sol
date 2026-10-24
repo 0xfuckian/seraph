@@ -2,6 +2,7 @@
 pragma solidity ^0.8.24;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 
 /**
@@ -11,6 +12,8 @@ import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
  *         and AI providers redeem compute credits via nullifier-tagged tickets.
  */
 contract UsageVault is ReentrancyGuard {
+    using SafeERC20 for IERC20;
+
     IERC20 public immutable paymentToken;
 
     mapping(bytes32 => uint256) public creditCommitments;
@@ -28,6 +31,7 @@ contract UsageVault is ReentrancyGuard {
     error NothingToClaim();
 
     constructor(address _paymentToken) {
+        require(_paymentToken != address(0), "UsageVault: zero token");
         paymentToken = IERC20(_paymentToken);
     }
 
@@ -38,7 +42,7 @@ contract UsageVault is ReentrancyGuard {
         require(commitment != bytes32(0) && amount > 0, "UsageVault: invalid deposit");
         if (creditCommitments[commitment] != 0) revert CommitmentAlreadyExists();
 
-        paymentToken.transferFrom(msg.sender, address(this), amount);
+        paymentToken.safeTransferFrom(msg.sender, address(this), amount);
         creditCommitments[commitment] = amount;
         emit CreditsDeposited(commitment, amount);
     }
@@ -53,8 +57,8 @@ contract UsageVault is ReentrancyGuard {
         uint256 amount,
         bytes32 secretPreimage
     ) external nonReentrant {
-        if (redeemedTickets[ticketNullifier]) revert TicketAlreadyRedeemed();
-        if (keccak256(abi.encodePacked(secretPreimage)) != commitment) revert InvalidTicketProof();
+        if (ticketNullifier == bytes32(0) || redeemedTickets[ticketNullifier]) revert TicketAlreadyRedeemed();
+        if (amount == 0 || keccak256(abi.encodePacked(secretPreimage)) != commitment) revert InvalidTicketProof();
         if (creditCommitments[commitment] < amount) revert InsufficientCommitmentBalance();
 
         redeemedTickets[ticketNullifier] = true;
@@ -68,7 +72,7 @@ contract UsageVault is ReentrancyGuard {
         amount = providerEarnings[msg.sender];
         if (amount == 0) revert NothingToClaim();
         providerEarnings[msg.sender] = 0;
-        paymentToken.transfer(msg.sender, amount);
+        paymentToken.safeTransfer(msg.sender, amount);
         emit EarningsClaimed(msg.sender, amount);
     }
 }

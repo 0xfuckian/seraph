@@ -2,6 +2,7 @@
 pragma solidity ^0.8.24;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 
 /**
@@ -10,6 +11,8 @@ import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
  *         Supports encrypted view-key memos, stealth tips, and invoice settlement in SER or wXMR.
  */
 contract InvoiceRegistry is ReentrancyGuard {
+    using SafeERC20 for IERC20;
+
     struct Invoice {
         bytes32 stealthRecipient;
         address claimAddr;
@@ -20,6 +23,7 @@ contract InvoiceRegistry is ReentrancyGuard {
     }
 
     mapping(bytes32 => Invoice) public invoices;
+    mapping(bytes32 => bool) public usedPaymentNullifiers;
 
     event EncryptedMessageSent(bytes32 indexed recipientPubkey, bytes32 indexed ephemeralPubkey, bytes ciphertext);
     event InvoiceCreated(bytes32 indexed invoiceId, bytes32 indexed stealthRecipient, address token, uint256 amount);
@@ -28,6 +32,7 @@ contract InvoiceRegistry is ReentrancyGuard {
     error InvoiceExists();
     error UnknownInvoice();
     error AlreadySettled();
+    error NullifierAlreadyUsed();
 
     /**
      * @notice Broadcast an encrypted message to `recipientPubkey` (scannable via IncomingViewKey).
@@ -37,6 +42,7 @@ contract InvoiceRegistry is ReentrancyGuard {
         bytes32 ephemeralPubkey,
         bytes calldata ciphertext
     ) external {
+        require(recipientPubkey != bytes32(0) && ciphertext.length > 0, "InvoiceRegistry: invalid message");
         emit EncryptedMessageSent(recipientPubkey, ephemeralPubkey, ciphertext);
     }
 
@@ -52,7 +58,7 @@ contract InvoiceRegistry is ReentrancyGuard {
         bytes calldata encryptedMemo
     ) external {
         if (invoices[invoiceId].amount != 0) revert InvoiceExists();
-        require(amount > 0 && claimAddr != address(0), "InvoiceRegistry: invalid invoice");
+        require(invoiceId != bytes32(0) && amount > 0 && claimAddr != address(0) && token != address(0), "InvoiceRegistry: invalid invoice");
 
         invoices[invoiceId] = Invoice({
             stealthRecipient: stealthRecipient,
@@ -72,9 +78,11 @@ contract InvoiceRegistry is ReentrancyGuard {
         Invoice storage inv = invoices[invoiceId];
         if (inv.amount == 0) revert UnknownInvoice();
         if (inv.settled) revert AlreadySettled();
+        if (paymentNullifier == bytes32(0) || usedPaymentNullifiers[paymentNullifier]) revert NullifierAlreadyUsed();
 
         inv.settled = true;
-        IERC20(inv.token).transferFrom(msg.sender, inv.claimAddr, inv.amount);
+        usedPaymentNullifiers[paymentNullifier] = true;
+        IERC20(inv.token).safeTransferFrom(msg.sender, inv.claimAddr, inv.amount);
         emit InvoiceSettled(invoiceId, paymentNullifier, inv.amount);
     }
 }

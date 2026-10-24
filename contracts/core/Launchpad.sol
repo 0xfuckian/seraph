@@ -11,7 +11,7 @@ import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
  *         and O(1) holder dividend distribution (Magnified Dividend Per Share).
  *         No wallet tax exemptions exist; all trading fees are enforced at the pool/curve level.
  */
-contract LaunchToken is ERC20, ERC20Burnable {
+contract LaunchToken is ERC20, ERC20Burnable, ReentrancyGuard {
     uint256 private constant ACC_PRECISION = 1e36;
 
     address public immutable launchpad;
@@ -80,13 +80,14 @@ contract LaunchToken is ERC20, ERC20Burnable {
     function claimableDividends(address holder) public view returns (uint256) {
         if (holder == address(0) || holder == launchpad) return 0;
         uint256 accumulated = (balanceOf(holder) * accDividendPerShare) / ACC_PRECISION;
-        return pendingDividends[holder] + (accumulated - rewardDebt[holder]);
+        uint256 newlyOwed = accumulated > rewardDebt[holder] ? accumulated - rewardDebt[holder] : 0;
+        return pendingDividends[holder] + newlyOwed;
     }
 
     /**
      * @notice Claim accrued ETH holder dividends.
      */
-    function claimDividends(address holder) external returns (uint256 amount) {
+    function claimDividends(address holder) external nonReentrant returns (uint256 amount) {
         _checkpoint(holder);
         amount = pendingDividends[holder];
         require(amount > 0, "LaunchToken: nothing to claim");
@@ -102,7 +103,7 @@ contract LaunchToken is ERC20, ERC20Burnable {
         if (accumulated > rewardDebt[account]) {
             pendingDividends[account] += accumulated - rewardDebt[account];
         }
-        rewardDebt[account] = accumulated;
+        rewardDebt[account] = (balanceOf(account) * accDividendPerShare + ACC_PRECISION - 1) / ACC_PRECISION;
     }
 
     function _update(address from, address to, uint256 value) internal virtual override {
@@ -110,10 +111,10 @@ contract LaunchToken is ERC20, ERC20Burnable {
         _checkpoint(to);
         super._update(from, to, value);
         if (from != address(0) && from != launchpad) {
-            rewardDebt[from] = (balanceOf(from) * accDividendPerShare) / ACC_PRECISION;
+            rewardDebt[from] = (balanceOf(from) * accDividendPerShare + ACC_PRECISION - 1) / ACC_PRECISION;
         }
         if (to != address(0) && to != launchpad) {
-            rewardDebt[to] = (balanceOf(to) * accDividendPerShare) / ACC_PRECISION;
+            rewardDebt[to] = (balanceOf(to) * accDividendPerShare + ACC_PRECISION - 1) / ACC_PRECISION;
         }
     }
 }
@@ -135,6 +136,7 @@ contract SeraphLaunchpad is ReentrancyGuard {
     uint16 public constant PLATFORM_FEE_BPS = 100;      // Fixed 1.0% platform fee per side
     uint16 public constant MAX_CREATOR_FEE_BPS = 250;   // Max 2.5% creator fee per side
     uint16 public constant MAX_DEV_BUY_BPS = 1_000;     // Max 10.0% dev buy at launch
+    uint256 public constant MAX_TOTAL_SUPPLY = 1_000_000_000_000_000e18; // Max 1 Quadrillion tokens (prevents overflow)
 
     enum LaunchModel {
         FixedPool,
@@ -258,7 +260,7 @@ contract SeraphLaunchpad is ReentrancyGuard {
         if (bytes(p.name).length == 0 || bytes(p.name).length > 32) revert InvalidMetadata();
         if (bytes(p.symbol).length == 0 || bytes(p.symbol).length > 10) revert InvalidMetadata();
         if (bytes(p.description).length > 280) revert InvalidMetadata();
-        if (p.totalSupply < 1e18) revert InvalidSupply();
+        if (p.totalSupply < 1e18 || p.totalSupply > MAX_TOTAL_SUPPLY) revert InvalidSupply();
         if (p.buyFeeBps > MAX_CREATOR_FEE_BPS || p.sellFeeBps > MAX_CREATOR_FEE_BPS) revert InvalidFeeRate();
         if (
             uint256(p.creatorShareBps) +
