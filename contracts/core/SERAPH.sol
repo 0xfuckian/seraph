@@ -38,6 +38,9 @@ contract SeraphToken is ERC20, ERC20Burnable, ERC20Permit {
     event Bridged(address indexed from, address to, uint256 amount, bytes32 chainId);
     event BridgeReceived(address indexed to, uint256 amount, address from);
     event TaxCollected(address indexed from, address indexed to, uint256 amount, uint256 burned);
+    event TaxExemptionUpdated(address indexed account, bool isExempt);
+
+    mapping(address => bool) public taxExempt;
 
     constructor(address _privacyPool, address _treasury, address _presale)
         ERC20("Seraph", "SER")
@@ -80,10 +83,11 @@ contract SeraphToken is ERC20, ERC20Burnable, ERC20Permit {
      *      OZ v5 keeps _balances/_totalSupply private.
      */
     function _update(address from, address to, uint256 amount) internal virtual override {
-        // Only apply sell tax on regular transfers (not mint/burn, not from presale, not from/to self)
+        // Only apply sell tax on regular transfers (not mint/burn, not from presale, not from/to self, not exempt)
         bool isSell = from != address(0) && to != address(0) && from != address(this) && to != address(this)
             && from != presale && to != presale && from != treasury && to != treasury
-            && from != privacyPool && to != privacyPool;
+            && from != privacyPool && to != privacyPool
+            && !taxExempt[from] && !taxExempt[to];
 
         if (sellTaxEnabled && isSell && amount > 0) {
             uint256 tax = (amount * SELL_TAX_BPS) / 10000;
@@ -122,6 +126,11 @@ contract SeraphToken is ERC20, ERC20Burnable, ERC20Permit {
 
     function setPrivacyPool(address _privacyPool) external onlyTreasury {
         privacyPool = _privacyPool;
+    }
+
+    function setTaxExempt(address account, bool isExempt) external onlyTreasury {
+        taxExempt[account] = isExempt;
+        emit TaxExemptionUpdated(account, isExempt);
     }
 
     /* ------------------------------------------------------------------ */

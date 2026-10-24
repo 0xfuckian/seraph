@@ -67,6 +67,10 @@ export const PRIVACY_POOL_ABI = [
   "function unshield(bytes32 nullifier, uint256 amount, address recipient, bytes32 root, bytes proof)",
   "function getLastRoot() view returns (bytes32)",
   "function isKnownRoot(bytes32 root) view returns (bool)",
+  "function paused() view returns (bool)",
+  "function setPaused(bool _paused)",
+  "event Paused(address account)",
+  "event Unpaused(address account)",
 ] as const;
 
 export const CROSS_EVM_BRIDGE_ABI = [
@@ -76,6 +80,27 @@ export const CROSS_EVM_BRIDGE_ABI = [
   "function challengeBatch(uint256 batchId, address challenger)",
   "function bridgeOut(address recipient, uint256 amount, bytes32 destChainId) returns (uint256 nonce)",
   "function claimBridged(uint256 batchId, bytes32 nullifier, address recipient, uint256 amount, bytes32[] merkleProof)",
+  "function paused() view returns (bool)",
+  "function setPaused(bool _paused)",
+  "event Paused(address account)",
+  "event Unpaused(address account)",
+] as const;
+
+export const SERAPH_TOKEN_ABI = [
+  "function name() view returns (string)",
+  "function symbol() view returns (string)",
+  "function decimals() view returns (uint8)",
+  "function totalSupply() view returns (uint256)",
+  "function balanceOf(address account) view returns (uint256)",
+  "function transfer(address to, uint256 amount) returns (bool)",
+  "function allowance(address owner, address spender) view returns (uint256)",
+  "function approve(address spender, uint256 amount) returns (bool)",
+  "function transferFrom(address from, address to, uint256 amount) returns (bool)",
+  "function approveAndShield(uint256 amount, bytes32 commitment)",
+  "function setTaxExempt(address account, bool isExempt)",
+  "function taxExempt(address account) view returns (bool)",
+  "function setSellTaxEnabled(bool enabled)",
+  "function sellTaxEnabled() view returns (bool)",
 ] as const;
 
 export const GAS_RELAYER_ABI = [
@@ -267,4 +292,156 @@ export function validateLaunchConfig(cfg: LaunchConfig): void {
 
 export function randomBytes32(): Uint8Array {
   return new Uint8Array(randomBytes(32));
+}
+
+export interface ScannedNote {
+  index: number;
+  commitment: string;
+  amount: bigint;
+  asset: AssetId;
+  blinding: string;
+  memo: string;
+}
+
+export const NOTE_MAGIC = new Uint8Array([0x53, 0x45, 0x52, 0x50]); // "SERP"
+
+/**
+ * Encodes a private note memo payload with a 4-byte magic identifier
+ * for trial decryption by incoming view keys.
+ */
+export function encodeNoteMemo(amount: bigint, asset: AssetId, memo = ""): Uint8Array {
+  const memoBytes = Buffer.from(memo, "utf8");
+  const buf = Buffer.alloc(4 + 8 + 1 + memoBytes.length);
+  buf.set(NOTE_MAGIC, 0);
+  buf.writeBigUInt64BE(amount, 4);
+  buf[12] = asset;
+  if (memoBytes.length > 0) {
+    memoBytes.copy(buf, 13);
+  }
+  return new Uint8Array(buf);
+}
+
+/**
+ * Scans encrypted note commitments from the Privacy Continuum Merkle tree
+ * using an Incoming View Key, recovering spendable balance and private memos.
+ */
+export function scanNotesForOwner(
+  encryptedNotes: Array<{
+    leafIndex: number;
+    commitment: Uint8Array | string;
+    blinding: Uint8Array;
+    encryptedMemo: Uint8Array;
+  }>,
+  incomingViewKey: Uint8Array
+): ScannedNote[] {
+  const recovered: ScannedNote[] = [];
+  for (const n of encryptedNotes) {
+    try {
+      const decrypted = xorViewKeyMemo(incomingViewKey, n.blinding, n.encryptedMemo);
+      // Decrypted layout: [4 bytes "SERP"][8 bytes amount BE][1 byte asset][rest utf8 string memo]
+      if (
+        decrypted.length >= 13 &&
+        decrypted[0] === NOTE_MAGIC[0] &&
+        decrypted[1] === NOTE_MAGIC[1] &&
+        decrypted[2] === NOTE_MAGIC[2] &&
+        decrypted[3] === NOTE_MAGIC[3]
+      ) {
+        const amt = Buffer.from(decrypted.slice(4, 12)).readBigUInt64BE();
+        const asset = decrypted[12] as AssetId;
+        const memo = Buffer.from(decrypted.slice(13)).toString("utf8");
+        recovered.push({
+          index: n.leafIndex,
+          commitment: typeof n.commitment === "string" ? n.commitment : "0x" + Buffer.from(n.commitment).toString("hex"),
+          amount: amt,
+          asset,
+          blinding: "0x" + Buffer.from(n.blinding).toString("hex"),
+          memo,
+        });
+      }
+    } catch {
+      // Note not addressed to this view key
+    }
+  }
+  return recovered;
+}
+
+export interface ComplianceRecord {
+  nullifier: string;
+  amount: bigint;
+  recipient: string;
+  timestamp: number;
+  txHash?: string;
+}
+
+/**
+ * Generates a cryptographically verifiable tax and regulatory disclosure package
+ * signed with the wallet's Outgoing View Key, proving unshielded amounts and destinations.
+ */
+export function generateComplianceDisclosure(
+  spentRecords: ComplianceRecord[],
+  outgoingViewKey: Uint8Array
+): {
+  disclosureSummary: string;
+  signatureTag: string;
+  totalUnshielded: bigint;
+  itemCount: number;
+} {
+  let total = 0n;
+  for (const r of spentRecords) total += r.amount;
+
+  const summary = JSON.stringify({
+    protocol: "Seraph Protocol",
+    records: spentRecords.map((r) => ({
+      ...r,
+      amount: r.amount.toString(),
+    })),
+    totalUnshielded: total.toString(),
+  });
+
+  const sig = sha256Tag("seraph_tax_disclosure_v1", outgoingViewKey, Buffer.from(summary, "utf8"));
+  return {
+    disclosureSummary: summary,
+    signatureTag: "0x" + Buffer.from(sig).toString("hex"),
+    totalUnshielded: total,
+    itemCount: spentRecords.length,
+  };
+}
+
+/**
+ * Generates an unlinkable AI agent credit commitment and one-time redemption ticket.
+ */
+export function createCreditDeposit(
+  amount: bigint,
+  secretPreimage: Uint8Array
+): {
+  commitment: Uint8Array;
+  ticketNullifier: Uint8Array;
+} {
+  if (secretPreimage.length !== 32) throw new Error("secretPreimage must be 32 bytes");
+  const amtBuf = Buffer.alloc(8);
+  amtBuf.writeBigUInt64BE(amount);
+  const commitment = sha256Tag("seraph_ai_credit_commitment", amtBuf, secretPreimage);
+  const ticketNullifier = sha256Tag("seraph_ai_ticket_nullifier", secretPreimage);
+  return {
+    commitment,
+    ticketNullifier,
+  };
+}
+
+/**
+ * Client helper for autonomous AI agent compute payments and usage ticket deposits.
+ */
+export class UsageVaultClient {
+  vaultAddress: string;
+
+  constructor(vaultAddress: string) {
+    this.vaultAddress = vaultAddress;
+  }
+
+  encodeDeposit(commitment: Uint8Array, amount: bigint): { to: string; data: string } {
+    const amtBuf = Buffer.alloc(32);
+    amtBuf.writeBigUInt64BE(amount, 24);
+    const data = "0xd211e4f4" + Buffer.from(commitment).toString("hex") + amtBuf.toString("hex");
+    return { to: this.vaultAddress, data };
+  }
 }

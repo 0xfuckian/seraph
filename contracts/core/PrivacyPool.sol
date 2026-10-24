@@ -27,6 +27,8 @@ contract PrivacyPool is ReentrancyGuard {
     event Unshielded(bytes32 indexed nullifier, uint256 amount, address indexed recipient);
     event VerifierUpdated(address indexed verifier, bool isSpend);
     event TreasuryUpdated(address indexed newTreasury);
+    event Paused(address account);
+    event Unpaused(address account);
 
     // ─── Constants & Immutables ─────────────────────────────────────────
     IERC20 public immutable token;
@@ -48,11 +50,23 @@ contract PrivacyPool is ReentrancyGuard {
     // ─── Verifiers ──────────────────────────────────────────────────────
     address public spendVerifier;
     address public bridgeVerifier;
+    bool public paused;
 
     // ─── Modifiers ──────────────────────────────────────────────────────
     modifier onlyTreasury() {
         require(msg.sender == treasury, "PrivacyPool: not treasury");
         _;
+    }
+
+    modifier whenNotPaused() {
+        require(!paused, "PrivacyPool: paused");
+        _;
+    }
+
+    function setPaused(bool _paused) external onlyTreasury {
+        paused = _paused;
+        if (_paused) emit Paused(msg.sender);
+        else emit Unpaused(msg.sender);
     }
 
     constructor(address _token, address _treasury, address _spendVerifier, address _bridgeVerifier) {
@@ -100,6 +114,7 @@ contract PrivacyPool is ReentrancyGuard {
     function shieldFor(address depositor, uint256 amount, bytes32 commitment, bytes calldata proof)
         public
         nonReentrant
+        whenNotPaused
         returns (uint32 leafIndex)
     {
         proof; // Silences compiler warning for optional advanced shielding
@@ -131,7 +146,7 @@ contract PrivacyPool is ReentrancyGuard {
         bytes32[] calldata commitments,
         bytes32 root,
         bytes calldata proof
-    ) external nonReentrant {
+    ) external nonReentrant whenNotPaused {
         require(nullifiers.length > 0, "PrivacyPool: no nullifiers");
         require(commitments.length > 0, "PrivacyPool: no commitments");
         require(isKnownRoot(root), "PrivacyPool: unknown or expired root");
@@ -176,7 +191,7 @@ contract PrivacyPool is ReentrancyGuard {
         address recipient,
         bytes32 root,
         bytes calldata proof
-    ) external nonReentrant {
+    ) external nonReentrant whenNotPaused {
         require(amount > 0, "PrivacyPool: amount must be > 0");
         require(recipient != address(0), "PrivacyPool: recipient is zero");
         require(nullifier != bytes32(0), "PrivacyPool: invalid nullifier");

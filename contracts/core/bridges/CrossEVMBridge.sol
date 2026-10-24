@@ -41,6 +41,7 @@ contract CrossEVMBridge is ReentrancyGuard {
 
     mapping(bytes32 => bool) public processedNullifiers;
     uint256 public outboundNonce;
+    bool public paused;
 
     event RelayerBonded(address indexed relayer, uint256 totalBond);
     event RelayerUnbonded(address indexed relayer, uint256 amount, uint256 remainingBond);
@@ -48,6 +49,8 @@ contract CrossEVMBridge is ReentrancyGuard {
     event BatchChallenged(uint256 indexed batchId, address indexed challenger, address indexed slashedRelayer);
     event TokensLocked(uint256 indexed nonce, address indexed sender, address indexed recipient, uint256 amount, bytes32 destChainId);
     event TokensClaimed(uint256 indexed batchId, bytes32 indexed nullifier, address indexed recipient, uint256 amount);
+    event Paused(address account);
+    event Unpaused(address account);
 
     error InsufficientBond();
     error Unauthorized();
@@ -55,6 +58,19 @@ contract CrossEVMBridge is ReentrancyGuard {
     error ChallengeWindowActive();
     error NullifierAlreadyUsed();
     error InvalidMerkleProof();
+    error BridgePaused();
+
+    modifier whenNotPaused() {
+        if (paused) revert BridgePaused();
+        _;
+    }
+
+    function setPaused(bool _paused) external {
+        if (msg.sender != guardian) revert Unauthorized();
+        paused = _paused;
+        if (_paused) emit Paused(msg.sender);
+        else emit Unpaused(msg.sender);
+    }
 
     constructor(address _token, bytes32 _localChainId, address _guardian) {
         require(_token != address(0) && _guardian != address(0), "CrossEVMBridge: zero address");
@@ -84,7 +100,7 @@ contract CrossEVMBridge is ReentrancyGuard {
         emit RelayerUnbonded(msg.sender, amount, relayerBonds[msg.sender]);
     }
 
-    function submitStateBatch(bytes32 sourceChainId, bytes32 stateRoot) external returns (uint256 batchId) {
+    function submitStateBatch(bytes32 sourceChainId, bytes32 stateRoot) external whenNotPaused returns (uint256 batchId) {
         if (relayerBonds[msg.sender] < MIN_RELAYER_BOND) revert InsufficientBond();
         if (sourceChainId == bytes32(0) || sourceChainId == localChainId || stateRoot == bytes32(0)) revert InvalidBatch();
 
@@ -123,7 +139,7 @@ contract CrossEVMBridge is ReentrancyGuard {
     /**
      * @notice Lock tokens on the current chain to bridge to `destChainId`.
      */
-    function bridgeOut(address recipient, uint256 amount, bytes32 destChainId) external nonReentrant returns (uint256 nonce) {
+    function bridgeOut(address recipient, uint256 amount, bytes32 destChainId) external nonReentrant whenNotPaused returns (uint256 nonce) {
         require(recipient != address(0) && amount > 0 && destChainId != bytes32(0) && destChainId != localChainId, "CrossEVMBridge: invalid bridge params");
         IERC20(token).safeTransferFrom(msg.sender, address(this), amount);
         nonce = outboundNonce++;
@@ -139,7 +155,7 @@ contract CrossEVMBridge is ReentrancyGuard {
         address recipient,
         uint256 amount,
         bytes32[] calldata merkleProof
-    ) external nonReentrant {
+    ) external nonReentrant whenNotPaused {
         StateBatch storage b = batches[batchId];
         if (b.stateRoot == bytes32(0) || b.challenged) revert InvalidBatch();
         if (recipient == address(0) || amount == 0 || nullifier == bytes32(0)) revert InvalidBatch();

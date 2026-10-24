@@ -1,8 +1,8 @@
 # Seraph: A Privacy Continuum Protocol
 
-[![Foundry Tests](https://img.shields.io/badge/Foundry-154%2F154%20Passing-brightgreen)](./contracts/test/)
+[![Foundry Tests](https://img.shields.io/badge/Foundry-155%2F155%20Passing-brightgreen)](./contracts/test/)
 [![Rust Tests](https://img.shields.io/badge/Rust%20Crate-17%2F17%20Passing-blue)](./base-layer/tests/)
-[![Node Tests](https://img.shields.io/badge/Node.js%20SDK-40%2F40%20Passing-success)](./sdk/typescript/test/)
+[![Node Tests](https://img.shields.io/badge/Node.js%20SDK-43%2F43%20Passing-success)](./sdk/typescript/test/)
 [![Invariants](https://img.shields.io/badge/Stateful%20Invariants-896k%20Checks%20(0%20Reverts)-darkgreen)](./contracts/test/)
 [![Base Sepolia](https://img.shields.io/badge/Base%20Sepolia-13%20Contracts%20Deployed-blueviolet)](https://sepolia.basescan.org)
 
@@ -12,6 +12,7 @@ Seraph is a decentralized Privacy Continuum protocol uniting a sovereign Monero-
 
 - **Website**: [seraphprotocol.tech](https://seraphprotocol.tech)
 - **Whitepaper**: [whitepaper/seraph_whitepaper.md](./whitepaper/seraph_whitepaper.md)
+- **BookStack Documentation**: [docs/bookstack/README.md](./docs/bookstack/README.md)
 - **SDK**: [`@seraph-protocol/sdk`](./sdk/typescript/)
 - **Live Testnet**: Base Sepolia (`Chain ID 84532`)
 
