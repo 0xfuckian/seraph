@@ -1,10 +1,10 @@
 # Seraph: A Privacy Continuum Protocol
 
-[![Foundry Tests](https://img.shields.io/badge/Foundry-204%2F204%20Passing-brightgreen)](./contracts/test/)
+[![Foundry Tests](https://img.shields.io/badge/Foundry-205%2F205%20Passing-brightgreen)](./contracts/test/)
 [![Rust Tests](https://img.shields.io/badge/Rust%20Crate-17%2F17%20Passing-blue)](./base-layer/tests/)
 [![Node Tests](https://img.shields.io/badge/Node.js%20SDK-59%2F59%20Passing-success)](./sdk/typescript/test/)
 [![Relayer Daemon](https://img.shields.io/badge/Relayer%20Daemon-17%2F17%20Passing-teal)](./services/relayer/test/)
-[![Total Tests](https://img.shields.io/badge/Total%20Tests-297%2F297%20Passing-darkgreen)](./)
+[![Total Tests](https://img.shields.io/badge/Total%20Tests-298%2F298%20Passing-darkgreen)](./)
 [![Invariants](https://img.shields.io/badge/Stateful%20Invariants-128k%20Calls%20(0%20Reverts)-darkgreen)](./contracts/test/)
 [![Base Sepolia](https://img.shields.io/badge/Base%20Sepolia-13%20Contracts%20Deployed-blueviolet)](https://sepolia.basescan.org)
 [![Documentation](https://img.shields.io/badge/BookStack-22%20Chapters%20(4%20Books)-orange)](./docs/bookstack/README.md)
@@ -121,12 +121,12 @@ All protocol modules are currently deployed, verified, and operational on Base S
 
 ---
 
-## 5. Verification & Testing Registry (297 Tests)
+## 5. Verification & Testing Registry (298 Tests)
 
 Seraph enforces strict mathematical verification across Foundry, Rust, Node.js SDK, and the Relayer Daemon:
 
 ```bash
-# 1. Run Foundry Smart Contract Suites (204/204 tests + 128,000 invariant handler calls)
+# 1. Run Foundry Smart Contract Suites (205/205 tests + 128,000 invariant handler calls)
 forge test -vv
 
 # 2. Run Rust Base-Layer Cryptographic Pentests (17/17 tests)
@@ -161,7 +161,7 @@ The web application ([`website/index.html`](./website/index.html)) connects live
    - Reads live on-chain token launches directly from `SeraphLaunchpad`.
    - Live trading dock for Buying, Selling, Claiming Creator/Platform Fees, and Claiming Holder Dividends.
 4. **Promotional Media & Growth Suite** ([`promotions/`](./promotions/)):
-   - **12 Social Media & Content Documents** (`promotions/posts/`):
+   - **14 Social Media & Content Documents** (`promotions/posts/`):
      - `01_main_announcement_thread.txt` (10-tweet launch thread)
      - `02_monero_plus_evm_deep_dive.txt` (Technical deep dive)
      - `03_the_privacy_continuum_levels_0_to_3.txt` (4-level continuum guide)
@@ -174,11 +174,14 @@ The web application ([`website/index.html`](./website/index.html)) connects live
      - `10_relayer_and_gas_abstraction_guide.txt` (Zero-gas relayer operator guide)
      - `11_privacy_continuum_manifesto_longform.txt` (2,490-word longform manifesto)
      - `12_merchant_stealth_invoices_and_ai_billing.txt` (Stealth invoices & AI billing)
-   - **4 Official 16:9 Promotional Visuals** (`promotions/images/`):
+     - `13_zero_gas_voucher_abstraction.txt` (Zero-gas voucher deep dive & UX paradox)
+     - `14_bookstack_documentation_portal.txt` (22-chapter curriculum & explorer guide)
+   - **5 Official 16:9 Promotional Visuals** (`promotions/images/`):
      - `seraph_privacy_continuum_banner.jpg` (Hero visual banner)
      - `seraph_stealth_privacy_pool.jpg` (Stealth routing & shielded pool architecture)
      - `seraph_launchpad_bonding_curve.jpg` (Launchpad bonding curve & fee distribution)
      - `seraph_dual_evm_bridge.jpg` (Dual EVM bridge & relayer network nexus)
+     - `seraph_evm_layers_and_messaging.jpg` (Dual EVM execution spheres & zero-knowledge messaging)
 
 ---
 

@@ -152,7 +152,7 @@ However, transparent blockchains represent an immediate vulnerability for autono
 3. **Budgetary Vulnerability**: If an agent’s treasury balance is transparent, counterparties in automated negotiations extract maximal rents, knowing the agent's exact operational reserves and financial runway.
 
 ### The Solution: Blinded Compute Tickets (`UsageVault.sol`)
-Seraph provides the foundational privacy layer for the machine economy through the `UsageVault` contract (`0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512`).
+Seraph provides the foundational privacy layer for the machine economy through the `UsageVault` contract (`0x455e6fd221f4Eef8a0Eb78307d61Aa87e95F9E90`).
 
 Using cryptographic one-time usage tickets:
 1. An autonomous agent locks a balance of $SER or $wXMR into `UsageVault.sol` under a blinded commitment:
@@ -238,9 +238,9 @@ Deployed Base Sepolia Testnet Contracts:
 - PrivacyPool: `0x06fA7CAfC96Bf988F3d601138976a448e8B99aE6`
 - CrossEVMBridge: `0x10f135b8004fB99eec3d7e7E4f652b477A14b0bF`
 - GasRelayer: `0x8b5F2A84c7E1a37c0245a4944c6691c94488b394`
-- InvoiceRegistry: `0x5FbDB2315678afecb367f032d93F642f64180aa3`
-- UsageVault: `0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512`
-- CollateralVault: `0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0`
+- InvoiceRegistry: `0xF5eC3a1CE0A1e2905401A78984b44631e931A733`
+- UsageVault: `0x455e6fd221f4Eef8a0Eb78307d61Aa87e95F9E90`
+- CollateralVault: `0xc6031429AAF8BEaB631b75C29f5Bb0D3701169aB`
 
 Join us in building the privacy-preserving foundation of the next web. 🕊️⚡
 

@@ -62,10 +62,10 @@ export function createRelayerFromEnv(): SeraphRelayerDaemon {
   const bridgeAddress =
     process.env.CROSS_EVM_BRIDGE_ADDRESS ||
     process.env.BRIDGE_ADDRESS ||
-    "0x10f135b8004fB99eec3d7e7E4f652b477A14b0bF";
+    "0x5dbdC525f9eA7D3076b285Bf77753a7A1AA10E8d";
   const gasRelayerAddress =
     process.env.GAS_RELAYER_ADDRESS ||
-    "0x8b5F2A84c7E1a37c0245a4944c6691c94488b394";
+    "0xD8dB7BE5F9CC850B1047E0A2D856c454cC617885";
 
   const config: RelayerConfig = {
     rpcUrl: process.env.RPC_URL || "http://127.0.0.1:8545",

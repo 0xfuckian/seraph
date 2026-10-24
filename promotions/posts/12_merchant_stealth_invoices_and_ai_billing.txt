@@ -18,8 +18,8 @@ Decentralized commerce and autonomous agent economies are suffering from a fatal
    - Machine-to-machine micro-payments cannot scale without drowning in gas costs or leaking corporate identity.
 
 Seraph Protocol solves both challenges with two native, first-party privacy modules deployed on Base Sepolia (`Chain ID: 84532`):
-• `InvoiceRegistry.sol` (`0x5FbDB2315678afecb367f032d93F642f64180aa3`): Single-use stealth invoices with encrypted view-key memos.
-• `UsageVault.sol` (`0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512`): Blinded compute ticket deposits for high-frequency, unlinkable AI streaming billing.
+• `InvoiceRegistry.sol` (`0xF5eC3a1CE0A1e2905401A78984b44631e931A733`): Single-use stealth invoices with encrypted view-key memos.
+• `UsageVault.sol` (`0x455e6fd221f4Eef8a0Eb78307d61Aa87e95F9E90`): Blinded compute ticket deposits for high-frequency, unlinkable AI streaming billing.
 
 ---
 
@@ -274,8 +274,8 @@ There is ZERO link between the agent's wallet and the compute provider.
 
 [TWEET 11/12]
 Both contracts are live and battle-tested on Base Sepolia (`Chain ID: 84532`):
-• InvoiceRegistry: `0x5FbDB2315678afecb367f032d93F642f64180aa3`
-• UsageVault: `0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512`
+• InvoiceRegistry: `0xF5eC3a1CE0A1e2905401A78984b44631e931A733`
+• UsageVault: `0x455e6fd221f4Eef8a0Eb78307d61Aa87e95F9E90`
 • 100% passing tests across 155+ Foundry test suites and invariant fuzzers.
 
 ---

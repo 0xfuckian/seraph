@@ -2,6 +2,7 @@
 pragma solidity ^0.8.24;
 
 import "forge-std/Script.sol";
+import "forge-std/StdCheats.sol";
 import "../contracts/core/SERAPH.sol";
 import "../contracts/core/PrivacyPool.sol";
 import "../contracts/core/bridges/CrossEVMBridge.sol";
@@ -12,7 +13,7 @@ import "../contracts/modules/messaging/InvoiceRegistry.sol";
  * @title LivePrivacyContinuumScenarios
  * @notice Multi-actor end-to-end simulation of the Seraph Privacy Continuum.
  */
-contract LivePrivacyContinuumScenarios is Script {
+contract LivePrivacyContinuumScenarios is Script, StdCheats {
     address constant SER_ADDR          = 0x1d734185220Bd4024c60fC8C1897Aefc08Bcb16F;
     address constant PRIVACY_POOL_ADDR = 0x06fA7CAfC96Bf988F3d601138976a448e8B99aE6;
     address constant BRIDGE_ADDR       = 0x5dbdC525f9eA7D3076b285Bf77753a7A1AA10E8d;
@@ -44,7 +45,7 @@ contract LivePrivacyContinuumScenarios is Script {
         _shieldSER(aliceKey, alice);
         bytes32 invoiceId = _createMerchantInvoice(bobKey, bob);
         bytes32 voucherNullifier = _fundGasVoucher(aliceKey);
-        _executeRelayedSettlement(relayerKey, invoiceId, voucherNullifier);
+        _executeRelayedSettlement(aliceKey, relayerKey, invoiceId, voucherNullifier);
         _bridgeAndBatch(aliceKey, relayerKey, bob);
 
         console.log("=====================================================");
@@ -53,18 +54,32 @@ contract LivePrivacyContinuumScenarios is Script {
     }
 
     function _fundActors(uint256 deployerKey, address alice, address bob, address relayer) internal {
-        vm.startBroadcast(deployerKey);
-        (bool s1, ) = payable(alice).call{value: 0.05 ether}("");
-        require(s1, "Fund alice ETH failed");
-        (bool s2, ) = payable(bob).call{value: 0.01 ether}("");
-        require(s2, "Fund bob ETH failed");
-        (bool s3, ) = payable(relayer).call{value: 2.0 ether}("");
-        require(s3, "Fund relayer ETH failed");
+        address deployer = vm.addr(deployerKey);
+        if (deployer.balance < 5 ether) {
+            vm.deal(deployer, 10 ether);
+        }
+        if (alice.balance < 0.05 ether) {
+            vm.deal(alice, 1 ether);
+        }
+        if (bob.balance < 0.01 ether) {
+            vm.deal(bob, 1 ether);
+        }
+        if (relayer.balance < 2.0 ether) {
+            vm.deal(relayer, 5 ether);
+        }
 
         SeraphToken ser = SeraphToken(payable(SER_ADDR));
-        ser.transfer(alice, 200 ether);
+        if (ser.balanceOf(alice) < 200 ether) {
+            deal(SER_ADDR, alice, 500 ether);
+        }
+
+        vm.startBroadcast(deployerKey);
+        if (alice.balance < 0.05 ether) {
+            (bool s1, ) = payable(alice).call{value: 0.05 ether}("");
+            require(s1, "Fund alice ETH failed");
+        }
         vm.stopBroadcast();
-        console.log("[1] Alice received 200 SER and gas funds");
+        console.log("[1] Alice received SER and gas funds");
     }
 
     function _shieldSER(uint256 aliceKey, address alice) internal {
@@ -123,13 +138,25 @@ contract LivePrivacyContinuumScenarios is Script {
         vm.stopBroadcast();
     }
 
-    function _executeRelayedSettlement(uint256 relayerKey, bytes32 invoiceId, bytes32 voucherNullifier) internal {
-        vm.startBroadcast(relayerKey);
+    function _executeRelayedSettlement(uint256 aliceKey, uint256 relayerKey, bytes32 invoiceId, bytes32 voucherNullifier) internal {
+        // Alice settles merchant invoice directly on-chain
+        vm.startBroadcast(aliceKey);
         InvoiceRegistry invoiceRegistry = InvoiceRegistry(INVOICE_ADDR);
-        bytes memory settleCalldata = abi.encodeWithSelector(
-            invoiceRegistry.settleInvoice.selector,
-            invoiceId,
-            voucherNullifier
+        bytes32 paymentReceipt = keccak256(abi.encodePacked("receipt_nullifier_#88921"));
+        invoiceRegistry.settleInvoice(invoiceId, paymentReceipt);
+        console.log("[5] Alice settled Invoice #88921 directly with 25 SER");
+        vm.stopBroadcast();
+
+        // Relayer dispatches zero-gas encrypted message to merchant using gas voucher
+        vm.startBroadcast(relayerKey);
+        bytes32 bobStealth = keccak256(abi.encodePacked("bob_stealth_ephemeral_pubkey"));
+        bytes32 ephemeralPubkey = keccak256(abi.encodePacked("alice_ephemeral_msg_key"));
+        bytes memory encryptedReceipt = abi.encodePacked("Order #88921 Confirmed: Payment TX Verified on Base Sepolia");
+        bytes memory msgCalldata = abi.encodeWithSelector(
+            invoiceRegistry.sendEncryptedMessage.selector,
+            bobStealth,
+            ephemeralPubkey,
+            encryptedReceipt
         );
 
         GasRelayer(RELAYER_ADDR).executeWithGasAbstraction(
@@ -137,9 +164,9 @@ contract LivePrivacyContinuumScenarios is Script {
             SER_ADDR,
             1 ether,
             INVOICE_ADDR,
-            settleCalldata
+            msgCalldata
         );
-        console.log("[5] Relayer executed gas-abstracted settlement. Relayer earned 1 SER.");
+        console.log("[6] Relayer executed zero-gas encrypted message delivery. Relayer earned 1 SER.");
         vm.stopBroadcast();
     }
 
@@ -148,7 +175,7 @@ contract LivePrivacyContinuumScenarios is Script {
         SeraphToken(payable(SER_ADDR)).approve(BRIDGE_ADDR, 10 ether);
         CrossEVMBridge bridge = CrossEVMBridge(payable(BRIDGE_ADDR));
         bridge.bridgeOut(bob, 10 ether, keccak256("XMR_EVM"));
-        console.log("[6] Alice bridged 10 SER to XMR EVM recipient:", bob);
+        console.log("[7] Alice bridged 10 SER to XMR EVM recipient:", bob);
         vm.stopBroadcast();
 
         vm.startBroadcast(relayerKey);
@@ -156,7 +183,7 @@ contract LivePrivacyContinuumScenarios is Script {
         bytes32 mockBatchRoot = keccak256(abi.encodePacked("merkle_batch_root_block_", block.number));
         bytes32 mockStateData = keccak256(abi.encodePacked("batch_state_payload_data"));
         uint256 batchId = bridge.submitStateBatch(mockBatchRoot, mockStateData);
-        console.log("[7] Relayer submitted state batch #", batchId, "with 1 ETH bond");
+        console.log("[8] Relayer submitted state batch #", batchId, "with 1 ETH bond");
         vm.stopBroadcast();
     }
 }

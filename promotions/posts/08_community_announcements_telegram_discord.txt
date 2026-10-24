@@ -24,9 +24,9 @@ Seraph is a modular privacy continuum uniting a Monero-inspired settlement layer
 • SeraphLaunchpad: 0xe0349E4cC431329207e98C5205062776e058A846
 • CrossEVMBridge: 0x10f135b8004fB99eec3d7e7E4f652b477A14b0bF
 • GasRelayer: 0x8b5F2A84c7E1a37c0245a4944c6691c94488b394
-• InvoiceRegistry: 0x5FbDB2315678afecb367f032d93F642f64180aa3
-• UsageVault (AI Credits): 0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512
-• CollateralVault (xUSD): 0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0
+• InvoiceRegistry: 0xF5eC3a1CE0A1e2905401A78984b44631e931A733
+• UsageVault (AI Credits): 0x455e6fd221f4Eef8a0Eb78307d61Aa87e95F9E90
+• CollateralVault (xUSD): 0xc6031429AAF8BEaB631b75C29f5Bb0D3701169aB
 
 🛡️ COMMUNITY RULES:
 1. Admins will NEVER DM you first or ask for private keys / seed phrases.
