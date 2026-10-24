@@ -1,6 +1,6 @@
 # Seraph Protocol — Autonomous Development, Audit & Multi-Agent Pentest Report
 
-**Last Updated**: October 23, 2026 (Milestone 6 — Deep Pentesting, Stateful Invariants & UI Update)  
+**Last Updated**: October 23, 2026 (Milestone 7 — Wave 2 Multi-Agent Pentesting & 896,000 Stateful Invariant Evaluations)  
 **Latest Commit**: On `main`  
 **Live Testnet**: **Base Sepolia (`Chain ID 84532`)** — All 13 core, launchpad, bridge, gas relayer, and module contracts deployed & verified with live multi-wallet scenarios.
 
@@ -56,12 +56,14 @@
 
 ---
 
-## 3. Automated Test & Pentest Summary (`172/172` Tests + `384,000` Invariant Checks Passing)
+## 3. Automated Test & Pentest Summary (`205/205` Tests + `896,000` Invariant Checks Passing)
 
-- **Foundry Smart Contract Suites (`135/135` Passing across 10 Suites)**:
-  - [StatefulProtocolInvariants.t.sol](file:///Users/ianmora/Desktop/Projects/seraph/contracts/test/StatefulProtocolInvariants.t.sol): `1/1` stateful invariant suite (`256 runs × 500 depth = 128,000 calls`, `384,000` invariant evaluations across `invariant_LaunchpadETHAlwaysSolvent`, `invariant_LaunchTokenDividendsAlwaysSolvent`, and `invariant_TokenReserveMatchesActualBalanceAndSupplyCapped`).
+- **Foundry Smart Contract Suites (`154/154` Passing across 12 Suites)**:
+  - [StatefulProtocolInvariants.t.sol](file:///Users/ianmora/Desktop/Projects/seraph/contracts/test/StatefulProtocolInvariants.t.sol): `1/1` stateful invariant suite (`128,000` calls, `384,000` invariant evaluations across `invariant_LaunchpadETHAlwaysSolvent`, `invariant_LaunchTokenDividendsAlwaysSolvent`, and `invariant_TokenReserveMatchesActualBalanceAndSupplyCapped`).
+  - [StatefulModulesAndPoolInvariants.t.sol](file:///Users/ianmora/Desktop/Projects/seraph/contracts/test/StatefulModulesAndPoolInvariants.t.sol): `1/1` stateful invariant suite (`128,000` calls, `512,000` invariant evaluations across `invariant_PrivacyPoolBalanceEqualsNetShielded`, `invariant_UsageVaultSolvency`, `invariant_CollateralVaultAndXUSDSolvency`, and `invariant_GasRelayerPoolSolvency`).
   - [DeepPentestLaunchpadPresale.t.sol](file:///Users/ianmora/Desktop/Projects/seraph/contracts/test/DeepPentestLaunchpadPresale.t.sol): `26/26` passed (reentrancy callbacks, flash-loan roundtrip extraction fuzzing across all 3 models, 10-wallet sybil dividend ping-pong loop, `1e33` max supply boundary, presale cliff second-by-second boundaries).
   - [DeepPentestBridgePoolModules.t.sol](file:///Users/ianmora/Desktop/Projects/seraph/contracts/test/DeepPentestBridgePoolModules.t.sol): `29/29` passed (`GasRelayer` forbidden target & pool cap, `CrossEVMBridge` unbond window lock & Merkle proof tampering, `PrivacyPool` duplicate nullifier & signal-binding verifier, `InvoiceRegistry`/`UsageVault`/`CollateralVault` reentrancy & 150% CR fuzzing).
+  - [PermitTaxAndPresaleStress.t.sol](file:///Users/ianmora/Desktop/Projects/seraph/contracts/test/PermitTaxAndPresaleStress.t.sol): `18/18` passed (EIP-2612 `permit` cryptographic replay/tamper checks, `SeraphToken` supply conservation fuzzing, and 20-buyer multi-tier/multi-currency presale stress test).
   - [LaunchpadMultiActor.t.sol](file:///Users/ianmora/Desktop/Projects/seraph/contracts/test/LaunchpadMultiActor.t.sol): `20/20` passed.
   - [FullProtocolScenarios.t.sol](file:///Users/ianmora/Desktop/Projects/seraph/contracts/test/FullProtocolScenarios.t.sol): `16/16` passed.
   - [Presale.t.sol](file:///Users/ianmora/Desktop/Projects/seraph/contracts/test/Presale.t.sol): `17/17` passed.
@@ -71,5 +73,5 @@
   - [ProtocolModules.t.sol](file:///Users/ianmora/Desktop/Projects/seraph/contracts/test/ProtocolModules.t.sol): `5/5` passed.
 - **Rust Base-Layer Crate (`17/17` Passing)**:
   - [adversarial_pentest.rs](file:///Users/ianmora/Desktop/Projects/seraph/base-layer/tests/adversarial_pentest.rs) (`15/15` passed) + [lib.rs](file:///Users/ianmora/Desktop/Projects/seraph/base-layer/src/lib.rs) (`2/2` passed).
-- **TypeScript SDK & Website Security / E2E (`20/20` Passing)**:
-  - [security_pentest.test.mjs](file:///Users/ianmora/Desktop/Projects/seraph/sdk/typescript/test/security_pentest.test.mjs) (`16/16` passed) + [website_e2e.test.mjs](file:///Users/ianmora/Desktop/Projects/seraph/sdk/typescript/test/website_e2e.test.mjs) (`2/2` passed) + [sdk.test.mjs](file:///Users/ianmora/Desktop/Projects/seraph/sdk/typescript/test/sdk.test.mjs) (`2/2` passed).
+- **TypeScript SDK & Website Security / E2E (`34/34` Passing)**:
+  - [security_pentest.test.mjs](file:///Users/ianmora/Desktop/Projects/seraph/sdk/typescript/test/security_pentest.test.mjs) (`16/16` passed) + [presale_and_router_pentest.test.mjs](file:///Users/ianmora/Desktop/Projects/seraph/sdk/typescript/test/presale_and_router_pentest.test.mjs) (`14/14` passed) + [website_e2e.test.mjs](file:///Users/ianmora/Desktop/Projects/seraph/sdk/typescript/test/website_e2e.test.mjs) (`2/2` passed) + [sdk.test.mjs](file:///Users/ianmora/Desktop/Projects/seraph/sdk/typescript/test/sdk.test.mjs) (`2/2` passed).
