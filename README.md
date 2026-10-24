@@ -3,6 +3,8 @@
 [![Foundry Tests](https://img.shields.io/badge/Foundry-204%2F204%20Passing-brightgreen)](./contracts/test/)
 [![Rust Tests](https://img.shields.io/badge/Rust%20Crate-17%2F17%20Passing-blue)](./base-layer/tests/)
 [![Node Tests](https://img.shields.io/badge/Node.js%20SDK-59%2F59%20Passing-success)](./sdk/typescript/test/)
+[![Relayer Daemon](https://img.shields.io/badge/Relayer%20Daemon-17%2F17%20Passing-teal)](./services/relayer/test/)
+[![Total Tests](https://img.shields.io/badge/Total%20Tests-297%2F297%20Passing-darkgreen)](./)
 [![Invariants](https://img.shields.io/badge/Stateful%20Invariants-128k%20Calls%20(0%20Reverts)-darkgreen)](./contracts/test/)
 [![Base Sepolia](https://img.shields.io/badge/Base%20Sepolia-13%20Contracts%20Deployed-blueviolet)](https://sepolia.basescan.org)
 [![Documentation](https://img.shields.io/badge/BookStack-22%20Chapters%20(4%20Books)-orange)](./docs/bookstack/README.md)
@@ -44,11 +46,11 @@ Seraph resolves this tension by treating privacy as a continuous mathematical sp
 
 ## 2. Current Implementation Status
 
-**Current Phase: Alpha (Phase 3 of 5) — ~80% Complete**
+**Current Phase: Alpha (Phase 3 of 5) — ~85% Complete**
 
 - [x] **Phase 1: Proof of Concept (PoC)** — 100% Complete (Rust note ledger, Circom circuits, CLI wallet).
 - [x] **Phase 2: Minimum Viable Product (MVP)** — 100% Complete (13 contracts deployed on Base Sepolia, interactive Web3 dApp, TypeScript SDK).
-- [x] **Phase 3: Alpha** — ~80% Complete (204 Foundry tests, 17 Rust tests, 59 Node tests, 128,000 handler fuzz calls across invariant test suites with 0 reverts, 15 security vulnerabilities resolved, promotional artwork and media pack created).
+- [x] **Phase 3: Alpha** — ~85% Complete (297 total tests passing across Foundry [204], Rust [17], TypeScript SDK [59], and Relayer Daemon [17]; 128,000 handler fuzz calls across invariant test suites with 0 reverts; automated relayer & bridge daemon service; 15 security vulnerabilities resolved; 12-thread promotional media pack and 4 high-res graphics created).
 - [ ] **Phase 4: Beta (Mainnet Candidate)** — Upcoming (Client-side WASM ZK proving, Rust `seraphd` node daemon, relayer network, external tier-1 security audit).
 - [ ] **Phase 5: v1.0 Production Launch** — Target (Base mainnet deployment, liquidity pools, TGE).
 
@@ -112,11 +114,16 @@ All protocol modules are currently deployed, verified, and operational on Base S
 ### 4.4 TypeScript SDK (`sdk/typescript/`)
 - **`@seraph-protocol/sdk`**: Key derivation (`deriveWalletKeys`), note commitments (`computeNoteCommitment`), nullifiers (`deriveNullifier`), view-key memo encryption, and client-side bonding curve mathematics.
 
+### 4.5 Relayer & Bridge Daemon (`services/relayer/`)
+- **`@seraph-protocol/relayer`**: Automated cross-chain bridge batcher and zero-gas execution relayer connecting Base Sepolia, Seraph EVM, and XMR EVM.
+- **CrossChainBridgeBatcher**: Ingests on-chain `TokensLocked` events, computes binary Merkle trees with orphan promotion, enforces 1 ETH relayer bonds, submits state batches on `CrossEVMBridge`, and produces inclusion proofs for `claimBridged`.
+- **GasAbstractionDispatcher**: Solvency verification, anti-drain target protections, double-spend prevention, and transaction dispatch for `GasRelayer.executeWithGasAbstraction`.
+
 ---
 
-## 5. Verification & Testing Registry (280 Tests)
+## 5. Verification & Testing Registry (297 Tests)
 
-Seraph enforces strict mathematical verification across Foundry, Rust, and Node.js:
+Seraph enforces strict mathematical verification across Foundry, Rust, Node.js SDK, and the Relayer Daemon:
 
 ```bash
 # 1. Run Foundry Smart Contract Suites (204/204 tests + 128,000 invariant handler calls)
@@ -127,6 +134,12 @@ cargo test --manifest-path base-layer/Cargo.toml
 
 # 3. Run Node.js SDK & Website Security Suites (59/59 tests)
 node --test sdk/typescript/test/*.test.mjs
+
+# 4. Run Relayer & Bridge Daemon Suites (17/17 tests)
+node --test services/relayer/test/*.test.mjs
+
+# 5. Run Live Multi-Actor Scenario Script on Base Sepolia Fork
+forge script script/LivePrivacyContinuumScenarios.s.sol
 ```
 
 ---
@@ -147,9 +160,25 @@ The web application ([`website/index.html`](./website/index.html)) connects live
 3. **Launchpad Feed & Trading Dock** (`#launch`):
    - Reads live on-chain token launches directly from `SeraphLaunchpad`.
    - Live trading dock for Buying, Selling, Claiming Creator/Platform Fees, and Claiming Holder Dividends.
-4. **Promotional Media Suite** ([`promotions/`](./promotions/)):
-   - High-impact promotional posts and threads (`promotions/posts/`)
-   - Official 16:9 promotional artwork visuals (`promotions/images/`)
+4. **Promotional Media & Growth Suite** ([`promotions/`](./promotions/)):
+   - **12 Social Media & Content Documents** (`promotions/posts/`):
+     - `01_main_announcement_thread.txt` (10-tweet launch thread)
+     - `02_monero_plus_evm_deep_dive.txt` (Technical deep dive)
+     - `03_the_privacy_continuum_levels_0_to_3.txt` (4-level continuum guide)
+     - `04_launchpad_and_tokenomics_thread.txt` (Bonding curve & fee splits)
+     - `05_autonomous_ai_agents_thread.txt` (Autonomous agent micro-billing)
+     - `06_compliance_and_view_keys.txt` (Selective disclosure & audit keys)
+     - `07_developer_quickstart_guide.txt` (SDK integration tutorial)
+     - `08_community_announcements_telegram_discord.txt` (Telegram/Discord announcements)
+     - `09_dual_evm_bridge_architecture.txt` (Lock-prove-mint cross-chain thread)
+     - `10_relayer_and_gas_abstraction_guide.txt` (Zero-gas relayer operator guide)
+     - `11_privacy_continuum_manifesto_longform.txt` (2,490-word longform manifesto)
+     - `12_merchant_stealth_invoices_and_ai_billing.txt` (Stealth invoices & AI billing)
+   - **4 Official 16:9 Promotional Visuals** (`promotions/images/`):
+     - `seraph_privacy_continuum_banner.jpg` (Hero visual banner)
+     - `seraph_stealth_privacy_pool.jpg` (Stealth routing & shielded pool architecture)
+     - `seraph_launchpad_bonding_curve.jpg` (Launchpad bonding curve & fee distribution)
+     - `seraph_dual_evm_bridge.jpg` (Dual EVM bridge & relayer network nexus)
 
 ---
 

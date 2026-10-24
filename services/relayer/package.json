@@ -1,0 +1,15 @@
+{
+  "name": "@seraph-protocol/relayer",
+  "version": "0.1.0",
+  "description": "Seraph Protocol Automated Cross-Chain Bridge Batcher and Gas Abstraction Relayer Daemon",
+  "type": "module",
+  "main": "src/index.ts",
+  "bin": {
+    "seraph-relayer": "bin/seraph-relayer.mjs"
+  },
+  "scripts": {
+    "test": "node --test test/relayer.test.mjs",
+    "start": "node src/index.ts"
+  },
+  "license": "MIT"
+}
