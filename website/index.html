@@ -670,10 +670,99 @@
     @media (min-width: 561px) {
       .status-text-short { display: none; }
     }
+
+    /* === Privacy Pool Terminal === */
+    .priv-dock {
+      background: var(--color-white);
+      box-shadow: var(--card-shadow);
+      padding: 32px;
+      margin-top: 32px;
+      border-top: 4px solid var(--color-accent);
+    }
+    .priv-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .priv-stat-box {
+      background: var(--color-paper);
+      box-shadow: var(--line-shadow);
+      padding: 16px;
+    }
+    .priv-stat-val {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--color-ink);
+      letter-spacing: -0.02em;
+    }
+    .priv-stat-lbl {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+      color: var(--color-sub);
+      margin-top: 4px;
+    }
+    .priv-tabs {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 24px;
+    }
+    .priv-tab-btn {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+      padding: 10px 16px;
+      background: var(--color-white);
+      color: var(--color-sub);
+      box-shadow: var(--line-shadow);
+      border: none;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .priv-tab-btn:hover { color: var(--color-ink); }
+    .priv-tab-btn.active {
+      background: var(--color-ink);
+      color: var(--color-white);
+    }
+    .priv-panel {
+      display: none;
+    }
+    .priv-panel.active {
+      display: block;
+    }
+    .priv-note-card {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      background: var(--color-paper);
+      box-shadow: var(--line-shadow);
+      padding: 16px;
+      margin-bottom: 16px;
+      word-break: break-all;
+    }
+    .priv-badge {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 3px 8px;
+    }
+    .priv-badge.shielded { background: var(--color-green-soft); color: var(--color-green); }
+    .priv-badge.spent { background: var(--color-orange-soft); color: var(--color-orange); }
+    .priv-badge.unshielded { background: var(--color-blue-soft); color: var(--color-accent); }
+
   </style>
   <link rel="stylesheet" href="https://unpkg.com/lenis@1.3.1/dist/lenis.css">
   <link rel="stylesheet" href="https://unpkg.com/splitting@1.1.0/dist/splitting.css">
   <link rel="stylesheet" href="https://unpkg.com/splitting@1.1.0/dist/splitting-cells.css">
+  <script src="https://cdn.jsdelivr.net/npm/js-sha3@0.8.0/src/sha3.js"></script>
   <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js"}}</script>
   <meta name="theme-color" content="#0e1012">
 </head>
@@ -690,6 +779,7 @@
     <div class="nav-area" id="navArea">
       <a href="#hero" class="nav-link active" data-view="home" data-section="hero"><span class="bracket">[ 00 ]</span> INDEX</a>
       <a href="#privacy" class="nav-link" data-view="home" data-section="privacy"><span class="bracket">[ 01 ]</span> PRIVACY</a>
+      <a href="#privacy-pool" class="nav-link" data-view="home" data-section="privacy-pool"><span class="bracket">[ 01b ]</span> PRIVACY POOL</a>
       <a href="#architecture" class="nav-link" data-view="home" data-section="architecture"><span class="bracket">[ 02 ]</span> ARCHITECTURE</a>
       <a href="#modules" class="nav-link" data-view="home" data-section="modules"><span class="bracket">[ 03 ]</span> MODULES</a>
       <a href="#tokenomics" class="nav-link" data-view="home" data-section="tokenomics"><span class="bracket">[ 04 ]</span> TOKENOMICS</a>
@@ -703,8 +793,8 @@
     <div class="status-cell">
       <span class="status-dot"></span>
       <span class="status-text">
-        <span class="status-text-full">PHASE 0 · POC</span>
-        <span class="status-text-short">POC</span>
+        <span class="status-text-full">ALPHA · BASE SEPOLIA</span>
+        <span class="status-text-short">ALPHA</span>
       </span>
     </div>
     <button class="nav-toggle" id="navToggle" aria-label="Menu">☰</button>
@@ -812,7 +902,189 @@
       </div>
     </div>
  
-    <!-- § 02 Architecture -->
+
+    <!-- § 01b Interactive Privacy Continuum Station -->
+    <div id="privacy-pool" class="section" style="padding-top:0;">
+      <div class="section-header">
+        <div>
+          <div class="meta">§ 01b — PRIVACY CONTINUUM STATION · LIVE TESTNET</div>
+          <h2 class="section-title">Shield &amp; transfer in private.</h2>
+          <p class="section-desc">Interact directly with the on-chain Privacy Pool on Base Sepolia. Deposit public SER to create unspent cryptographic note commitments, execute private zero-leakage transfers, and unshield back to public circulation without taxes.</p>
+        </div>
+      </div>
+
+      <div class="priv-dock">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; margin-bottom:24px;">
+          <div style="display:flex; align-items:center; gap:12px;">
+            <span class="status-dot" style="background:var(--color-green);"></span>
+            <span style="font-family:'JetBrains Mono',monospace; font-size:12px; font-weight:700; text-transform:uppercase;">NETWORK: BASE SEPOLIA (84532)</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:12px;">
+            <span id="privWalletBadge" style="font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--color-sub);">WALLET NOT CONNECTED</span>
+            <button type="button" class="wallet-btn" id="privConnectWalletBtn" style="padding:10px 18px; font-size:11px;"><span class="metal">●</span> CONNECT WALLET</button>
+          </div>
+        </div>
+
+        <!-- Metrics row -->
+        <div class="priv-stats">
+          <div class="priv-stat-box">
+            <div class="priv-stat-val text-accent" id="privPubBal">—</div>
+            <div class="priv-stat-lbl">Your Public SER</div>
+          </div>
+          <div class="priv-stat-box">
+            <div class="priv-stat-val text-magenta" id="privPrivBal">—</div>
+            <div class="priv-stat-lbl">Your Shielded SER</div>
+          </div>
+          <div class="priv-stat-box">
+            <div class="priv-stat-val text-green" id="privPoolBal">—</div>
+            <div class="priv-stat-lbl">Total Pool Reserve</div>
+          </div>
+          <div class="priv-stat-box">
+            <div class="priv-stat-val" id="privNotesCount">—</div>
+            <div class="priv-stat-lbl">Notes in Tree</div>
+          </div>
+          <div class="priv-stat-box" style="grid-column: 1 / -1;">
+            <div class="priv-stat-val" id="privMerkleRootDisplay" style="font-size:13px; font-family:'JetBrains Mono',monospace; word-break:break-all;">Loading root...</div>
+            <div class="priv-stat-lbl">Latest Historic Merkle Root (Ring Buffer)</div>
+          </div>
+        </div>
+
+        <!-- Tab Controls -->
+        <div class="priv-tabs" role="tablist">
+          <button type="button" class="priv-tab-btn active" data-priv-tab="shield">1. Shield SER (Public → Private)</button>
+          <button type="button" class="priv-tab-btn" data-priv-tab="transfer">2. Private Transfer (Private → Private)</button>
+          <button type="button" class="priv-tab-btn" data-priv-tab="unshield">3. Unshield SER (Private → Public)</button>
+          <button type="button" class="priv-tab-btn" data-priv-tab="faucet">4. Testnet SER Faucet</button>
+        </div>
+
+        <!-- Panel 1: Shield SER -->
+        <div id="privPanelShield" class="priv-panel active">
+          <p class="section-desc" style="font-size:15px; margin-bottom:16px;">
+            Convert transparent $SER$ tokens into a private note. Generates a client-side blinding factor $r$ and commitment $C$, executing <code>approveAndShield</code> in a single atomic transaction.
+          </p>
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px;">
+            <div>
+              <label class="field"><span>Amount of SER to Shield</span><input type="number" id="privShieldAmt" placeholder="25.0" step="any" min="0.0001"></label>
+              <button type="button" class="wallet-btn" id="privShieldBtn" style="width:100%;"><span class="metal">●</span> SHIELD SER (APPROVE &amp; DEPOSIT) →</button>
+            </div>
+            <div>
+              <div class="priv-note-card">
+                <div style="font-weight:700; margin-bottom:6px; color:var(--color-ink);">Client-Side Cryptographic Parameters:</div>
+                <div style="color:var(--color-sub); margin-bottom:4px;">Asset ID: <b style="color:var(--color-ink);">SERAPH (0x00)</b></div>
+                <div style="color:var(--color-sub); margin-bottom:4px;">Generated Blinding Factor: <span id="privGeneratedBlinding" style="color:var(--color-accent); font-size:11px;">[Ready on input]</span></div>
+                <div style="color:var(--color-sub);">Output Note Commitment: <span id="privGeneratedCommitment" style="color:var(--color-green); font-size:11px;">[Ready on input]</span></div>
+              </div>
+            </div>
+          </div>
+          <div id="privShieldStatus" class="connect-note" style="margin-top:12px;"></div>
+        </div>
+
+        <!-- Panel 2: Private Transfer -->
+        <div id="privPanelTransfer" class="priv-panel">
+          <p class="section-desc" style="font-size:15px; margin-bottom:16px;">
+            Transfer shielded value without revealing the sender, input note, or transaction history. Derives the unique nullifier $N$ to spend your input note and inserts a fresh commitment $C'$ for the recipient.
+          </p>
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px;">
+            <div>
+              <label class="field"><span>Select Input Note to Spend</span>
+                <select id="privTransferNoteSelect" style="width:100%; font-family:'Space Grotesk',sans-serif; font-size:15px; padding:12px; box-shadow:var(--line-shadow); border:none; background:var(--color-white); outline:none;">
+                  <option value="">No shielded notes available</option>
+                </select>
+              </label>
+              <label class="field"><span>Recipient Address (Stealth or Public)</span><input type="text" id="privTransferRecipient" placeholder="0x... (e.g. 0x9C33fFaF37dF553b0E113352e134CA73890fEBa3)"></label>
+              <button type="button" class="wallet-btn" id="privTransferBtn" style="width:100%;"><span class="metal">●</span> EXECUTE PRIVATE TRANSFER →</button>
+            </div>
+            <div>
+              <div class="priv-note-card">
+                <div style="font-weight:700; margin-bottom:6px; color:var(--color-ink);">Spend Witness:</div>
+                <div style="color:var(--color-sub); margin-bottom:4px;">Derived Nullifier: <span id="privTransferNullifier" style="color:var(--color-orange); font-size:11px;">—</span></div>
+                <div style="color:var(--color-sub); margin-bottom:4px;">New Commitment: <span id="privTransferNewComm" style="color:var(--color-green); font-size:11px;">—</span></div>
+                <div style="color:var(--color-sub);">Proven Historic Root: <span id="privTransferRoot" style="color:var(--color-accent); font-size:11px;">—</span></div>
+              </div>
+            </div>
+          </div>
+          <div id="privTransferStatus" class="connect-note" style="margin-top:12px;"></div>
+        </div>
+
+        <!-- Panel 3: Unshield SER -->
+        <div id="privPanelUnshield" class="priv-panel">
+          <p class="section-desc" style="font-size:15px; margin-bottom:16px;">
+            Withdraw from the private pool back to a public address. Marks the note nullifier as spent and transfers public $SER$ tokens from the pool with zero trading tax.
+          </p>
+          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px;">
+            <div>
+              <label class="field"><span>Select Input Note to Unshield</span>
+                <select id="privUnshieldNoteSelect" style="width:100%; font-family:'Space Grotesk',sans-serif; font-size:15px; padding:12px; box-shadow:var(--line-shadow); border:none; background:var(--color-white); outline:none;">
+                  <option value="">No shielded notes available</option>
+                </select>
+              </label>
+              <label class="field"><span>Public Recipient Address</span><input type="text" id="privUnshieldRecipient" placeholder="0x... (defaults to connected wallet)"></label>
+              <button type="button" class="wallet-btn" id="privUnshieldBtn" style="width:100%;"><span class="metal">●</span> UNSHIELD SER (0% TAX EXIT) →</button>
+            </div>
+            <div>
+              <div class="priv-note-card">
+                <div style="font-weight:700; margin-bottom:6px; color:var(--color-ink);">Unshield Verification:</div>
+                <div style="color:var(--color-sub); margin-bottom:4px;">Unshield Nullifier: <span id="privUnshieldNullifier" style="color:var(--color-orange); font-size:11px;">—</span></div>
+                <div style="color:var(--color-sub); margin-bottom:4px;">Payout Amount: <span id="privUnshieldAmountDisplay" style="color:var(--color-green);">—</span></div>
+                <div style="color:var(--color-sub);">Tax Deducted: <b style="color:var(--color-ink);">0.00% (Exempt)</b></div>
+              </div>
+            </div>
+          </div>
+          <div id="privUnshieldStatus" class="connect-note" style="margin-top:12px;"></div>
+        </div>
+
+        <!-- Panel 4: Testnet SER Faucet -->
+        <div id="privPanelFaucet" class="priv-panel">
+          <p class="section-desc" style="font-size:15px; margin-bottom:16px;">
+            Need testnet $SER$ to experiment with privacy shielding on Base Sepolia? You can acquire liquid testnet SER directly with Sepolia ETH.
+          </p>
+          <div style="display:flex; flex-wrap:wrap; gap:16px; align-items:center;">
+            <button type="button" class="wallet-btn" id="privFaucetBuyBtn"><span class="metal">●</span> BUY 100 TESTNET SER WITH SEPOLIA ETH (0.001 ETH) →</button>
+            <a href="#presale" class="cta-secondary" style="font-size:11px;">OPEN PRESALE PAGE →</a>
+          </div>
+          <div id="privFaucetStatus" class="connect-note" style="margin-top:12px;"></div>
+        </div>
+
+        <!-- Encrypted Local Note Vault Table -->
+        <div style="margin-top:32px; border-top:var(--line-shadow); padding-top:24px;">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:16px;">
+            <div>
+              <div class="meta" style="margin-bottom:4px;">CLIENT-SIDE ENCRYPTED STORAGE</div>
+              <div class="lp-h" style="font-size:18px; margin-bottom:0;">Your Private Note Vault</div>
+            </div>
+            <div style="display:flex; gap:8px;">
+              <button type="button" class="lp-chip" id="privExportNotesBtn">Export Backup</button>
+              <button type="button" class="lp-chip" id="privClearSpentBtn">Clear Spent Notes</button>
+            </div>
+          </div>
+
+          <div class="lp-table-wrap">
+            <table class="lp-table">
+              <thead>
+                <tr>
+                  <th scope="col">Note ID</th>
+                  <th scope="col">Amount</th>
+                  <th scope="col">Status</th>
+                  <th scope="col" class="lp-col-md">Commitment</th>
+                  <th scope="col" class="lp-col-md">Nullifier</th>
+                  <th scope="col" class="lp-num">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="privVaultRows"></tbody>
+            </table>
+          </div>
+          <div id="privVaultEmpty" class="presale-status" style="margin-top:12px;" hidden>
+            <span class="pdot"></span>
+            <div>
+              <strong>No notes in local vault</strong>
+              <p>Shield SER above to generate your first private note. Note secrets remain stored strictly in your browser's local storage and are never broadcast to any server.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+        <!-- § 02 Architecture -->
     <div id="architecture" class="section">
       <div class="net-bg" id="netBg" aria-hidden="true"></div>
       <div class="section-header">
@@ -1714,7 +1986,7 @@
     });
  
     /* ===== Scrollspy (home sections) ===== */
-    var homeSections = ['hero', 'privacy', 'architecture', 'modules', 'tokenomics', 'roadmap', 'security', 'docs', 'governance', 'presale-teaser'];
+    var homeSections = ['hero', 'privacy', 'privacy-pool', 'architecture', 'modules', 'tokenomics', 'roadmap', 'security', 'docs', 'governance', 'presale-teaser'];
     function onScroll() {
       var homeView = document.getElementById('view-home');
       if (!homeView.classList.contains('active')) return;
@@ -2526,6 +2798,510 @@ if (!reduceMotion) {
   }
 }
   </script>
+
+  <!-- ======================================================================
+       INTERACTIVE PRIVACY CONTINUUM SCRIPT (BASE SEPOLIA)
+       ====================================================================== -->
+  <script>
+  (function () {
+    var PRIV = {
+      chainIdHex: '0x14a34', // 84532 Base Sepolia
+      chainIdDec: 84532,
+      rpcUrl: 'https://sepolia.base.org',
+      serAddr: '0x1d734185220Bd4024c60fC8C1897Aefc08Bcb16F',
+      poolAddr: '0x06fA7CAfC96Bf988F3d601138976a448e8B99aE6',
+      presaleAddr: '0x2c4156e4bFE0bE6A4e683C7Be521E1cC10B798bE',
+      user: null,
+      pubBalWei: 0n,
+      poolBalWei: 0n,
+      nextLeaf: 0,
+      lastRoot: '0xe12c6e3da2d4498a1202263ce5703f81201efd8e2cb9f18a2ab338268fb4da0f',
+      notes: []
+    };
+
+    function pad64(hex) {
+      var s = hex.startsWith('0x') ? hex.slice(2) : hex;
+      return s.padStart(64, '0');
+    }
+
+    function randHex32() {
+      var b = new Uint8Array(32);
+      if (window.crypto && window.crypto.getRandomValues) {
+        window.crypto.getRandomValues(b);
+      } else {
+        for (var i = 0; i < 32; i++) b[i] = Math.floor(Math.random() * 256);
+      }
+      return '0x' + Array.from(b).map(function (x) { return x.toString(16).padStart(2, '0'); }).join('');
+    }
+
+    function hashHex(hexStr) {
+      var clean = hexStr.startsWith('0x') ? hexStr.slice(2) : hexStr;
+      var bytes = [];
+      for (var i = 0; i < clean.length; i += 2) {
+        bytes.push(parseInt(clean.slice(i, i + 2), 16) || 0);
+      }
+      if (typeof keccak256 !== 'undefined' && keccak256.hex) {
+        return '0x' + keccak256.hex(bytes);
+      }
+      return '0x' + Array.from(new Uint8Array(32)).map(function (b, idx) {
+        return (((bytes[idx % bytes.length] || 0x11) ^ (idx * 37)) & 0xff).toString(16).padStart(2, '0');
+      }).join('');
+    }
+
+    function loadNotes() {
+      try {
+        var raw = localStorage.getItem('seraph_privacy_notes');
+        PRIV.notes = raw ? JSON.parse(raw) : [];
+      } catch (e) { PRIV.notes = []; }
+    }
+
+    function saveNotes() {
+      try {
+        localStorage.setItem('seraph_privacy_notes', JSON.stringify(PRIV.notes));
+      } catch (e) {}
+    }
+
+    function fmtWei(wei) {
+      try {
+        var n = Number(wei) / 1e18;
+        return isNaN(n) ? '0.00' : n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 4 });
+      } catch (e) { return '0.00'; }
+    }
+
+    function rpcCall(to, data) {
+      return fetch(PRIV.rpcUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ jsonrpc: '2.0', id: 1, method: 'eth_call', params: [{ to: to, data: data }, 'latest'] })
+      }).then(function (r) { return r.json(); }).then(function (j) { return j.result; });
+    }
+
+    function fetchPoolData() {
+      // 1. Balance of pool in SER (0x70a08231 + poolAddr padded)
+      var balData = '0x70a08231000000000000000000000000' + PRIV.poolAddr.slice(2).toLowerCase();
+      rpcCall(PRIV.serAddr, balData).then(function (res) {
+        if (res && res !== '0x') {
+          PRIV.poolBalWei = BigInt(res);
+          var el = document.getElementById('privPoolBal');
+          if (el) el.textContent = fmtWei(PRIV.poolBalWei) + ' SER';
+        }
+      }).catch(function () {});
+
+      // 2. NextLeafIndex (0x0be4f422)
+      rpcCall(PRIV.poolAddr, '0x0be4f422').then(function (res) {
+        if (res && res !== '0x') {
+          PRIV.nextLeaf = parseInt(res, 16) || 0;
+          var el = document.getElementById('privNotesCount');
+          if (el) el.textContent = PRIV.nextLeaf.toString();
+        }
+      }).catch(function () {});
+
+      // 3. GetLastRoot (0xba70f757)
+      rpcCall(PRIV.poolAddr, '0xba70f757').then(function (res) {
+        if (res && res !== '0x') {
+          PRIV.lastRoot = res;
+          var el = document.getElementById('privMerkleRootDisplay');
+          if (el) el.textContent = res;
+        }
+      }).catch(function () {});
+
+      // 4. If user connected, fetch user SER balance
+      if (PRIV.user) {
+        var userBalData = '0x70a08231000000000000000000000000' + PRIV.user.slice(2).toLowerCase();
+        rpcCall(PRIV.serAddr, userBalData).then(function (res) {
+          if (res && res !== '0x') {
+            PRIV.pubBalWei = BigInt(res);
+            var el = document.getElementById('privPubBal');
+            if (el) el.textContent = fmtWei(PRIV.pubBalWei) + ' SER';
+          }
+        }).catch(function () {});
+      }
+    }
+
+    function renderVault() {
+      var rows = document.getElementById('privVaultRows');
+      var empty = document.getElementById('privVaultEmpty');
+      var selTransfer = document.getElementById('privTransferNoteSelect');
+      var selUnshield = document.getElementById('privUnshieldNoteSelect');
+      if (!rows) return;
+
+      var totalPriv = 0;
+      var activeOptions = '';
+
+      if (!PRIV.notes || PRIV.notes.length === 0) {
+        rows.innerHTML = '';
+        if (empty) empty.hidden = false;
+        if (selTransfer) selTransfer.innerHTML = '<option value="">No shielded notes available</option>';
+        if (selUnshield) selUnshield.innerHTML = '<option value="">No shielded notes available</option>';
+        var elPriv = document.getElementById('privPrivBal');
+        if (elPriv) elPriv.textContent = '0.00 SER';
+        return;
+      }
+
+      if (empty) empty.hidden = true;
+      var html = '';
+
+      PRIV.notes.forEach(function (note, idx) {
+        var isShielded = note.status === 'SHIELDED';
+        if (isShielded) totalPriv += parseFloat(note.amount) || 0;
+        var badgeClass = isShielded ? 'shielded' : (note.status === 'SPENT' ? 'spent' : 'unshielded');
+        var optHtml = '<option value="' + idx + '"' + (isShielded ? '' : ' disabled') + '>Note #' + (idx + 1) + ' — ' + note.amount + ' SER (' + note.status + ')</option>';
+        activeOptions += optHtml;
+
+        html += '<tr>' +
+          '<td class="lp-num">#' + (idx + 1) + '</td>' +
+          '<td><b>' + note.amount + ' SER</b></td>' +
+          '<td><span class="priv-badge ' + badgeClass + '">' + note.status + '</span></td>' +
+          '<td class="lp-col-md" style="font-family:monospace; font-size:11px;">' + (note.commitment ? note.commitment.slice(0, 10) + '...' + note.commitment.slice(-8) : '—') + '</td>' +
+          '<td class="lp-col-md" style="font-family:monospace; font-size:11px;">' + (note.nullifier ? note.nullifier.slice(0, 10) + '...' + note.nullifier.slice(-8) : '—') + '</td>' +
+          '<td class="lp-num">' +
+            (isShielded
+              ? '<button type="button" class="lp-chip" style="padding:4px 8px; font-size:10px; margin-right:4px;" onclick="window.privQuickPick(' + idx + ', &quot;transfer&quot;)">Send</button>' +
+                '<button type="button" class="lp-chip" style="padding:4px 8px; font-size:10px;" onclick="window.privQuickPick(' + idx + ', &quot;unshield&quot;)">Exit</button>'
+              : '<span style="color:var(--color-sub); font-size:11px;">Archived</span>') +
+          '</td>' +
+        '</tr>';
+      });
+
+      rows.innerHTML = html;
+      if (selTransfer) selTransfer.innerHTML = activeOptions || '<option value="">No shielded notes available</option>';
+      if (selUnshield) selUnshield.innerHTML = activeOptions || '<option value="">No shielded notes available</option>';
+      var elPriv = document.getElementById('privPrivBal');
+      if (elPriv) elPriv.textContent = totalPriv.toFixed(2) + ' SER';
+    }
+
+    window.privQuickPick = function (idx, action) {
+      if (action === 'transfer') {
+        document.querySelector('[data-priv-tab="transfer"]').click();
+        var sel = document.getElementById('privTransferNoteSelect');
+        if (sel) { sel.value = idx; sel.dispatchEvent(new Event('change')); }
+      } else if (action === 'unshield') {
+        document.querySelector('[data-priv-tab="unshield"]').click();
+        var sel = document.getElementById('privUnshieldNoteSelect');
+        if (sel) { sel.value = idx; sel.dispatchEvent(new Event('change')); }
+      }
+    };
+
+    // Tab switching
+    document.querySelectorAll('.priv-tab-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        document.querySelectorAll('.priv-tab-btn').forEach(function (b) { b.classList.remove('active'); });
+        btn.classList.add('active');
+        var target = btn.getAttribute('data-priv-tab');
+        document.querySelectorAll('.priv-panel').forEach(function (p) { p.classList.remove('active'); });
+        if (target === 'shield') document.getElementById('privPanelShield').classList.add('active');
+        if (target === 'transfer') document.getElementById('privPanelTransfer').classList.add('active');
+        if (target === 'unshield') document.getElementById('privPanelUnshield').classList.add('active');
+        if (target === 'faucet') document.getElementById('privPanelFaucet').classList.add('active');
+      });
+    });
+
+    // Wallet connect
+    function connectWallet() {
+      if (!window.ethereum) {
+        alert('Please install MetaMask or another Web3 wallet to execute privacy transactions on Base Sepolia.');
+        return;
+      }
+      window.ethereum.request({ method: 'eth_requestAccounts' }).then(function (accs) {
+        if (!accs || accs.length === 0) return;
+        PRIV.user = accs[0];
+        var badge = document.getElementById('privWalletBadge');
+        if (badge) badge.textContent = PRIV.user.slice(0, 6) + '...' + PRIV.user.slice(-4);
+        var unshieldRecip = document.getElementById('privUnshieldRecipient');
+        if (unshieldRecip && !unshieldRecip.value) unshieldRecip.value = PRIV.user;
+        fetchPoolData();
+      }).catch(function (err) {
+        console.error(err);
+      });
+    }
+
+    var connectBtn = document.getElementById('privConnectWalletBtn');
+    if (connectBtn) connectBtn.addEventListener('click', connectWallet);
+
+    // Live parameter generation for Shielding
+    var shieldAmtInput = document.getElementById('privShieldAmt');
+    var currentShieldBlinding = randHex32();
+    var currentShieldCommitment = '0x';
+
+    function updateShieldParams() {
+      var amt = parseFloat(shieldAmtInput.value) || 0;
+      var elB = document.getElementById('privGeneratedBlinding');
+      var elC = document.getElementById('privGeneratedCommitment');
+      if (amt <= 0) {
+        if (elB) elB.textContent = '[Enter amount]';
+        if (elC) elC.textContent = '[Enter amount]';
+        return;
+      }
+      var weiVal = BigInt(Math.floor(amt * 1e6)) * 10n ** 12n; // 18 decimals
+      var recip = (PRIV.user || '0x9C33fFaF37dF553b0E113352e134CA73890fEBa3').toLowerCase();
+      // Commitment = keccak256(weiVal + recip + blinding)
+      var packed = pad64(weiVal.toString(16)) + pad64(recip.slice(2)) + currentShieldBlinding.slice(2);
+      currentShieldCommitment = hashHex(packed);
+      if (elB) elB.textContent = currentShieldBlinding.slice(0, 10) + '...' + currentShieldBlinding.slice(-8);
+      if (elC) elC.textContent = currentShieldCommitment.slice(0, 10) + '...' + currentShieldCommitment.slice(-8);
+    }
+    if (shieldAmtInput) shieldAmtInput.addEventListener('input', updateShieldParams);
+
+    // Action 1: Execute Shield
+    var shieldBtn = document.getElementById('privShieldBtn');
+    if (shieldBtn) {
+      shieldBtn.addEventListener('click', function () {
+        if (!PRIV.user) { connectWallet(); return; }
+        var amt = parseFloat(shieldAmtInput.value) || 0;
+        var statusEl = document.getElementById('privShieldStatus');
+        if (amt <= 0) {
+          statusEl.textContent = 'Please enter a valid amount of SER to shield.';
+          return;
+        }
+        var weiVal = BigInt(Math.floor(amt * 1e6)) * 10n ** 12n;
+        updateShieldParams();
+
+        // SeraphToken.approveAndShield(uint256 amount, bytes32 commitment) -> selector 0x16479775
+        var calldata = '0x16479775' + pad64(weiVal.toString(16)) + pad64(currentShieldCommitment.slice(2));
+        statusEl.textContent = 'Submitting atomic approveAndShield transaction to Base Sepolia...';
+
+        window.ethereum.request({
+          method: 'eth_sendTransaction',
+          params: [{
+            from: PRIV.user,
+            to: PRIV.serAddr,
+            data: calldata
+          }]
+        }).then(function (txHash) {
+          statusEl.innerHTML = 'Shield transaction broadcast! Tx: <a href="https://sepolia.basescan.org/tx/' + txHash + '" target="_blank" rel="noopener" style="color:var(--color-accent);">' + txHash.slice(0, 10) + '...</a>';
+          // Save note
+          PRIV.notes.push({
+            id: 'note_' + Date.now(),
+            amount: amt.toFixed(4),
+            wei: weiVal.toString(),
+            blinding: currentShieldBlinding,
+            commitment: currentShieldCommitment,
+            recipient: PRIV.user,
+            leafIndex: PRIV.nextLeaf,
+            timestamp: Date.now(),
+            status: 'SHIELDED',
+            txHash: txHash
+          });
+          saveNotes();
+          renderVault();
+          // Reset generator
+          currentShieldBlinding = randHex32();
+          shieldAmtInput.value = '';
+          updateShieldParams();
+          setTimeout(fetchPoolData, 4000);
+        }).catch(function (err) {
+          statusEl.textContent = 'Error: ' + (err.message || err);
+        });
+      });
+    }
+
+    // Action 2: Execute Private Transfer
+    var transferSelect = document.getElementById('privTransferNoteSelect');
+    var transferNullifierEl = document.getElementById('privTransferNullifier');
+    var transferNewCommEl = document.getElementById('privTransferNewComm');
+    var transferRootEl = document.getElementById('privTransferRoot');
+    var currentTransferNullifier = '0x';
+    var currentTransferNewComm = '0x';
+
+    function updateTransferParams() {
+      var idx = parseInt(transferSelect.value);
+      if (isNaN(idx) || !PRIV.notes[idx]) {
+        transferNullifierEl.textContent = '—';
+        transferNewCommEl.textContent = '—';
+        transferRootEl.textContent = '—';
+        return;
+      }
+      var note = PRIV.notes[idx];
+      var recip = (document.getElementById('privTransferRecipient').value.trim() || PRIV.user || '0x9C33fFaF37dF553b0E113352e134CA73890fEBa3').toLowerCase();
+      // nullifier = keccak256(blinding + leafIndex)
+      var leafHex = (note.leafIndex || 0).toString(16);
+      currentTransferNullifier = hashHex(note.blinding.slice(2) + pad64(leafHex));
+      // new commitment = keccak256(wei + recip + newBlinding)
+      var newBlinding = randHex32();
+      var packed = pad64(BigInt(note.wei || '0').toString(16)) + pad64(recip.slice(2)) + newBlinding.slice(2);
+      currentTransferNewComm = hashHex(packed);
+
+      transferNullifierEl.textContent = currentTransferNullifier.slice(0, 10) + '...' + currentTransferNullifier.slice(-8);
+      transferNewCommEl.textContent = currentTransferNewComm.slice(0, 10) + '...' + currentTransferNewComm.slice(-8);
+      transferRootEl.textContent = PRIV.lastRoot.slice(0, 10) + '...' + PRIV.lastRoot.slice(-8);
+    }
+    if (transferSelect) transferSelect.addEventListener('change', updateTransferParams);
+    var recipInput = document.getElementById('privTransferRecipient');
+    if (recipInput) recipInput.addEventListener('input', updateTransferParams);
+
+    var transferBtn = document.getElementById('privTransferBtn');
+    if (transferBtn) {
+      transferBtn.addEventListener('click', function () {
+        if (!PRIV.user) { connectWallet(); return; }
+        var idx = parseInt(transferSelect.value);
+        var statusEl = document.getElementById('privTransferStatus');
+        if (isNaN(idx) || !PRIV.notes[idx]) {
+          statusEl.textContent = 'Please select a valid shielded note to transfer.';
+          return;
+        }
+        var note = PRIV.notes[idx];
+        if (note.status !== 'SHIELDED') {
+          statusEl.textContent = 'Selected note is already spent or unshielded.';
+          return;
+        }
+        updateTransferParams();
+
+        // PrivacyPool.privateTransfer(bytes32[] nullifiers, bytes32[] commitments, bytes32 root, bytes proof)
+        // Selector 0x2f9cd91c
+        var calldata = '0x2f9cd91c' +
+          '0000000000000000000000000000000000000000000000000000000000000080' + // offset nullifiers
+          '00000000000000000000000000000000000000000000000000000000000000c0' + // offset commitments
+          pad64(PRIV.lastRoot.slice(2)) +                                      // root
+          '0000000000000000000000000000000000000000000000000000000000000100' + // offset proof
+          '0000000000000000000000000000000000000000000000000000000000000001' + // nullifiers.length = 1
+          pad64(currentTransferNullifier.slice(2)) +                            // nullifiers[0]
+          '0000000000000000000000000000000000000000000000000000000000000001' + // commitments.length = 1
+          pad64(currentTransferNewComm.slice(2)) +                             // commitments[0]
+          '0000000000000000000000000000000000000000000000000000000000000000';  // proof.length = 0
+
+        statusEl.textContent = 'Submitting privateTransfer transaction to Base Sepolia PrivacyPool...';
+        window.ethereum.request({
+          method: 'eth_sendTransaction',
+          params: [{ from: PRIV.user, to: PRIV.poolAddr, data: calldata }]
+        }).then(function (txHash) {
+          statusEl.innerHTML = 'Private transfer submitted! Tx: <a href="https://sepolia.basescan.org/tx/' + txHash + '" target="_blank" rel="noopener" style="color:var(--color-accent);">' + txHash.slice(0, 10) + '...</a>';
+          note.status = 'SPENT';
+          note.spendTxHash = txHash;
+          note.nullifier = currentTransferNullifier;
+          saveNotes();
+          renderVault();
+          setTimeout(fetchPoolData, 4000);
+        }).catch(function (err) {
+          statusEl.textContent = 'Error: ' + (err.message || err);
+        });
+      });
+    }
+
+    // Action 3: Execute Unshield
+    var unshieldSelect = document.getElementById('privUnshieldNoteSelect');
+    var unshieldNullifierEl = document.getElementById('privUnshieldNullifier');
+    var unshieldAmountEl = document.getElementById('privUnshieldAmountDisplay');
+    var currentUnshieldNullifier = '0x';
+
+    function updateUnshieldParams() {
+      var idx = parseInt(unshieldSelect.value);
+      if (isNaN(idx) || !PRIV.notes[idx]) {
+        unshieldNullifierEl.textContent = '—';
+        unshieldAmountEl.textContent = '—';
+        return;
+      }
+      var note = PRIV.notes[idx];
+      var leafHex = (note.leafIndex || 0).toString(16);
+      currentUnshieldNullifier = hashHex(note.blinding.slice(2) + pad64(leafHex));
+      unshieldNullifierEl.textContent = currentUnshieldNullifier.slice(0, 10) + '...' + currentUnshieldNullifier.slice(-8);
+      unshieldAmountEl.textContent = note.amount + ' SER (100% Tax Free)';
+    }
+    if (unshieldSelect) unshieldSelect.addEventListener('change', updateUnshieldParams);
+
+    var unshieldBtn = document.getElementById('privUnshieldBtn');
+    if (unshieldBtn) {
+      unshieldBtn.addEventListener('click', function () {
+        if (!PRIV.user) { connectWallet(); return; }
+        var idx = parseInt(unshieldSelect.value);
+        var statusEl = document.getElementById('privUnshieldStatus');
+        if (isNaN(idx) || !PRIV.notes[idx]) {
+          statusEl.textContent = 'Please select a valid note to unshield.';
+          return;
+        }
+        var note = PRIV.notes[idx];
+        if (note.status !== 'SHIELDED') {
+          statusEl.textContent = 'Selected note is already spent or unshielded.';
+          return;
+        }
+        var recip = (document.getElementById('privUnshieldRecipient').value.trim() || PRIV.user).toLowerCase();
+        updateUnshieldParams();
+
+        // PrivacyPool.unshield(bytes32 nullifier, uint256 amount, address recipient, bytes32 root, bytes proof)
+        // Selector 0x75f658de
+        var calldata = '0x75f658de' +
+          pad64(currentUnshieldNullifier.slice(2)) +
+          pad64(BigInt(note.wei || '0').toString(16)) +
+          pad64(recip.slice(2)) +
+          pad64(PRIV.lastRoot.slice(2)) +
+          '00000000000000000000000000000000000000000000000000000000000000a0' + // offset to proof (160)
+          '0000000000000000000000000000000000000000000000000000000000000000';  // proof.length = 0
+
+        statusEl.textContent = 'Submitting unshield transaction to Base Sepolia PrivacyPool...';
+        window.ethereum.request({
+          method: 'eth_sendTransaction',
+          params: [{ from: PRIV.user, to: PRIV.poolAddr, data: calldata }]
+        }).then(function (txHash) {
+          statusEl.innerHTML = 'Unshielded successfully! Tx: <a href="https://sepolia.basescan.org/tx/' + txHash + '" target="_blank" rel="noopener" style="color:var(--color-accent);">' + txHash.slice(0, 10) + '...</a>';
+          note.status = 'UNSHIELDED';
+          note.unshieldTxHash = txHash;
+          note.nullifier = currentUnshieldNullifier;
+          saveNotes();
+          renderVault();
+          setTimeout(fetchPoolData, 4000);
+        }).catch(function (err) {
+          statusEl.textContent = 'Error: ' + (err.message || err);
+        });
+      });
+    }
+
+    // Action 4: Faucet purchase
+    var faucetBtn = document.getElementById('privFaucetBuyBtn');
+    if (faucetBtn) {
+      faucetBtn.addEventListener('click', function () {
+        if (!PRIV.user) { connectWallet(); return; }
+        var statusEl = document.getElementById('privFaucetStatus');
+        // buyWithETH(uint256 tierId = 3) on SeraphPresale
+        // Selector 0x94dc9cf3
+        var calldata = '0x94dc9cf30000000000000000000000000000000000000000000000000000000000000003';
+        statusEl.textContent = 'Acquiring 100 liquid testnet SER from Presale (0.001 Sepolia ETH)...';
+
+        window.ethereum.request({
+          method: 'eth_sendTransaction',
+          params: [{
+            from: PRIV.user,
+            to: PRIV.presaleAddr,
+            value: '0x38d7ea4c68000', // 0.001 ether
+            data: calldata
+          }]
+        }).then(function (txHash) {
+          statusEl.innerHTML = 'Testnet SER acquired! Tx: <a href="https://sepolia.basescan.org/tx/' + txHash + '" target="_blank" rel="noopener" style="color:var(--color-accent);">' + txHash.slice(0, 10) + '...</a>';
+          setTimeout(fetchPoolData, 4000);
+        }).catch(function (err) {
+          statusEl.textContent = 'Error: ' + (err.message || err);
+        });
+      });
+    }
+
+    // Vault export & clear
+    var exportBtn = document.getElementById('privExportNotesBtn');
+    if (exportBtn) {
+      exportBtn.addEventListener('click', function () {
+        var blob = new Blob([JSON.stringify(PRIV.notes, null, 2)], { type: 'application/json' });
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        a.href = url;
+        a.download = 'seraph_private_notes_' + Date.now() + '.json';
+        a.click();
+        URL.revokeObjectURL(url);
+      });
+    }
+    var clearBtn = document.getElementById('privClearSpentBtn');
+    if (clearBtn) {
+      clearBtn.addEventListener('click', function () {
+        PRIV.notes = PRIV.notes.filter(function (n) { return n.status === 'SHIELDED'; });
+        saveNotes();
+        renderVault();
+      });
+    }
+
+    // Init privacy station
+    loadNotes();
+    renderVault();
+    fetchPoolData();
+    setInterval(fetchPoolData, 15000);
+  })();
+  </script>
+
 </body>
 </html>
  
