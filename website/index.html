@@ -1438,7 +1438,27 @@
         </div>
       </div>
       <p id="lpPreviewNote" class="connect-note" hidden>SAMPLE DATA. These rows are placeholders for layout review, not tokens. The live site shows only on-chain launches.</p>
- 
+      <div id="lpTradeBar" class="lp-card" style="margin-top:16px;" hidden>
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:12px;">
+          <div>
+            <div class="meta" style="margin-bottom:4px;">LIVE ON-CHAIN MARKET · BASE SEPOLIA</div>
+            <div class="lp-h" id="lpTradeTitle" style="margin-bottom:0;">Select a token</div>
+          </div>
+          <code id="lpTradeToken" style="font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--color-sub);">—</code>
+        </div>
+        <div class="spec-row"><span class="k">Reserve / Graduation target</span><span class="v" id="lpTradeReserve">—</span></div>
+        <div class="spec-row"><span class="k">Graduation progress</span><span class="v accent" id="lpTradeGrad">—</span></div>
+        <div class="spec-row"><span class="k">Fee schedule (creator + 1% platform)</span><span class="v" id="lpTradeFees">—</span></div>
+        <div style="display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin-top:16px;">
+          <input type="text" id="lpTradeAmt" value="0.01" inputmode="decimal" aria-label="Trade amount" style="width:130px; font-family:'JetBrains Mono',monospace; font-size:14px; padding:10px 12px; border:none; box-shadow:var(--line-shadow);">
+          <button type="button" class="wallet-btn" id="lpBuyBtn" style="padding:11px 18px;">BUY (ETH)</button>
+          <button type="button" class="cta-secondary" id="lpSellBtn" style="padding:10px 18px; border:none; cursor:pointer;">SELL (TOKENS)</button>
+          <button type="button" class="cta-secondary" id="lpClaimFeesBtn" style="padding:10px 16px; border:none; cursor:pointer;">CLAIM FEES (`claimFees()`)</button>
+          <button type="button" class="cta-secondary" id="lpClaimDivsBtn" style="padding:10px 16px; border:none; cursor:pointer;">CLAIM DIVIDENDS (`claimDividends`)</button>
+        </div>
+        <div class="connect-note" id="lpTradeStatus">Click any live token row above to inspect reserves or trade via Web3 wallet.</div>
+      </div>
+
       <div class="struct-line"></div>
  
       <div class="section-header" style="margin-bottom:32px;">
@@ -1462,9 +1482,9 @@
             <div class="lp-drop">Image upload turns on with the launch build. PNG, JPG, GIF, or WebP. Square, 64px or larger.</div>
             <details class="lp-details">
               <summary>Add social links (optional)</summary>
-              <label class="field"><span>Website</span><input type="url" placeholder="https://"></label>
-              <label class="field"><span>X</span><input type="text" placeholder="@handle"></label>
-              <label class="field"><span>Telegram</span><input type="text" placeholder="@handle"></label>
+              <label class="field"><span>Website</span><input type="url" id="lpWebsite" placeholder="https://"></label>
+              <label class="field"><span>X</span><input type="text" id="lpTwitter" placeholder="@handle"></label>
+              <label class="field"><span>Telegram</span><input type="text" id="lpTelegram" placeholder="@handle"></label>
             </details>
  
             <div class="meta">Network</div>
@@ -1814,7 +1834,11 @@
       { name: 'Example Epsilon', sym: 'EPS', net: 'Base', age: 9, mcap: 2200000, chg: 0.4, prog: 100 }
     ];
     var lpPreview = new URLSearchParams(location.search).get('preview') === '1';
- 
+    var LP_RPC = 'https://sepolia.base.org';
+    var LP_CONTRACTS = { Base: '0xe0349E4cC431329207e98C5205062776e058A846', Arc: '' };
+    var LP_LIVE = [];
+    var lpSelected = null;
+
     function lpEsc(s) {
       return String(s).replace(/[&<>"']/g, function (c) {
         return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
@@ -1830,8 +1854,82 @@
       if (n >= 1e3) return '$' + (n / 1e3).toFixed(1) + 'K';
       return '$' + n.toFixed(0);
     }
+    function lpEncUint(n) { return BigInt(n).toString(16).padStart(64, '0'); }
+    function lpEncAddr(a) { return String(a || '').replace(/^0x/i, '').toLowerCase().padStart(64, '0'); }
+    function lpEncStr(s) {
+      var bytes = new TextEncoder().encode(s || '');
+      var hex = Array.from(bytes, function (b) { return b.toString(16).padStart(2, '0'); }).join('');
+      if (hex.length % 64 !== 0) hex = hex.padEnd(Math.ceil(hex.length / 64) * 64, '0');
+      return lpEncUint(bytes.length) + hex;
+    }
+    function lpDecStr(hex) {
+      if (!hex || hex.length < 130) return '';
+      var raw = hex.slice(2);
+      var len = parseInt(raw.slice(64, 128), 16) * 2;
+      var bytes = [];
+      for (var i = 128; i < 128 + len && i < raw.length; i += 2) {
+        bytes.push(parseInt(raw.slice(i, i + 2), 16));
+      }
+      return new TextDecoder().decode(new Uint8Array(bytes));
+    }
+    function lpEncodeLaunch(p) {
+      var strs = [p.name, p.symbol, p.description, p.image, p.website, p.twitter, p.telegram].map(lpEncStr);
+      var offset = 18 * 32;
+      var heads = strs.map(function (sb) { var o = lpEncUint(offset); offset += sb.length / 2; return o; });
+      heads.push(
+        lpEncUint(p.model), lpEncUint(p.totalSupply), lpEncAddr(p.feeWallet),
+        lpEncUint(p.buyFeeBps), lpEncUint(p.sellFeeBps), lpEncUint(p.creatorShareBps),
+        lpEncUint(p.buybackShareBps), lpEncUint(p.dividendsShareBps), lpEncUint(p.liquidityShareBps),
+        lpEncUint(p.platformShareBps), lpEncUint(p.devBuyBps)
+      );
+      return '0xf12b0b68' + lpEncUint(32) + heads.join('') + strs.join('');
+    }
+    async function lpEthCall(to, data) {
+      var res = await fetch(LP_RPC, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ jsonrpc: '2.0', id: 1, method: 'eth_call', params: [{ to: to, data: data }, 'latest'] })
+      });
+      var j = await res.json();
+      if (j.error) throw new Error(j.error.message || 'RPC error');
+      return j.result;
+    }
+    function lpDecodeLaunch(infoHex, name, sym) {
+      var w = infoHex.slice(2).match(/.{64}/g).map(function (x) { return BigInt('0x' + x); });
+      var tok = '0x' + infoHex.slice(26, 66);
+      var graduated = w[4] !== 0n;
+      var launchedAt = Number(w[13]);
+      var initialSupply = w[14];
+      var realQuote = w[15];
+      var phantomQuote = w[16];
+      var tokenReserve = w[17];
+      var gradThreshold = w[19];
+      var fdvEth = tokenReserve > 0n ? Number(((realQuote + phantomQuote) * initialSupply) / tokenReserve) / 1e18 : 1.5;
+      var prog = (graduated || gradThreshold === 0n) ? 100 : Math.min(100, Number((realQuote * 10000n) / gradThreshold) / 100);
+      var chg = phantomQuote > 0n ? Number((realQuote * 1000n) / phantomQuote) / 10 : 0;
+      return {
+        token: tok, name: name || 'Token', sym: sym || 'TKN', net: 'Base',
+        age: Math.max(0, Math.floor((Date.now() / 1000 - launchedAt) / 86400)),
+        mcap: Math.max(100, fdvEth * 2500), chg: chg, prog: prog,
+        model: Number(w[3]), graduated: graduated,
+        buyFeeBps: Number(w[5]), sellFeeBps: Number(w[6]),
+        realQuoteEth: Number(realQuote) / 1e18, gradTargetEth: Number(gradThreshold) / 1e18
+      };
+    }
+    function lpSelectToken(tokAddr) {
+      var found = (lpPreview ? LP_SAMPLE : LP_LIVE).find(function (t) { return (t.token || t.sym) === tokAddr; });
+      if (!found) return;
+      lpSelected = found;
+      var bar = document.getElementById('lpTradeBar');
+      bar.hidden = false;
+      document.getElementById('lpTradeTitle').textContent = found.name + ' ($' + found.sym + ')';
+      document.getElementById('lpTradeToken').textContent = found.token || ('SAMPLE:' + found.sym);
+      document.getElementById('lpTradeReserve').textContent = (found.realQuoteEth !== undefined ? found.realQuoteEth.toFixed(4) : '0.0000') + ' ETH / ' + (found.gradTargetEth || 4.5).toFixed(2) + ' ETH';
+      document.getElementById('lpTradeGrad').textContent = found.prog.toFixed(1) + '%' + (found.graduated ? ' · Graduated' : ' · Active curve');
+      document.getElementById('lpTradeFees').textContent = 'Buy ' + ((found.buyFeeBps || 200) / 100) + '% + 1% · Sell ' + ((found.sellFeeBps || 200) / 100) + '% + 1%';
+    }
     function lpRenderRows() {
-      var rows = lpPreview ? LP_SAMPLE : [];
+      var rows = lpPreview ? LP_SAMPLE : LP_LIVE;
       var list = rows.filter(function (t) {
         if (LP.net !== 'all' && t.net !== LP.net) return false;
         if (LP.status === 'new') return t.age <= 2;
@@ -1842,13 +1940,14 @@
       if (LP.status === 'new') list.sort(function (a, b) { return a.age - b.age; });
       else if (LP.status === 'near') list.sort(function (a, b) { return b.prog - a.prog; });
       else list.sort(function (a, b) { return b.mcap - a.mcap; });
- 
+
       document.getElementById('lpRows').innerHTML = list.map(function (t, i) {
         var hue = lpHue(t.sym);
         var chg = t.chg >= 0
           ? '<span class="lp-up">+' + t.chg.toFixed(1) + '%</span>'
           : '<span class="lp-down">' + t.chg.toFixed(1) + '%</span>';
-        return '<tr>' +
+        var key = t.token || t.sym;
+        return '<tr data-token="' + lpEsc(key) + '" style="cursor:pointer;">' +
           '<td class="lp-num">' + (i + 1) + '</td>' +
           '<td><div class="lp-token">' +
             '<span class="lp-avatar" style="background:oklch(0.62 0.13 ' + hue + ')">' + lpEsc(t.sym.charAt(0)) + '</span>' +
@@ -1862,6 +1961,31 @@
       }).join('');
       document.getElementById('lpEmpty').hidden = rows.length > 0;
       document.getElementById('lpPreviewNote').hidden = !lpPreview;
+      if (!lpSelected && rows.length > 0) lpSelectToken(rows[0].token || rows[0].sym);
+    }
+    document.getElementById('lpRows').addEventListener('click', function (e) {
+      var tr = e.target.closest('tr[data-token]');
+      if (tr) lpSelectToken(tr.getAttribute('data-token'));
+    });
+    async function lpLoadLive() {
+      try {
+        var totalHex = await lpEthCall(LP_CONTRACTS.Base, '0x0e883f8b');
+        var total = Number(BigInt(totalHex));
+        var items = [];
+        for (var i = 0; i < total; i++) {
+          var tokHex = await lpEthCall(LP_CONTRACTS.Base, '0x634282af' + lpEncUint(i));
+          var tok = '0x' + tokHex.slice(-40);
+          var res = await Promise.all([
+            lpEthCall(LP_CONTRACTS.Base, '0xb3964f23' + lpEncAddr(tok)),
+            lpEthCall(tok, '0x06fdde03'),
+            lpEthCall(tok, '0x95d89b41')
+          ]);
+          items.push(lpDecodeLaunch(res[0], lpDecStr(res[1]), lpDecStr(res[2])));
+        }
+        LP_LIVE = items;
+        lpRenderRows();
+        if (lpSelected && lpSelected.token) lpSelectToken(lpSelected.token);
+      } catch (_) {}
     }
  
     function lpBindChips(groupId, attr, onPick) {
@@ -1951,7 +2075,98 @@
       document.getElementById(id).addEventListener('input', lpUpdate);
     });
 
-    var LP_CONTRACTS = { Base: '0xe0349E4cC431329207e98C5205062776e058A846', Arc: '' };
+    function lpParseUnits18(str) {
+      var clean = String(str || '0').replace(/[^0-9.]/g, '');
+      var parts = clean.split('.');
+      var whole = BigInt(parts[0] || '0') * (10n ** 18n);
+      var fracStr = (parts[1] || '').slice(0, 18).padEnd(18, '0');
+      return whole + BigInt(fracStr || '0');
+    }
+    async function lpConnectWallet() {
+      if (!window.ethereum) throw new Error('No Web3 wallet detected. Open in MetaMask, Rabby, or Coinbase Wallet.');
+      var accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+      if (LP.chain === 'Base') {
+        try {
+          var cid = await window.ethereum.request({ method: 'eth_chainId' });
+          if (cid !== '0x14a34' && cid !== '0x2105') {
+            await window.ethereum.request({ method: 'wallet_switchEthereumChain', params: [{ chainId: '0x14a34' }] });
+          }
+        } catch (_) {}
+      }
+      return accounts[0];
+    }
+    document.getElementById('lpBuyBtn').addEventListener('click', async function () {
+      var st = document.getElementById('lpTradeStatus');
+      if (!lpSelected || !lpSelected.token) { st.textContent = 'Select a live on-chain token row first.'; return; }
+      try {
+        var acct = await lpConnectWallet();
+        var wei = lpParseUnits18(document.getElementById('lpTradeAmt').value);
+        if (wei <= 0n) { st.textContent = 'Enter a positive ETH amount.'; return; }
+        var data = '0xdb61c76e' + lpEncAddr(lpSelected.token) + lpEncUint(0) + lpEncAddr(acct);
+        var tx = await window.ethereum.request({
+          method: 'eth_sendTransaction',
+          params: [{ from: acct, to: LP_CONTRACTS.Base, value: '0x' + wei.toString(16), data: data }]
+        });
+        st.textContent = 'Buy submitted: ' + tx;
+        setTimeout(lpLoadLive, 3500);
+      } catch (err) {
+        st.textContent = (err && err.message) ? err.message : 'Buy cancelled.';
+      }
+    });
+    document.getElementById('lpSellBtn').addEventListener('click', async function () {
+      var st = document.getElementById('lpTradeStatus');
+      if (!lpSelected || !lpSelected.token) { st.textContent = 'Select a live on-chain token row first.'; return; }
+      try {
+        var acct = await lpConnectWallet();
+        var amtWei = lpParseUnits18(document.getElementById('lpTradeAmt').value);
+        if (amtWei <= 0n) { st.textContent = 'Enter a positive token amount.'; return; }
+        var allowHex = await lpEthCall(lpSelected.token, '0xdd62ed3e' + lpEncAddr(acct) + lpEncAddr(LP_CONTRACTS.Base));
+        if (BigInt(allowHex || '0x0') < amtWei) {
+          var maxUint = (1n << 256n) - 1n;
+          await window.ethereum.request({
+            method: 'eth_sendTransaction',
+            params: [{ from: acct, to: lpSelected.token, data: '0x095ea7b3' + lpEncAddr(LP_CONTRACTS.Base) + lpEncUint(maxUint) }]
+          });
+        }
+        var data = '0x2dc8f867' + lpEncAddr(lpSelected.token) + lpEncUint(amtWei) + lpEncUint(0) + lpEncAddr(acct);
+        var tx = await window.ethereum.request({
+          method: 'eth_sendTransaction',
+          params: [{ from: acct, to: LP_CONTRACTS.Base, data: data }]
+        });
+        st.textContent = 'Sell submitted: ' + tx;
+        setTimeout(lpLoadLive, 3500);
+      } catch (err) {
+        st.textContent = (err && err.message) ? err.message : 'Sell cancelled.';
+      }
+    });
+    document.getElementById('lpClaimFeesBtn').addEventListener('click', async function () {
+      var st = document.getElementById('lpTradeStatus');
+      try {
+        var acct = await lpConnectWallet();
+        var tx = await window.ethereum.request({
+          method: 'eth_sendTransaction',
+          params: [{ from: acct, to: LP_CONTRACTS.Base, data: '0xd294f093' }]
+        });
+        st.textContent = 'claimFees() submitted: ' + tx;
+      } catch (err) {
+        st.textContent = (err && err.message) ? err.message : 'Claim fees cancelled.';
+      }
+    });
+    document.getElementById('lpClaimDivsBtn').addEventListener('click', async function () {
+      var st = document.getElementById('lpTradeStatus');
+      if (!lpSelected || !lpSelected.token) { st.textContent = 'Select a live on-chain token row first.'; return; }
+      try {
+        var acct = await lpConnectWallet();
+        var tx = await window.ethereum.request({
+          method: 'eth_sendTransaction',
+          params: [{ from: acct, to: lpSelected.token, data: '0xc7e772ed' + lpEncAddr(acct) }]
+        });
+        st.textContent = 'claimDividends() submitted: ' + tx;
+      } catch (err) {
+        st.textContent = (err && err.message) ? err.message : 'Claim dividends cancelled.';
+      }
+    });
+
     document.getElementById('lpLaunchBtn').addEventListener('click', async function () {
       var statusEl = document.getElementById('lpLaunchStatus');
       var name = document.getElementById('lpName').value.trim();
@@ -1961,16 +2176,54 @@
       if (!document.getElementById('lpAck').checked) { statusEl.textContent = 'Confirm the launch acknowledgment checkbox first.'; return; }
       if (!window.ethereum) { statusEl.textContent = 'No Web3 wallet detected. Open in MetaMask, Rabby, or Coinbase Wallet.'; return; }
       try {
-        var accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-        if (LP.chain === 'Base') {
-          try { await window.ethereum.request({ method: 'wallet_switchEthereumChain', params: [{ chainId: '0x2105' }] }); } catch (_) {}
-        }
+        var acct = await lpConnectWallet();
         var target = LP_CONTRACTS[LP.chain];
         if (!target) {
-          statusEl.textContent = 'Wallet connected (' + accounts[0].slice(0, 6) + '…' + accounts[0].slice(-4) + '). SeraphLaunchpad contract on ' + LP.chain + ' is awaiting mainnet deployment address.';
+          statusEl.textContent = 'Wallet connected (' + acct.slice(0, 6) + '…' + acct.slice(-4) + '). SeraphLaunchpad contract on ' + LP.chain + ' is awaiting deployment address.';
           return;
         }
-        statusEl.textContent = 'Ready to submit launch transaction from ' + accounts[0].slice(0, 6) + '…' + accounts[0].slice(-4) + '.';
+        var supplyNum = BigInt((document.getElementById('lpSupply').value || '1000000000').replace(/[^0-9]/g, '') || '1000000000') * (10n ** 18n);
+        var buyFeeBps = Math.round(parseFloat(document.getElementById('lpBuyRange').value) * 100);
+        var sellFeeBps = Math.round(parseFloat(document.getElementById('lpSellRange').value) * 100);
+        var devBuyBps = Math.round((LP.dev || 0) * 100);
+        var splits = {};
+        document.querySelectorAll('#lpCustom input[data-split]').forEach(function (i) {
+          splits[i.getAttribute('data-split')] = Math.round((parseFloat(i.value) || 0) * 100);
+        });
+        var modelIdx = { fixed: 0, curve: 1, seraph: 2 }[LP.model] || 0;
+        var feeWalletRaw = document.getElementById('lpFeeWallet').value.trim();
+        var feeWallet = /^0x[0-9a-fA-F]{40}$/.test(feeWalletRaw) ? feeWalletRaw : acct;
+        var calldata = lpEncodeLaunch({
+          name: name,
+          symbol: ticker,
+          description: document.getElementById('lpDesc').value.trim(),
+          image: '',
+          website: document.getElementById('lpWebsite').value.trim(),
+          twitter: document.getElementById('lpTwitter').value.trim(),
+          telegram: document.getElementById('lpTelegram').value.trim(),
+          model: modelIdx,
+          totalSupply: supplyNum,
+          feeWallet: feeWallet,
+          buyFeeBps: buyFeeBps,
+          sellFeeBps: sellFeeBps,
+          creatorShareBps: splits.creator || 0,
+          buybackShareBps: splits.buyback || 0,
+          dividendsShareBps: splits.dividends || 0,
+          liquidityShareBps: splits.liquidity || 0,
+          platformShareBps: splits.platform || 0,
+          devBuyBps: devBuyBps
+        });
+        var valueWei = 500000000000000n;
+        try {
+          var qHex = await lpEthCall(target, '0x411d8ed5' + lpEncUint(supplyNum) + lpEncUint(buyFeeBps) + lpEncUint(devBuyBps));
+          if (qHex) valueWei = BigInt(qHex);
+        } catch (_) {}
+        var txHash = await window.ethereum.request({
+          method: 'eth_sendTransaction',
+          params: [{ from: acct, to: target, value: '0x' + valueWei.toString(16), data: calldata }]
+        });
+        statusEl.textContent = 'Launch transaction submitted: ' + txHash;
+        setTimeout(lpLoadLive, 4000);
       } catch (err) {
         statusEl.textContent = (err && err.message) ? err.message : 'Wallet request cancelled.';
       }
@@ -1978,6 +2231,7 @@
 
     lpRenderRows();
     lpUpdate();
+    lpLoadLive();
  
     /* Init */
     route();

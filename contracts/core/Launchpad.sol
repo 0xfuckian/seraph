@@ -102,6 +102,7 @@ contract LaunchToken is ERC20, ERC20Burnable {
         if (accumulated > rewardDebt[account]) {
             pendingDividends[account] += accumulated - rewardDebt[account];
         }
+        rewardDebt[account] = accumulated;
     }
 
     function _update(address from, address to, uint256 value) internal virtual override {

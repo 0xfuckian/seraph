@@ -187,4 +187,50 @@ contract SecurityAuditTest is Test {
         SeraphLaunchpad.LaunchInfo memory info = launchpad.getLaunch(tk);
         assertGe(address(launchpad).balance, info.realQuoteReserve + launchpad.claimableFees(address(multisigTreasury)));
     }
+
+    function test_Audit6_DoubleClaimDividendsRevertsAndCannotDrainOtherHolders() public {
+        SeraphLaunchpad.LaunchParams memory p = SeraphLaunchpad.LaunchParams({
+            name: "DivToken",
+            symbol: "DIV",
+            description: "Dividend double-claim test",
+            image: "",
+            website: "",
+            twitter: "",
+            telegram: "",
+            model: SeraphLaunchpad.LaunchModel.BondingCurve,
+            totalSupply: 1_000_000_000e18,
+            feeWallet: address(multisigTreasury),
+            buyFeeBps: 250,
+            sellFeeBps: 250,
+            creatorShareBps: 0,
+            buybackShareBps: 0,
+            dividendsShareBps: 10000,
+            liquidityShareBps: 0,
+            platformShareBps: 0,
+            devBuyBps: 0
+        });
+
+        vm.prank(alice);
+        address tk = launchpad.launch{value: 0.001 ether}(p);
+
+        vm.prank(alice);
+        launchpad.buy{value: 1 ether}(tk, 0, alice);
+        vm.prank(bob);
+        launchpad.buy{value: 1 ether}(tk, 0, bob);
+
+        // Alice claims her dividends once
+        vm.prank(alice);
+        uint256 firstClaim = LaunchToken(tk).claimDividends(alice);
+        assertGt(firstClaim, 0);
+        assertEq(LaunchToken(tk).claimableDividends(alice), 0);
+
+        // Calling claimDividends a second time without new trades must revert and leave Bob's share intact
+        vm.prank(alice);
+        vm.expectRevert("LaunchToken: nothing to claim");
+        LaunchToken(tk).claimDividends(alice);
+
+        vm.prank(bob);
+        uint256 bobClaim = LaunchToken(tk).claimDividends(bob);
+        assertGt(bobClaim, 0);
+    }
 }
