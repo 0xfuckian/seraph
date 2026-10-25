@@ -47,6 +47,17 @@ To run a live, self-hosted [BookStack](https://www.bookstackapp.com/docs/admin/i
 - **1-Command Docker Setup**: `docker compose up -d` in `deploy/bookstack/`
 - **Native Ubuntu Installer**: `sudo ./install-ubuntu.sh docs.seraphprotocol.tech`
 - **Automated Sync Engine**: `npm run sync --prefix deploy/bookstack`
+- **Master Documentation Shelf**: [`/shelves/seraph-protocol-documentation`](http://localhost:8000/shelves/seraph-protocol-documentation)
+
+### Applied Theme & Customizations
+- **Brand Palette**: Seraph Cyan (`#00f3ff`) primary accents, cyber-privacy dark obsidian backgrounds (`#05070a` / `#0b0e14`).
+- **Typography & Math**: Injected `Space Grotesk` headers, `JetBrains Mono` code blocks, and KaTeX CDN for real-time LaTeX math rendering.
+- **Architectural Graphic Covers**: High-resolution covers attached to all 4 books and the master shelf.
+- **Offline PDF Manuals**: Full-length compiled PDF manuals are exported and maintained in [`docs/pdf/`](../pdf/):
+  - `Book 1: Foundations & Cryptography` ([`Book_1_Foundations_and_Cryptography.pdf`](../pdf/Book_1_Foundations_and_Cryptography.pdf))
+  - `Book 2: Core Architecture & Networks` ([`Book_2_Core_Architecture_and_Networks.pdf`](../pdf/Book_2_Core_Architecture_and_Networks.pdf))
+  - `Book 3: Applications & Tokenomics` ([`Book_3_Applications_and_Tokenomics.pdf`](../pdf/Book_3_Applications_and_Tokenomics.pdf))
+  - `Book 4: Operations, Security & Reference` ([`Book_4_Operations_Security_and_Reference.pdf`](../pdf/Book_4_Operations_Security_and_Reference.pdf))
 
 See the [BookStack Deployment Guide](../../deploy/bookstack/README.md) for full setup instructions.
 
