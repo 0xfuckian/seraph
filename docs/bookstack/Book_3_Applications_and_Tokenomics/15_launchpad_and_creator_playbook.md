@@ -43,10 +43,11 @@ The contract is live on Base Sepolia at `0xe0349E4cC431329207e98C5205062776e058A
 
 ---
 
-## 15.3 The 5-Way Fee Split & 6 UI Presets
+## 15.3 The Fee Model, Anti-Spam Launch Fee & 6 UI Presets
 
 The launchpad charges:
-- A **mandatory 1.00% Seraph platform fee** (`PLATFORM_FEE_BPS = 100`).
+- A **flat anti-spam creation fee of 0.001 ETH** (~$2.50 USD), paid at token deployment and routed directly to the Seraph Treasury (`0xa287FC2B8f89023eF1c82af09aee351cCdDa8a76`) to prevent automated bot flood attacks.
+- A **mandatory 1.00% Seraph platform fee** on every buy and sell (`PLATFORM_FEE_BPS = 100`).
 - A **creator fee of up to 2.50%** (`buyFeeBps`, `sellFeeBps` $\le 250$).
 
 Creators allocate their trading fee revenue across 5 destinations summing to 10,000 basis points (100%):

@@ -52,7 +52,7 @@ contract DeployTestnet is Script {
             uint256(0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80)
         );
         address deployer = vm.addr(deployerKey);
-        address treasury = vm.envOr("TREASURY_ADDRESS", deployer);
+        address treasury = vm.envOr("TREASURY_ADDRESS", address(0xa287FC2B8f89023eF1c82af09aee351cCdDa8a76));
         uint256 tgeTimestamp = vm.envOr("TGE_TIMESTAMP", block.timestamp + 7 days);
 
         console.log("=====================================================");
@@ -80,7 +80,7 @@ contract DeployTestnet is Script {
         console.log("SeraphPresale:       ", address(presale));
         console.log("PrivacyPool:         ", address(privacyPool));
 
-        SeraphLaunchpad launchpad = new SeraphLaunchpad(treasury, 0.0005 ether);
+        SeraphLaunchpad launchpad = new SeraphLaunchpad(treasury, 0.001 ether);
         console.log("SeraphLaunchpad:     ", address(launchpad));
 
         CrossEVMBridge bridge = new CrossEVMBridge(address(ser), keccak256("SERAPH_TESTNET"), treasury);

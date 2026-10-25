@@ -14,8 +14,8 @@ contract DeployLaunchpad is Script {
     function run() external returns (SeraphLaunchpad launchpad) {
         uint256 deployerKey = vm.envOr("PRIVATE_KEY", uint256(0));
         address deployer = deployerKey != 0 ? vm.addr(deployerKey) : msg.sender;
-        address feeRecipient = vm.envOr("PLATFORM_FEE_RECIPIENT", deployer);
-        uint256 launchFee = vm.envOr("LAUNCH_FEE_WEI", uint256(0.0005 ether));
+        address feeRecipient = vm.envOr("PLATFORM_FEE_RECIPIENT", address(0xa287FC2B8f89023eF1c82af09aee351cCdDa8a76));
+        uint256 launchFee = vm.envOr("LAUNCH_FEE_WEI", uint256(0.001 ether));
 
         if (deployerKey != 0) {
             vm.startBroadcast(deployerKey);

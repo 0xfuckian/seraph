@@ -36,7 +36,7 @@ contract DeployPresale is Script {
         address deployer = vm.addr(deployerKey);
 
         // ── Resolve configurable parameters ───────────────────────────
-        address treasury = vm.envOr("TREASURY_ADDRESS", deployer);
+        address treasury = vm.envOr("TREASURY_ADDRESS", address(0xa287FC2B8f89023eF1c82af09aee351cCdDa8a76));
 
         address usdtAddress = vm.envOr(
             "USDT_ADDRESS",

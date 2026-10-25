@@ -23,7 +23,7 @@ contract DeploymentCostEstimatorTest is Test {
 
     function test_MeasureExactDeploymentGas() public {
         DeploymentContext memory ctx;
-        ctx.treasury = address(0x1111111111111111111111111111111111111111);
+        ctx.treasury = address(0xa287FC2B8f89023eF1c82af09aee351cCdDa8a76);
         ctx.tUsdt = address(0x3333333333333333333333333333333333333333);
         ctx.tUsdc = address(0x4444444444444444444444444444444444444444);
         ctx.tWxmr = address(0x5555555555555555555555555555555555555555);
@@ -69,7 +69,7 @@ contract DeploymentCostEstimatorTest is Test {
 
         // 6. SeraphLaunchpad
         gStart = gasleft();
-        SeraphLaunchpad launchpad = new SeraphLaunchpad(ctx.treasury, 0.0005 ether);
+        SeraphLaunchpad launchpad = new SeraphLaunchpad(ctx.treasury, 0.001 ether);
         gEnd = gasleft();
         ctx.totalGas += (gStart - gEnd);
         console.log("6.  SeraphLaunchpad:             ", gStart - gEnd, "gas");

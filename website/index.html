@@ -2020,8 +2020,8 @@
  
           <div class="lp-card">
             <label class="check"><input type="checkbox" id="lpAck"><span>I understand I am launching this token myself. Seraph does not review, endorse, or guarantee it, and it may lose all of its value.</span></label>
-            <button class="wallet-btn" type="button" id="lpLaunchBtn"><span class="metal">●</span> LAUNCH TOKEN</button>
-            <div class="connect-note" id="lpLaunchStatus">Connect a wallet to launch on the selected network.</div>
+            <button class="wallet-btn" type="button" id="lpLaunchBtn"><span class="metal">●</span> LAUNCH TOKEN (0.001 ETH)</button>
+            <div class="connect-note" id="lpLaunchStatus">Anti-spam creation fee: 0.001 ETH (~$2.50) routed to the protocol treasury. Connect a wallet to launch on Base Sepolia.</div>
           </div>
         </div>
  
@@ -2709,7 +2709,7 @@
           platformShareBps: splits.platform || 0,
           devBuyBps: devBuyBps
         });
-        var valueWei = 500000000000000n;
+        var valueWei = 1000000000000000n; // 0.001 ETH default launch fee
         try {
           var qHex = await lpEthCall(target, '0x411d8ed5' + lpEncUint(supplyNum) + lpEncUint(buyFeeBps) + lpEncUint(devBuyBps));
           if (qHex) valueWei = BigInt(qHex);

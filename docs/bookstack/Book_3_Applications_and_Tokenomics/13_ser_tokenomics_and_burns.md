@@ -60,7 +60,7 @@ To ensure long-term value accrual and discourage predatory mercenary dumping, `S
 
 - **Sell Tax Rate**: 1.00% (`SELL_TAX_BPS = 100`).
 - **Burn Split**: 50% permanently burned (`BURN_BPS = 5000`).
-- **Treasury Split**: 50% directed to the Protocol Treasury (`toTreasury = tax - burned`).
+- **Treasury Split**: 50% directed to the Protocol Treasury (`toTreasury = tax - burned`, official address: `0xa287FC2B8f89023eF1c82af09aee351cCdDa8a76`).
 
 ```
                               1.00% SELL TAX
