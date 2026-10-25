@@ -1486,7 +1486,7 @@
 
       <!-- Quick Resource Links Bar -->
       <div style="display:flex; flex-wrap:wrap; gap:12px; margin-bottom:28px;">
-        <a href="https://docs.seraphprotocol.tech" target="_blank" rel="noopener" class="cta-primary" style="font-size:11px; padding:12px 20px;">
+        <a href="https://docs.seraphprotocol.tech/shelves/seraph-protocol-documentation" target="_blank" rel="noopener" class="cta-primary" style="font-size:11px; padding:12px 20px;">
           <span class="metal">●</span> ENTER BOOKSTACK DOCS (DOCS.SERAPHPROTOCOL.TECH) ↗
         </a>
         <a href="https://github.com/0xfuckian/seraph/blob/main/whitepaper/seraph_whitepaper.md" target="_blank" rel="noopener" class="cta-secondary" style="font-size:11px; padding:12px 20px;">
@@ -1518,7 +1518,7 @@
               <span class="tech-tag">Groth16</span>
             </div>
             <div class="deck-result text-magenta">Four-level Privacy Continuum (L0–L3), Monero heritage, Seraphis research horizons, and ZK verification benchmarks.</div>
-            <a href="https://docs.seraphprotocol.tech/books/foundations-cryptography" target="_blank" rel="noopener" class="cta-secondary" style="font-size:11px; padding:10px 18px; margin-top:14px; text-decoration:none;">OPEN IN BOOKSTACK ↗</a>
+            <a href="https://docs.seraphprotocol.tech/books/book-1-foundations-cryptography" target="_blank" rel="noopener" class="cta-secondary" style="font-size:11px; padding:10px 18px; margin-top:14px; text-decoration:none;">OPEN IN BOOKSTACK ↗</a>
           </div>
         </div>
 
@@ -1538,7 +1538,7 @@
               <span class="tech-tag">MEV Shield</span>
             </div>
             <div class="deck-result text-accent">Sovereign base-layer state machine, Seraph EVM &amp; XMR EVM, optimistic fraud proofs, and threshold-encrypted mempools.</div>
-            <a href="https://docs.seraphprotocol.tech/books/core-architecture-networks" target="_blank" rel="noopener" class="cta-secondary" style="font-size:11px; padding:10px 18px; margin-top:14px; text-decoration:none;">OPEN IN BOOKSTACK ↗</a>
+            <a href="https://docs.seraphprotocol.tech/books/book-2-core-architecture-networks" target="_blank" rel="noopener" class="cta-secondary" style="font-size:11px; padding:10px 18px; margin-top:14px; text-decoration:none;">OPEN IN BOOKSTACK ↗</a>
           </div>
         </div>
 
@@ -1558,7 +1558,7 @@
               <span class="tech-tag">Dividends</span>
             </div>
             <div class="deck-result text-green">Official wallets, view key scanning, autonomous AI usage metering, fixed 100M supply, fee burns, and Launchpad playbook.</div>
-            <a href="https://docs.seraphprotocol.tech/books/applications-tokenomics" target="_blank" rel="noopener" class="cta-secondary" style="font-size:11px; padding:10px 18px; margin-top:14px; text-decoration:none;">OPEN IN BOOKSTACK ↗</a>
+            <a href="https://docs.seraphprotocol.tech/books/book-3-applications-tokenomics" target="_blank" rel="noopener" class="cta-secondary" style="font-size:11px; padding:10px 18px; margin-top:14px; text-decoration:none;">OPEN IN BOOKSTACK ↗</a>
           </div>
         </div>
 
@@ -1578,7 +1578,7 @@
               <span class="tech-tag">Glossary</span>
             </div>
             <div class="deck-result text-orange">Anonymous DAO governance, 12-vector threat pentests, emergency pause playbooks, and developer setup instructions.</div>
-            <a href="https://docs.seraphprotocol.tech/books/operations-security-reference" target="_blank" rel="noopener" class="cta-secondary" style="font-size:11px; padding:10px 18px; margin-top:14px; text-decoration:none;">OPEN IN BOOKSTACK ↗</a>
+            <a href="https://docs.seraphprotocol.tech/books/book-4-operations-security-reference" target="_blank" rel="noopener" class="cta-secondary" style="font-size:11px; padding:10px 18px; margin-top:14px; text-decoration:none;">OPEN IN BOOKSTACK ↗</a>
           </div>
         </div>
       </div>
@@ -1591,7 +1591,7 @@
           <p style="color:var(--color-sub); font-size:14px; line-height:1.6; margin-top:6px;">Seraph uses a dedicated BookStack instance for full-text searchable documentation, LaTeX mathematical equations, interactive diagrams, and live developer guides. Access the documentation portal directly or review the open-source repository.</p>
         </div>
         <div style="display:flex; gap:12px; flex-wrap:wrap;">
-          <a href="https://docs.seraphprotocol.tech" target="_blank" rel="noopener" class="wallet-btn" style="text-decoration:none; padding:14px 24px;">
+          <a href="https://docs.seraphprotocol.tech/shelves/seraph-protocol-documentation" target="_blank" rel="noopener" class="wallet-btn" style="text-decoration:none; padding:14px 24px;">
             <span class="metal">●</span> OPEN BOOKSTACK PORTAL ↗
           </a>
           <a href="https://github.com/0xfuckian/seraph/tree/main/docs/bookstack" target="_blank" rel="noopener" class="cta-secondary" style="text-decoration:none; padding:14px 20px; font-size:12px;">
@@ -3843,6 +3843,18 @@ if (!reduceMotion) {
     renderVault();
     fetchPoolData();
     setInterval(fetchPoolData, 15000);
+  })();
+
+  // BookStack Local / Production link router
+  (function () {
+    var isLocal = window.location.hostname === 'localhost' ||
+                  window.location.hostname === '127.0.0.1' ||
+                  window.location.protocol === 'file:';
+    if (isLocal) {
+      document.querySelectorAll('a[href^="https://docs.seraphprotocol.tech"]').forEach(function (el) {
+        el.href = el.href.replace('https://docs.seraphprotocol.tech', 'http://localhost:8000');
+      });
+    }
   })();
   </script>
 
