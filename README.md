@@ -4,7 +4,7 @@
 [![Rust Tests](https://img.shields.io/badge/Rust%20Crate-17%2F17%20Passing-blue)](./base-layer/tests/)
 [![Node Tests](https://img.shields.io/badge/Node.js%20SDK-59%2F59%20Passing-success)](./sdk/typescript/test/)
 [![Relayer Daemon](https://img.shields.io/badge/Relayer%20Daemon-17%2F17%20Passing-teal)](./services/relayer/test/)
-[![Total Tests](https://img.shields.io/badge/Total%20Tests-298%2F298%20Passing-darkgreen)](./)
+[![Total Tests](https://img.shields.io/badge/Total%20Tests-301%2F301%20Passing-darkgreen)](./)
 [![Invariants](https://img.shields.io/badge/Stateful%20Invariants-128k%20Calls%20(0%20Reverts)-darkgreen)](./contracts/test/)
 [![Base Sepolia](https://img.shields.io/badge/Base%20Sepolia-13%20Contracts%20Deployed-blueviolet)](https://sepolia.basescan.org)
 [![Documentation](https://img.shields.io/badge/BookStack-22%20Chapters%20(4%20Books)-orange)](./docs/bookstack/README.md)
@@ -119,11 +119,15 @@ All protocol modules are currently deployed, verified, and operational on Base S
 - **CrossChainBridgeBatcher**: Ingests on-chain `TokensLocked` events, computes binary Merkle trees with orphan promotion, enforces 1 ETH relayer bonds, submits state batches on `CrossEVMBridge`, and produces inclusion proofs for `claimBridged`.
 - **GasAbstractionDispatcher**: Solvency verification, anti-drain target protections, double-spend prevention, and transaction dispatch for `GasRelayer.executeWithGasAbstraction`.
 
+### 4.6 Live BookStack Deployment & Sync Suite (`deploy/bookstack/`)
+- **`@seraph-protocol/bookstack-deploy`**: Turnkey self-hosted [BookStackApp](https://www.bookstackapp.com/docs/admin/installation/) wiki deployment (Docker Compose or Ubuntu script) with persistent MariaDB storage.
+- **Automated Sync Engine (`sync-docs-to-bookstack.mjs`)**: Directly connects to BookStack's REST API (`POST /api/books` and `POST /api/pages`), synchronizing all 4 Books and 22 markdown chapters with idempotent upserting.
+
 ---
 
-## 5. Verification & Testing Registry (298 Tests)
+## 5. Verification & Testing Registry (301 Tests)
 
-Seraph enforces strict mathematical verification across Foundry, Rust, Node.js SDK, and the Relayer Daemon:
+Seraph enforces strict mathematical verification across Foundry, Rust, Node.js SDK, the Relayer Daemon, and the BookStack Sync Engine:
 
 ```bash
 # 1. Run Foundry Smart Contract Suites (205/205 tests + 128,000 invariant handler calls)
@@ -138,7 +142,10 @@ node --test sdk/typescript/test/*.test.mjs
 # 4. Run Relayer & Bridge Daemon Suites (17/17 tests)
 node --test services/relayer/test/*.test.mjs
 
-# 5. Run Live Multi-Actor Scenario Script on Base Sepolia Fork
+# 5. Run BookStack Deployment & Sync Verification Suite (3/3 tests)
+npm test --prefix deploy/bookstack
+
+# 6. Run Live Multi-Actor Scenario Script on Base Sepolia Fork
 forge script script/LivePrivacyContinuumScenarios.s.sol
 ```
 

@@ -1,0 +1,41 @@
+version: "3.8"
+
+services:
+  bookstack:
+    image: lscr.io/linuxserver/bookstack:latest
+    container_name: seraph_bookstack
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Etc/UTC
+      - APP_URL=${APP_URL:-http://localhost:6875}
+      - DB_HOST=bookstack_db
+      - DB_PORT=3306
+      - DB_USER=${DB_USER:-bookstack}
+      - DB_PASSWORD=${DB_PASSWORD:-seraph_db_secret_key_84532}
+      - DB_DATABASE=${DB_NAME:-bookstack}
+    volumes:
+      - ./bookstack_config:/config
+    ports:
+      - "${APP_PORT:-6875}:80"
+    depends_on:
+      bookstack_db:
+        condition: service_healthy
+
+  bookstack_db:
+    image: mariadb:11
+    container_name: seraph_bookstack_db
+    restart: unless-stopped
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PASSWORD:-seraph_root_secret_key_84532}
+      - MYSQL_DATABASE=${DB_NAME:-bookstack}
+      - MYSQL_USER=${DB_USER:-bookstack}
+      - MYSQL_PASSWORD=${DB_PASSWORD:-seraph_db_secret_key_84532}
+    volumes:
+      - ./db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      timeout: 5s
+      retries: 10

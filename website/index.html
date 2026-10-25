@@ -2547,17 +2547,48 @@
       var fracStr = (parts[1] || '').slice(0, 18).padEnd(18, '0');
       return whole + BigInt(fracStr || '0');
     }
+    async function ensureBaseSepoliaChain() {
+      if (!window.ethereum) return;
+      try {
+        var cid = await window.ethereum.request({ method: 'eth_chainId' });
+        if (cid !== '0x14a34' && cid !== '0x2105') {
+          try {
+            await window.ethereum.request({
+              method: 'wallet_switchEthereumChain',
+              params: [{ chainId: '0x14a34' }]
+            });
+          } catch (switchErr) {
+            if (switchErr && (switchErr.code === 4902 || (switchErr.message && switchErr.message.toLowerCase().includes('unrecognized')))) {
+              await window.ethereum.request({
+                method: 'wallet_addEthereumChain',
+                params: [{
+                  chainId: '0x14a34',
+                  chainName: 'Base Sepolia',
+                  nativeCurrency: { name: 'Sepolia Ether', symbol: 'ETH', decimals: 18 },
+                  rpcUrls: ['https://sepolia.base.org'],
+                  blockExplorerUrls: ['https://sepolia.basescan.org']
+                }]
+              });
+            } else {
+              throw switchErr;
+            }
+          }
+          var checkCid = await window.ethereum.request({ method: 'eth_chainId' });
+          if (checkCid !== '0x14a34' && checkCid !== '0x2105') {
+            throw new Error('Please switch your wallet network to Base Sepolia (Chain ID 84532) in your wallet.');
+          }
+        }
+      } catch (err) {
+        console.warn('Network switch error:', err);
+        throw err;
+      }
+    }
     async function lpConnectWallet() {
       if (!window.ethereum) throw new Error('No Web3 wallet detected. Open in MetaMask, Rabby, or Coinbase Wallet.');
-      var accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
       if (LP.chain === 'Base') {
-        try {
-          var cid = await window.ethereum.request({ method: 'eth_chainId' });
-          if (cid !== '0x14a34' && cid !== '0x2105') {
-            await window.ethereum.request({ method: 'wallet_switchEthereumChain', params: [{ chainId: '0x14a34' }] });
-          }
-        } catch (_) {}
+        await ensureBaseSepoliaChain();
       }
+      var accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
       return accounts[0];
     }
     document.getElementById('lpBuyBtn').addEventListener('click', async function () {
@@ -3209,12 +3240,14 @@ if (!reduceMotion) {
     });
 
     // Wallet connect
-    function connectWallet() {
+    async function connectWallet() {
       if (!window.ethereum) {
         alert('Please install MetaMask or another Web3 wallet to execute privacy transactions on Base Sepolia.');
         return;
       }
-      window.ethereum.request({ method: 'eth_requestAccounts' }).then(function (accs) {
+      try {
+        await ensureBaseSepoliaChain();
+        var accs = await window.ethereum.request({ method: 'eth_requestAccounts' });
         if (!accs || accs.length === 0) return;
         PRIV.user = accs[0];
         var badge = document.getElementById('privWalletBadge');
@@ -3222,9 +3255,11 @@ if (!reduceMotion) {
         var unshieldRecip = document.getElementById('privUnshieldRecipient');
         if (unshieldRecip && !unshieldRecip.value) unshieldRecip.value = PRIV.user;
         fetchPoolData();
-      }).catch(function (err) {
+      } catch (err) {
         console.error(err);
-      });
+        var msg = (err && err.message) ? err.message : 'Wallet connection error';
+        alert(msg);
+      }
     }
 
     var connectBtn = document.getElementById('privConnectWalletBtn');

@@ -39,10 +39,25 @@ docs/bookstack/
 
 ---
 
+## Live BookStack Instance Deployment & Sync
+
+To run a live, self-hosted [BookStack](https://www.bookstackapp.com/docs/admin/installation/) instance and automatically import all 4 Books and 22 Chapters via REST API:
+
+- **Deployment Directory**: [`deploy/bookstack/`](../../deploy/bookstack/)
+- **1-Command Docker Setup**: `docker compose up -d` in `deploy/bookstack/`
+- **Native Ubuntu Installer**: `sudo ./install-ubuntu.sh docs.seraphprotocol.tech`
+- **Automated Sync Engine**: `npm run sync --prefix deploy/bookstack`
+
+See the [BookStack Deployment Guide](../../deploy/bookstack/README.md) for full setup instructions.
+
+---
+
 ## Technical Baseline & Test Matrix
 
 All specifications in this documentation correspond to verifiable, tested implementations in the Seraph monorepo:
-- **EVM Smart Contracts**: 155 unit & scenario tests + 896,000 stateful invariant checks in Foundry with 0 reverts.
+- **EVM Smart Contracts**: 205 unit & scenario tests + 128,000 stateful invariant checks in Foundry with 0 reverts.
 - **Rust Base Layer**: 17 adversarial pentest and cryptographic property suites in `seraph-base-layer`.
-- **TypeScript SDK & UI**: 43 automated Node tests verifying zero XSS, exact Base Sepolia RPC decoding, cryptographic key derivations, and note scanning.
+- **TypeScript SDK & UI**: 59 automated Node tests verifying zero XSS, exact Base Sepolia RPC decoding, cryptographic key derivations, and note scanning.
+- **Relayer Daemon**: 17 automated unit and integration tests covering cross-chain bridge batching and gas abstraction.
+- **BookStack Sync Suite**: 3 automated tests verifying local chapter inventories, markdown extraction, and deployment configs.
 - **Deployed Testnet Deployment**: Base Sepolia (`Chain ID 84532`).

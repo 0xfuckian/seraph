@@ -1,0 +1,20 @@
+{
+  "name": "@seraph-protocol/bookstack-deploy",
+  "version": "1.0.0",
+  "description": "BookStack deployment suite and automated documentation synchronizer for Seraph Protocol",
+  "type": "module",
+  "main": "sync-docs-to-bookstack.mjs",
+  "scripts": {
+    "sync": "node sync-docs-to-bookstack.mjs",
+    "sync:dry": "node sync-docs-to-bookstack.mjs --dry-run",
+    "test": "node --test test/sync.test.mjs"
+  },
+  "keywords": [
+    "bookstack",
+    "documentation",
+    "seraph",
+    "wiki",
+    "sync"
+  ],
+  "license": "MIT"
+}
