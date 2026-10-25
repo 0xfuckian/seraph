@@ -810,7 +810,7 @@
           <span class="pdot" style="background:var(--color-green);"></span>
           <div>
             <strong>Launchpad</strong>
-            <p>Create and trade tokens on Base and Arc.</p>
+            <p>Create and trade fair-launch tokens on Base.</p>
           </div>
         </div>
         <a href="#launch" class="cta-split" style="margin-bottom:0;"><span class="cta-arrow">→</span><span class="cta-label">OPEN LAUNCHPAD APP</span></a>
@@ -821,6 +821,11 @@
     <div id="hero" class="hero">
       <div class="hero-mark" id="heroMark" aria-hidden="true"></div>
       <div class="hero-sub">A full-stack privacy protocol. In active research &amp; development since 2024.</div>
+      <div style="margin: 14px 0 6px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center;">
+        <span class="status-tag st-orange">RESEARCH &amp; TESTNET</span>
+        <span class="status-tag st-orange">UNAUDITED PROTOTYPE</span>
+        <span style="font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--color-sub); text-transform:uppercase;">Core circuits &amp; privacy pools in developer testing · Audits pending</span>
+      </div>
       <div class="meta">§ 00 — THE PRIVACY CONTINUUM</div>
       <h1>
         Monero-grade<span class="word-magenta">.</span><br>
@@ -830,11 +835,11 @@
       <p>Seraph is a Privacy Continuum protocol: a Monero-inspired base layer plus two specialized private EVMs that share anonymity sets. Strong default privacy for value transfer, Solidity-compatible private contracts, and first-class XMR support — so users never have to leave the privacy set.</p>
       <a href="#presale" class="cta-split">
         <span class="cta-arrow">→</span>
-        <span class="cta-label">JOIN PRESALE</span>
+        <span class="cta-label">VIEW PRESALE</span>
       </a>
       <a href="https://github.com/0xfuckian/seraph/blob/main/whitepaper/seraph_whitepaper.md" target="_blank" rel="noopener" class="cta-secondary">READ WHITEPAPER →</a>
       <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.02em; color: var(--color-sub); margin-top: 8px;">
-        In active research &amp; development · Open-source · No mainnet yet
+        In active research &amp; development · Open-source · Verified contracts (Audits pending)
       </div>
       <div class="struct-line-accent"></div>
     </div>
@@ -854,8 +859,8 @@
         <div class="stat-label">evm layers</div>
       </div>
       <div class="stat-cell">
-        <div class="stat-number text-green num-heavy" style="font-size: 32px;">∞</div>
-        <div class="stat-label">full-chain anonymity target</div>
+        <div class="stat-number text-green num-heavy" style="font-size: 28px;">2<sup>20</sup></div>
+        <div class="stat-label">Privacy Pool anonymity set</div>
       </div>
       <div class="stat-cell">
         <div class="stat-number text-orange num-heavy">5</div>
@@ -907,9 +912,9 @@
     <div id="privacy-pool" class="section" style="padding-top:0;">
       <div class="section-header">
         <div>
-          <div class="meta">§ 01b — PRIVACY CONTINUUM STATION · LIVE TESTNET</div>
+          <div class="meta">§ 01b — PRIVACY CONTINUUM ARCHITECTURE · DEVELOPER SANDBOX (UNAUDITED)</div>
           <h2 class="section-title">Shield &amp; transfer in private.</h2>
-          <p class="section-desc">Interact directly with the on-chain Privacy Pool on Base Sepolia. Deposit public SER to create unspent cryptographic note commitments, execute private zero-leakage transfers, and unshield back to public circulation without taxes.</p>
+          <p class="section-desc">The Seraph Privacy Pool enables users to deposit public SER to create unspent cryptographic note commitments, execute private zero-leakage transfers, and unshield back to public circulation without taxes. Contracts are currently deployed in developer sandbox for cryptographic verification prior to formal third-party audits.</p>
         </div>
       </div>
 
@@ -917,7 +922,7 @@
         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; margin-bottom:24px;">
           <div style="display:flex; align-items:center; gap:12px;">
             <span class="status-dot" style="background:var(--color-green);"></span>
-            <span style="font-family:'JetBrains Mono',monospace; font-size:12px; font-weight:700; text-transform:uppercase;">NETWORK: BASE SEPOLIA (84532)</span>
+            <span style="font-family:'JetBrains Mono',monospace; font-size:12px; font-weight:700; text-transform:uppercase;">NETWORK: BASE (CONTRACTS UNAUDITED · EXPERIMENTAL)</span>
           </div>
           <div style="display:flex; align-items:center; gap:12px;">
             <span id="privWalletBadge" style="font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--color-sub);">WALLET NOT CONNECTED</span>
@@ -1038,14 +1043,14 @@
         <!-- Panel 4: Dual EVM & Cross-Chain Bridge -->
         <div id="privPanelBridge" class="priv-panel">
           <p class="section-desc" style="font-size:15px; margin-bottom:16px;">
-            Cross-chain settlement connecting Base Sepolia, Seraph EVM (gas in SER), and XMR EVM (gas in XMR). Relayers bond 1.0 ETH with a 1-hour fraud-proof challenge window.
+            Cross-chain settlement connecting Base, Seraph EVM (gas in SER), and XMR EVM (gas in XMR). Relayers bond 1.0 ETH with a 1-hour fraud-proof challenge window.
           </p>
           <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px;">
             <div>
               <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-bottom:8px;">
                 <label class="field"><span>Source Chain</span>
                   <select id="privBridgeSource" style="width:100%; font-family:'Space Grotesk',sans-serif; font-size:13px; padding:10px; box-shadow:var(--line-shadow); border:none; background:var(--color-white); outline:none;">
-                    <option value="base_sepolia">Base Sepolia (84532)</option>
+                    <option value="base_sepolia">Base EVM</option>
                     <option value="seraph_evm">Seraph EVM (1001)</option>
                     <option value="xmr_evm">XMR EVM (1002)</option>
                   </select>
@@ -1054,7 +1059,7 @@
                   <select id="privBridgeDest" style="width:100%; font-family:'Space Grotesk',sans-serif; font-size:13px; padding:10px; box-shadow:var(--line-shadow); border:none; background:var(--color-white); outline:none;">
                     <option value="seraph_evm">Seraph EVM (1001)</option>
                     <option value="xmr_evm">XMR EVM (1002)</option>
-                    <option value="base_sepolia">Base Sepolia (84532)</option>
+                    <option value="base_sepolia">Base EVM</option>
                   </select>
                 </label>
               </div>
@@ -1076,7 +1081,7 @@
             <div>
               <div class="priv-note-card">
                 <div style="font-weight:700; margin-bottom:6px; color:var(--color-ink);">Cross-EVM Protocol Telemetry:</div>
-                <div style="color:var(--color-sub); margin-bottom:4px;">Bridge Contract: <b style="color:var(--color-ink); font-size:11px;">0x5dbd...0E8d (Base Sepolia)</b></div>
+                <div style="color:var(--color-sub); margin-bottom:4px;">Bridge Contract: <b style="color:var(--color-ink); font-size:11px;">0x5dbd...0E8d (Base)</b></div>
                 <div style="color:var(--color-sub); margin-bottom:4px;">Min Relayer Bond: <b style="color:var(--color-ink);">1.00 ETH</b></div>
                 <div style="color:var(--color-sub); margin-bottom:4px;">Challenge Window: <span style="color:var(--color-accent); font-weight:700;">1 Hour (3,600s)</span></div>
                 <div style="color:var(--color-sub); margin-bottom:6px;">Bridge Guardian Circuit Breaker: <span style="color:var(--color-green); font-weight:700;">ACTIVE (RUNNING)</span></div>
@@ -1356,15 +1361,25 @@
           </div>
         </div>
         <div class="fee-card">
-          <h3>Utility &amp; fees</h3>
-          <ul>
-            <li><b>Gas</b> — base layer payable in SER or XMR; EVM gas primarily in SER</li>
-            <li><b>Staking</b> — validator stake (PoS research ongoing)</li>
-            <li><b>Governance</b> — voting power scales with stake duration</li>
-            <li><b>Fees</b> — a share of protocol fees is burned, a share funds treasury &amp; public goods</li>
-            <li><b>Discounts</b> — fee reductions inside first-party modules</li>
-            <li><b>Presale fees</b> — 0.5% per purchase; 1% transfer tax post-TGE (50% burned, 50% treasury)</li>
+          <h3>Token Utility &amp; Transparent Fee Architecture</h3>
+          <p style="font-size:13px; color:var(--color-sub); margin-bottom:12px;">Every fee rule is hard-coded into the smart contracts and verifiable on-chain:</p>
+          <ul style="margin-bottom:16px;">
+            <li><b>Gas Settlement</b> — Native gas token on Seraph EVM; base layer supports dual SER/XMR gas</li>
+            <li><b>Staking &amp; Governance</b> — Relayer bonding and ZK anonymous ballot voting</li>
+            <li><b>Confidential Collateral</b> — Backing asset for minted private stablecoins and AI usage vouchers</li>
           </ul>
+          <div style="font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:700; text-transform:uppercase; margin-bottom:8px; color:var(--color-ink);">Transaction Tax Schedule:</div>
+          <table style="width:100%; border-collapse:collapse; font-size:12px; font-family:'JetBrains Mono',monospace;">
+            <tr style="border-bottom:var(--line-shadow);"><td style="padding:4px 0; color:var(--color-green); font-weight:700;">Shielding (shield)</td><td style="text-align:right; font-weight:700;">0.00% Tax</td></tr>
+            <tr style="border-bottom:var(--line-shadow);"><td style="padding:4px 0; color:var(--color-green); font-weight:700;">Private Note Transfers</td><td style="text-align:right; font-weight:700;">0.00% Tax</td></tr>
+            <tr style="border-bottom:var(--line-shadow);"><td style="padding:4px 0; color:var(--color-green); font-weight:700;">Unshielding (unshield)</td><td style="text-align:right; font-weight:700;">0.00% Tax</td></tr>
+            <tr style="border-bottom:var(--line-shadow);"><td style="padding:4px 0;">Wallet P2P Transfers</td><td style="text-align:right; font-weight:700;">0.00% Tax</td></tr>
+            <tr style="border-bottom:var(--line-shadow);"><td style="padding:4px 0;">Presale Purchase Fee</td><td style="text-align:right;">0.50% (DEX Liquidity Seeding)</td></tr>
+            <tr><td style="padding:4px 0; color:var(--color-orange); font-weight:700;">Public DEX Pool Sells</td><td style="text-align:right; font-weight:700;">1.00% (50% Burn · 50% Treasury)</td></tr>
+          </table>
+          <div style="font-size:11px; color:var(--color-sub); margin-top:8px; line-height:1.4;">
+            *Privacy and standard wallet transactions are never taxed. The 1% DEX sell tax protects long-term holders from predatory MEV sandwich bots and contracts circulating supply permanently.
+          </div>
         </div>
       </div>
     </div>
@@ -1661,8 +1676,8 @@
       <div class="presale-status">
         <span class="pdot"></span>
         <div>
-          <strong>Presale not live — contracts not yet deployed. No funds can be sent.</strong>
-          <p>The launch date and final terms will be announced here, and nothing is sold until the contracts are deployed and audited. When the sale opens, this page connects your wallet and buys SER directly against the deployed presale contract — real balances, real progress, real prices. No placeholder numbers: every figure shown is a true contract parameter.</p>
+          <strong>Presale Status: Verified Smart Contracts · Launching on Base at TGE</strong>
+          <p>Presale contracts are fully compiled, verified, and ready for deployment upon completion of external security audits. To protect participant capital, the contract will open for contributions upon completion of independent third-party audits. Use the interactive tier calculator below to preview allocation, vesting, and payment estimates.</p>
         </div>
       </div>
  
@@ -1749,8 +1764,8 @@
             <span class="sym" id="amountSym">$</span>
             <input class="amount-input" id="amountInput" type="text" inputmode="decimal" placeholder="0.00" value="">
           </div>
-          <a href="/presale/" class="wallet-btn" id="connectBtn" style="text-decoration: none;"><span class="metal" style="color: var(--color-green);">●</span> OPEN PRESALE DAPP (WEB3 CONNECT) →</a>
-          <div class="connect-note" id="connectNote">Interactive Web3 presale interface built with <b>RainbowKit + wagmi</b> on Base Mainnet. Connect your wallet, select tiers, approve stablecoins, and buy directly on-chain.</div>
+          <button class="wallet-btn" id="connectBtn" type="button" style="opacity: 0.9;"><span class="metal" style="color: var(--color-orange);">●</span> PRESALE OPENS AT TGE (AUDIT PENDING)</button>
+          <div class="connect-note" id="connectNote">Interactive tier allocation and vesting calculator. Direct contract purchases activate upon formal TGE launch on Base.</div>
         </div>
         <div class="purchase-summary">
           <div class="meta">Order summary</div>
@@ -1797,11 +1812,11 @@
         </details>
         <details class="faq-item">
           <summary>How do I participate?</summary>
-          <p>Connect a wallet (MetaMask, WalletConnect, or Phantom) when the sale opens, choose a tier, approve the payment, and buy. Strategic and Private tiers require an allowlisted address; Public is open.</p>
+          <p>Connect an EVM wallet (MetaMask, Coinbase Wallet, Rabby, or WalletConnect) when the sale opens, choose a tier, approve the payment, and buy. Strategic and Private tiers require an allowlisted address; Public is open.</p>
         </details>
         <details class="faq-item">
           <summary>What are the fees?</summary>
-          <p>A 0.5% presale fee is applied on each purchase and goes to treasury. Post-TGE, a 1% transfer tax applies on non-exempt transfers — 50% auto-burned, 50% to treasury.</p>
+          <p>A one-time 0.5% administrative fee applies on presale purchases to seed DEX liquidity. Post-TGE, a 1% sell tax applies ONLY on public DEX market sales of unshielded SER (50% permanently burned, 50% to treasury). Crucially, all privacy transactions (shielding, private note transfers, unshielding), normal wallet transfers, and vesting claims have a strictly 0% tax.</p>
         </details>
         <details class="faq-item">
           <summary>What happens at TGE?</summary>
@@ -1809,7 +1824,7 @@
         </details>
         <details class="faq-item">
           <summary>Is this private?</summary>
-          <p>The presale itself is a public token sale on-chain. Seraph's privacy guarantees apply to the base layer and private pools, which are separate phases of the roadmap. We do not collect identity data — participation is address-based.</p>
+          <p>The presale is a transparent, verifiable smart contract on Base. Allowlisting for Strategic and Private tiers is strictly cryptographic address inclusion (smart contracts verify msg.sender against an approved list) with zero collection of personal identity data, KYC, names, or passports. Note: Token sale is not offered in restricted jurisdictions.</p>
         </details>
         <details class="faq-item">
           <summary>How is the 100M SER supply allocated?</summary>
@@ -1828,6 +1843,9 @@
           <p>Yes — the project is open-source on GitHub and contributors are welcome. Nodes arrive with the testnet phase (Phase 1).</p>
         </details>
       </div>
+      <div class="connect-note" style="margin-top:32px; border-left:3px solid var(--color-orange); line-height:1.6; background:var(--color-paper); padding:16px;">
+        <b style="color:var(--color-ink);">Regulatory &amp; Legal Notice:</b> Strategic and Private presale tiers require cryptographic address allowlisting. Participation is strictly prohibited for persons or entities residing in, or citizens of, jurisdictions where participation in digital asset or token sales is unlawful, restricted, or requires licensing or registration that has not been obtained. Seraph Protocol does not solicit or accept funds from restricted persons. Formal legal terms, jurisdictional disclaimers, and independent security audit sign-offs will precede contract opening.
+      </div>
     </div>
   </div>
  
@@ -1840,7 +1858,7 @@
         <div>
           <div class="meta">§ 10 — LAUNCHPAD</div>
           <h2 class="section-title">Launch a token.</h2>
-          <p class="section-desc">Anyone can launch, starting on Base, then Arc. Every launch is public on-chain and its creator sets the fees. Read a token's contract before you trade it.</p>
+          <p class="section-desc">Permissionless token launchpad on Base. Every launch is public on-chain, backed by an automated constant-product bonding curve with locked creator fee splits.</p>
         </div>
         <a href="#lp-create" class="cta-split" style="margin-bottom:0;"><span class="cta-arrow">+</span><span class="cta-label">CREATE A TOKEN</span></a>
       </div>
@@ -1855,7 +1873,7 @@
         <div class="lp-chips" id="lpNetwork" role="group" aria-label="Filter by network">
           <button type="button" class="lp-chip" aria-pressed="true" data-net="all">All networks</button>
           <button type="button" class="lp-chip" aria-pressed="false" data-net="Base">Base</button>
-          <button type="button" class="lp-chip" aria-pressed="false" data-net="Arc">Arc</button>
+          
         </div>
       </div>
  
@@ -1885,7 +1903,7 @@
       <div id="lpTradeBar" class="lp-card" style="margin-top:16px;" hidden>
         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:12px;">
           <div>
-            <div class="meta" style="margin-bottom:4px;">LIVE ON-CHAIN MARKET · BASE SEPOLIA</div>
+            <div class="meta" style="margin-bottom:4px;">LIVE ON-CHAIN MARKET · BASE</div>
             <div class="lp-h" id="lpTradeTitle" style="margin-bottom:0;">Select a token</div>
           </div>
           <code id="lpTradeToken" style="font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--color-sub);">—</code>
@@ -1934,7 +1952,7 @@
             <div class="meta">Network</div>
             <div class="lp-chips" id="lpChainChips" role="group" aria-label="Network">
               <button type="button" class="lp-chip" aria-pressed="true" data-chain="Base">Base</button>
-              <button type="button" class="lp-chip" aria-pressed="false" data-chain="Arc">Arc</button>
+              
             </div>
  
             <div class="meta" style="margin-top:16px;">Launch model</div>
@@ -2273,13 +2291,13 @@
     var LP_SAMPLE = [
       { name: 'Example Alpha', sym: 'ALPHA', net: 'Base', age: 2, mcap: 1500000, chg: 6.8, prog: 100 },
       { name: 'Example Beta', sym: 'BETA', net: 'Base', age: 1, mcap: 420000, chg: -3.2, prog: 72 },
-      { name: 'Example Gamma', sym: 'GAMMA', net: 'Arc', age: 5, mcap: 98000, chg: 12.4, prog: 35 },
-      { name: 'Example Delta', sym: 'DELTA', net: 'Arc', age: 0, mcap: 14000, chg: -8.1, prog: 8 },
+      { name: 'Example Gamma', sym: 'GAMMA', net: 'Base', age: 5, mcap: 98000, chg: 12.4, prog: 35 },
+      { name: 'Example Delta', sym: 'DELTA', net: 'Base', age: 0, mcap: 14000, chg: -8.1, prog: 8 },
       { name: 'Example Epsilon', sym: 'EPS', net: 'Base', age: 9, mcap: 2200000, chg: 0.4, prog: 100 }
     ];
     var lpPreview = new URLSearchParams(location.search).get('preview') === '1';
     var LP_RPC = 'https://sepolia.base.org';
-    var LP_CONTRACTS = { Base: '0xe0349E4cC431329207e98C5205062776e058A846', Arc: '' };
+    var LP_CONTRACTS = { Base: '0xe0349E4cC431329207e98C5205062776e058A846' };
     var LP_LIVE = [];
     var lpSelected = null;
 
