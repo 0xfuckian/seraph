@@ -101,10 +101,7 @@ contract PrivacyPool is ReentrancyGuard {
      * @param commitment The commitment to the new private note.
      * @param proof Optional proof data (for advanced shielding modes).
      */
-    function shield(uint256 amount, bytes32 commitment, bytes calldata proof)
-        external
-        returns (uint32 leafIndex)
-    {
+    function shield(uint256 amount, bytes32 commitment, bytes calldata proof) external returns (uint32 leafIndex) {
         return shieldFor(msg.sender, amount, commitment, proof);
     }
 
@@ -185,13 +182,11 @@ contract PrivacyPool is ReentrancyGuard {
      * @param root Historic Merkle root being proven against.
      * @param proof ZK proof of ownership and balance.
      */
-    function unshield(
-        bytes32 nullifier,
-        uint256 amount,
-        address recipient,
-        bytes32 root,
-        bytes calldata proof
-    ) external nonReentrant whenNotPaused {
+    function unshield(bytes32 nullifier, uint256 amount, address recipient, bytes32 root, bytes calldata proof)
+        external
+        nonReentrant
+        whenNotPaused
+    {
         require(amount > 0, "PrivacyPool: amount must be > 0");
         require(recipient != address(0), "PrivacyPool: recipient is zero");
         require(nullifier != bytes32(0), "PrivacyPool: invalid nullifier");
@@ -225,7 +220,7 @@ contract PrivacyPool is ReentrancyGuard {
      * @dev Insert a commitment into the incremental Merkle tree and update root.
      */
     function _insertCommitment(bytes32 commitment) internal returns (uint32 leafIndex) {
-        require(nextLeafIndex < 2**TREE_DEPTH, "PrivacyPool: tree is full");
+        require(nextLeafIndex < 2 ** TREE_DEPTH, "PrivacyPool: tree is full");
         leafIndex = nextLeafIndex;
         uint32 currentIndex = leafIndex;
         bytes32 currentHash = commitment;

@@ -302,7 +302,8 @@ contract PresaleTest is Test {
     }
 
     function capOf(uint256 id) internal view returns (uint256) {
-        (string memory nm, uint256 pr, uint256 hc, uint256 sd, bool kyc, uint256 lk, uint256 vs, bool ac) = presale.tiers(id);
+        (string memory nm, uint256 pr, uint256 hc, uint256 sd, bool kyc, uint256 lk, uint256 vs, bool ac) =
+            presale.tiers(id);
         return hc;
     }
 

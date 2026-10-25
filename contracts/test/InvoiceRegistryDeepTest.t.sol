@@ -77,7 +77,7 @@ contract InvoiceRegistryDeepTest is Test {
         // Case A: Empty memo
         bytes32 idA = keccak256("invoice_empty_memo");
         registry.createInvoice(idA, keccak256("stealth_a"), bob, address(ser), 10e18, "");
-        (, , , , , bytes memory memoA) = registry.invoices(idA);
+        (,,,,, bytes memory memoA) = registry.invoices(idA);
         assertEq(memoA.length, 0);
 
         // Case B: Large 1KB encrypted memo
@@ -88,7 +88,7 @@ contract InvoiceRegistryDeepTest is Test {
 
         bytes32 idB = keccak256("invoice_large_memo");
         registry.createInvoice(idB, keccak256("stealth_b"), bob, address(wxmr), 50e18, largeMemo);
-        (, , , , , bytes memory memoB) = registry.invoices(idB);
+        (,,,,, bytes memory memoB) = registry.invoices(idB);
         assertEq(memoB.length, 1024);
         assertEq(keccak256(memoB), keccak256(largeMemo));
     }
@@ -150,7 +150,7 @@ contract InvoiceRegistryDeepTest is Test {
         assertEq(ser.balanceOf(bob), bobBalBefore + amount);
 
         // State verified
-        (, , , , bool settled, ) = registry.invoices(invoiceId);
+        (,,,, bool settled,) = registry.invoices(invoiceId);
         assertTrue(settled);
         assertTrue(registry.usedPaymentNullifiers(nullifier));
     }
@@ -177,7 +177,7 @@ contract InvoiceRegistryDeepTest is Test {
         assertEq(wxmr.balanceOf(alice), aliceBalBefore - amount);
         assertEq(wxmr.balanceOf(bob), bobBalBefore + amount);
 
-        (, , , , bool settled, ) = registry.invoices(invoiceId);
+        (,,,, bool settled,) = registry.invoices(invoiceId);
         assertTrue(settled);
         assertTrue(registry.usedPaymentNullifiers(nullifier));
     }

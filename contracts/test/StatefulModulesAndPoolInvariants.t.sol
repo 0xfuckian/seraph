@@ -187,12 +187,9 @@ contract ProtocolModulesHandler is Test {
         aiCommitments.push(commitment);
     }
 
-    function handler_redeemUsageTicket(
-        uint256 commitmentSeed,
-        uint256 providerSeed,
-        uint256 redeemBps,
-        uint256 seed
-    ) external {
+    function handler_redeemUsageTicket(uint256 commitmentSeed, uint256 providerSeed, uint256 redeemBps, uint256 seed)
+        external
+    {
         if (aiCommitments.length == 0) return;
 
         uint256 idx = commitmentSeed % aiCommitments.length;
@@ -308,12 +305,9 @@ contract ProtocolModulesHandler is Test {
         vm.stopPrank();
     }
 
-    function handler_executeWithGasAbstraction(
-        uint256 relayerSeed,
-        bool useWxmr,
-        uint256 feeBps,
-        uint256 seed
-    ) external {
+    function handler_executeWithGasAbstraction(uint256 relayerSeed, bool useWxmr, uint256 feeBps, uint256 seed)
+        external
+    {
         address feeToken = useWxmr ? address(wxmr) : address(ser);
         uint256 poolBal = gasRelayer.voucherPoolBalance(feeToken);
 
@@ -332,13 +326,7 @@ contract ProtocolModulesHandler is Test {
         );
 
         vm.prank(relayer);
-        gasRelayer.executeWithGasAbstraction(
-            voucherNullifier,
-            feeToken,
-            feeAmount,
-            address(invoices),
-            callData
-        );
+        gasRelayer.executeWithGasAbstraction(voucherNullifier, feeToken, feeAmount, address(invoices), callData);
 
         usedGasVouchers.push(voucherNullifier);
     }
@@ -415,16 +403,7 @@ contract StatefulModulesAndPoolInvariantsTest is StdInvariant, Test {
         }
 
         handler = new ProtocolModulesHandler(
-            ser,
-            wxmr,
-            pool,
-            aiVault,
-            cdpVault,
-            gasRelayer,
-            invoices,
-            treasury,
-            actors,
-            providers
+            ser, wxmr, pool, aiVault, cdpVault, gasRelayer, invoices, treasury, actors, providers
         );
 
         targetContract(address(handler));
@@ -437,9 +416,7 @@ contract StatefulModulesAndPoolInvariantsTest is StdInvariant, Test {
     function invariant_PrivacyPoolBalanceEqualsNetShielded() public view {
         uint256 expectedPoolBalance = handler.totalShielded() - handler.totalUnshielded();
         assertEq(
-            ser.balanceOf(address(pool)),
-            expectedPoolBalance,
-            "PrivacyPool balance does not equal net shielded SER"
+            ser.balanceOf(address(pool)), expectedPoolBalance, "PrivacyPool balance does not equal net shielded SER"
         );
         assertEq(
             uint256(pool.nextLeafIndex()),
@@ -497,9 +474,7 @@ contract StatefulModulesAndPoolInvariantsTest is StdInvariant, Test {
             if (debt > 0) {
                 uint256 collValUsd = (coll * price) / precision;
                 assertGe(
-                    collValUsd * bps,
-                    debt * minCrBps,
-                    "CollateralVault position violated 150% minimum collateral ratio"
+                    collValUsd * bps, debt * minCrBps, "CollateralVault position violated 150% minimum collateral ratio"
                 );
             }
         }
@@ -509,11 +484,7 @@ contract StatefulModulesAndPoolInvariantsTest is StdInvariant, Test {
             sumCollateral,
             "CollateralVault SER balance mismatch with sum of position collateral"
         );
-        assertEq(
-            cdpVault.xUSD().totalSupply(),
-            sumDebt,
-            "xUSD totalSupply mismatch with sum of position debt"
-        );
+        assertEq(cdpVault.xUSD().totalSupply(), sumDebt, "xUSD totalSupply mismatch with sum of position debt");
     }
 
     /**

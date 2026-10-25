@@ -34,12 +34,7 @@ contract PrivacyPoolTest is Test {
         token = new SeraphToken(address(0), treasury, address(0));
 
         // Deploy PrivacyPool
-        pool = new PrivacyPool(
-            address(token),
-            treasury,
-            address(verifier),
-            address(0)
-        );
+        pool = new PrivacyPool(address(token), treasury, address(verifier), address(0));
 
         // Link pool on token
         vm.prank(treasury);

@@ -45,9 +45,13 @@ contract CrossEVMBridge is ReentrancyGuard {
 
     event RelayerBonded(address indexed relayer, uint256 totalBond);
     event RelayerUnbonded(address indexed relayer, uint256 amount, uint256 remainingBond);
-    event BatchSubmitted(uint256 indexed batchId, bytes32 indexed sourceChainId, bytes32 stateRoot, address indexed relayer);
+    event BatchSubmitted(
+        uint256 indexed batchId, bytes32 indexed sourceChainId, bytes32 stateRoot, address indexed relayer
+    );
     event BatchChallenged(uint256 indexed batchId, address indexed challenger, address indexed slashedRelayer);
-    event TokensLocked(uint256 indexed nonce, address indexed sender, address indexed recipient, uint256 amount, bytes32 destChainId);
+    event TokensLocked(
+        uint256 indexed nonce, address indexed sender, address indexed recipient, uint256 amount, bytes32 destChainId
+    );
     event TokensClaimed(uint256 indexed batchId, bytes32 indexed nullifier, address indexed recipient, uint256 amount);
     event Paused(address account);
     event Unpaused(address account);
@@ -95,14 +99,20 @@ contract CrossEVMBridge is ReentrancyGuard {
             revert ChallengeWindowActive();
         }
         relayerBonds[msg.sender] -= amount;
-        (bool ok, ) = msg.sender.call{value: amount}("");
+        (bool ok,) = msg.sender.call{value: amount}("");
         require(ok, "CrossEVMBridge: unbond transfer failed");
         emit RelayerUnbonded(msg.sender, amount, relayerBonds[msg.sender]);
     }
 
-    function submitStateBatch(bytes32 sourceChainId, bytes32 stateRoot) external whenNotPaused returns (uint256 batchId) {
+    function submitStateBatch(bytes32 sourceChainId, bytes32 stateRoot)
+        external
+        whenNotPaused
+        returns (uint256 batchId)
+    {
         if (relayerBonds[msg.sender] < MIN_RELAYER_BOND) revert InsufficientBond();
-        if (sourceChainId == bytes32(0) || sourceChainId == localChainId || stateRoot == bytes32(0)) revert InvalidBatch();
+        if (sourceChainId == bytes32(0) || sourceChainId == localChainId || stateRoot == bytes32(0)) {
+            revert InvalidBatch();
+        }
 
         lastBatchSubmittedAt[msg.sender] = uint64(block.timestamp);
         batchId = nextBatchId++;
@@ -130,7 +140,7 @@ contract CrossEVMBridge is ReentrancyGuard {
         relayerBonds[b.relayer] = 0;
 
         if (slashed > 0) {
-            (bool ok, ) = challenger.call{value: slashed}("");
+            (bool ok,) = challenger.call{value: slashed}("");
             require(ok, "CrossEVMBridge: reward transfer failed");
         }
         emit BatchChallenged(batchId, challenger, b.relayer);
@@ -139,8 +149,16 @@ contract CrossEVMBridge is ReentrancyGuard {
     /**
      * @notice Lock tokens on the current chain to bridge to `destChainId`.
      */
-    function bridgeOut(address recipient, uint256 amount, bytes32 destChainId) external nonReentrant whenNotPaused returns (uint256 nonce) {
-        require(recipient != address(0) && amount > 0 && destChainId != bytes32(0) && destChainId != localChainId, "CrossEVMBridge: invalid bridge params");
+    function bridgeOut(address recipient, uint256 amount, bytes32 destChainId)
+        external
+        nonReentrant
+        whenNotPaused
+        returns (uint256 nonce)
+    {
+        require(
+            recipient != address(0) && amount > 0 && destChainId != bytes32(0) && destChainId != localChainId,
+            "CrossEVMBridge: invalid bridge params"
+        );
         IERC20(token).safeTransferFrom(msg.sender, address(this), amount);
         nonce = outboundNonce++;
         emit TokensLocked(nonce, msg.sender, recipient, amount, destChainId);
@@ -174,9 +192,8 @@ contract CrossEVMBridge is ReentrancyGuard {
         bytes32 computed = leaf;
         for (uint256 i = 0; i < proof.length; i++) {
             bytes32 el = proof[i];
-            computed = computed <= el
-                ? keccak256(abi.encodePacked(computed, el))
-                : keccak256(abi.encodePacked(el, computed));
+            computed =
+                computed <= el ? keccak256(abi.encodePacked(computed, el)) : keccak256(abi.encodePacked(el, computed));
         }
         return computed == root;
     }

@@ -239,17 +239,9 @@ contract LaunchpadMultiActorTest is Test {
         token.distributeDividends{value: 1 ether}();
 
         assertApproxEqAbs(
-            token.claimableDividends(buyer1),
-            div1 + 0.5 ether,
-            2,
-            "Buyer1 should have div1 + 50% of 1 ETH"
+            token.claimableDividends(buyer1), div1 + 0.5 ether, 2, "Buyer1 should have div1 + 50% of 1 ETH"
         );
-        assertApproxEqAbs(
-            token.claimableDividends(buyer2),
-            0.5 ether,
-            2,
-            "Buyer2 should have 50% of 1 ETH"
-        );
+        assertApproxEqAbs(token.claimableDividends(buyer2), 0.5 ether, 2, "Buyer2 should have 50% of 1 ETH");
 
         // Step 4: Buyer2 transfers half of their tokens (25% of circulating) to Buyer3,
         // and Buyer1 transfers ALL of their remaining tokens (50% of circulating) to Buyer3!
@@ -667,8 +659,8 @@ contract LaunchpadMultiActorTest is Test {
         vm.stopPrank();
 
         // Compare Buyer1's floor sell quote for outAuto1 (which equals outBase1)
-        (uint256 floorQuoteAuto, , ) = launchpad.quoteSell(autoToken, outAuto1);
-        (uint256 floorQuoteBase, , ) = launchpad.quoteSell(baseToken, outBase1);
+        (uint256 floorQuoteAuto,,) = launchpad.quoteSell(autoToken, outAuto1);
+        (uint256 floorQuoteBase,,) = launchpad.quoteSell(baseToken, outBase1);
 
         assertGt(
             launchpad.getLaunch(autoToken).realQuoteReserve,
@@ -818,7 +810,7 @@ contract LaunchpadMultiActorTest is Test {
         // Whale sends 50 ETH (way more than needed to buy remainingCurveTokens)
         {
             uint256 whaleBalBefore = whale.balance;
-            (uint256 quotedWhaleTokens, , , uint256 quotedRefund) = launchpad.quoteBuy(tokenAddr, 50 ether);
+            (uint256 quotedWhaleTokens,,, uint256 quotedRefund) = launchpad.quoteBuy(tokenAddr, 50 ether);
             assertEq(quotedWhaleTokens, remainingCurveTokens, "Quote must clamp to remaining sellableTokens");
             assertGt(quotedRefund, 45 ether, "Excess ETH (>45 ETH) must be quoted as refund");
 
@@ -1005,7 +997,7 @@ contract LaunchpadMultiActorTest is Test {
         address token = launchpad.launch{value: LAUNCH_FEE}(p);
 
         // 1. Direct minTokensOut check on buy
-        (uint256 expectedTokens, , , ) = launchpad.quoteBuy(token, 1 ether);
+        (uint256 expectedTokens,,,) = launchpad.quoteBuy(token, 1 ether);
         vm.prank(buyer1);
         vm.expectRevert(SeraphLaunchpad.SlippageExceeded.selector);
         launchpad.buy{value: 1 ether}(token, expectedTokens + 1, buyer1);
@@ -1020,12 +1012,12 @@ contract LaunchpadMultiActorTest is Test {
         launchpad.buy{value: 1 ether}(token, minOutWith1PctSlippage, buyer1);
 
         // Buyer1 succeeds when quoting fresh after Whale's buy
-        (uint256 freshQuote, , , ) = launchpad.quoteBuy(token, 1 ether);
+        (uint256 freshQuote,,,) = launchpad.quoteBuy(token, 1 ether);
         vm.prank(buyer1);
         uint256 b1Tokens = launchpad.buy{value: 1 ether}(token, freshQuote, buyer1);
 
         // 3. Direct minQuoteOut check on sell
-        (uint256 expectedEthOut, , ) = launchpad.quoteSell(token, b1Tokens);
+        (uint256 expectedEthOut,,) = launchpad.quoteSell(token, b1Tokens);
         vm.startPrank(buyer1);
         LaunchToken(token).approve(address(launchpad), b1Tokens);
         vm.expectRevert(SeraphLaunchpad.SlippageExceeded.selector);
@@ -1117,7 +1109,7 @@ contract LaunchpadMultiActorTest is Test {
         // Now Buyer1 sells 100% of circulating tokens back to the launchpad!
         // During sell(), tokens are transferred to launchpad BEFORE _distributeFees(),
         // making eligibleSupply() == 0. The contract must gracefully route the sell dividend to toCreator!
-        (, , uint256 sellCreatorFee) = launchpad.quoteSell(tokenAddr, b1);
+        (,, uint256 sellCreatorFee) = launchpad.quoteSell(tokenAddr, b1);
         vm.startPrank(buyer1);
         token.approve(address(launchpad), b1);
         launchpad.sell(tokenAddr, b1, 1, buyer1);
@@ -1161,7 +1153,7 @@ contract LaunchpadMultiActorTest is Test {
         for (uint256 i = 0; i < 5; i++) {
             uint256 buyAmt = bound(uint256(rawBuys[i]), 0.01 ether, 2.5 ether);
             if (launchpad.sellableTokens(tokenAddr) > 0) {
-                (uint256 qOut, , , ) = launchpad.quoteBuy(tokenAddr, buyAmt);
+                (uint256 qOut,,,) = launchpad.quoteBuy(tokenAddr, buyAmt);
                 if (qOut > 0) {
                     vm.prank(traders[i]);
                     launchpad.buy{value: buyAmt}(tokenAddr, 1, traders[i]);
@@ -1184,7 +1176,7 @@ contract LaunchpadMultiActorTest is Test {
             uint256 bal = LaunchToken(tokenAddr).balanceOf(traders[i]);
             uint256 sellAmt = (bal * boundedSellFrac) / 10_000;
             if (sellAmt > 0) {
-                (uint256 netOut, , ) = launchpad.quoteSell(tokenAddr, sellAmt);
+                (uint256 netOut,,) = launchpad.quoteSell(tokenAddr, sellAmt);
                 if (netOut > 0) {
                     vm.startPrank(traders[i]);
                     LaunchToken(tokenAddr).approve(address(launchpad), sellAmt);
@@ -1196,9 +1188,8 @@ contract LaunchpadMultiActorTest is Test {
 
         // Verify Launchpad ETH solvency: balance must cover realQuoteReserve + all claimableFees
         SeraphLaunchpad.LaunchInfo memory info = launchpad.getLaunch(tokenAddr);
-        uint256 totalLiabilities = info.realQuoteReserve +
-            launchpad.claimableFees(platformWallet) +
-            launchpad.claimableFees(creatorFeeWallet);
+        uint256 totalLiabilities =
+            info.realQuoteReserve + launchpad.claimableFees(platformWallet) + launchpad.claimableFees(creatorFeeWallet);
 
         assertEq(
             address(launchpad).balance,

@@ -152,7 +152,7 @@ contract FullProtocolScenariosTest is Test {
         // Buyer 3: Public (Tier 3, $0.04) using buyWithETH (2 ETH) + direct ETH transfer via receive() (3 ETH)
         vm.startPrank(buyer3);
         presale.buyWithETH{value: 2 ether}(3);
-        (bool ok, ) = address(presale).call{value: 3 ether}("");
+        (bool ok,) = address(presale).call{value: 3 ether}("");
         assertTrue(ok, "Direct ETH transfer via receive() should succeed");
         vm.stopPrank();
 
@@ -178,26 +178,26 @@ contract FullProtocolScenariosTest is Test {
 
         // Verify accumulated token allocations (net of 0.5% fee):
         // Buyer 1: 30,000 USDC -> 29,850 net / $0.02 = 1,492,500 SER
-        (uint256 b1Total, , ) = presale.getBuyerAllocation(buyer1, 1);
+        (uint256 b1Total,,) = presale.getBuyerAllocation(buyer1, 1);
         assertEq(b1Total, 1_492_500e18, "Buyer1 accumulated Strategic allocation");
 
         // Buyer 2: 45,000 USDT -> 44,775 net / $0.03 = 1,492,500 SER
-        (uint256 b2Total, , ) = presale.getBuyerAllocation(buyer2, 2);
+        (uint256 b2Total,,) = presale.getBuyerAllocation(buyer2, 2);
         assertEq(b2Total, 1_492_500e18, "Buyer2 accumulated Private allocation");
 
         // Buyer 3: 5 ETH ($10,000 at $2,000/ETH) -> 4.975 ETH net ($9,950) / $0.04 = 248,750 SER
-        (uint256 b3Total, , ) = presale.getBuyerAllocation(buyer3, 3);
+        (uint256 b3Total,,) = presale.getBuyerAllocation(buyer3, 3);
         assertEq(b3Total, 248_750e18, "Buyer3 accumulated Public ETH allocation");
 
         // Buyer 4: 8,000 USDC Public -> 7,960 / $0.04 = 199,000 SER; 4,000 USDC Strategic -> 3,980 / $0.02 = 199,000 SER
-        (uint256 b4Pub, , ) = presale.getBuyerAllocation(buyer4, 3);
-        (uint256 b4Strat, , ) = presale.getBuyerAllocation(buyer4, 1);
+        (uint256 b4Pub,,) = presale.getBuyerAllocation(buyer4, 3);
+        (uint256 b4Strat,,) = presale.getBuyerAllocation(buyer4, 1);
         assertEq(b4Pub, 199_000e18);
         assertEq(b4Strat, 199_000e18);
 
         // Buyer 5: 12,000 USDT Public -> 11,940 / $0.04 = 298,500 SER; 6,000 USDT Private -> 5,970 / $0.03 = 199,000 SER
-        (uint256 b5Pub, , ) = presale.getBuyerAllocation(buyer5, 3);
-        (uint256 b5Priv, , ) = presale.getBuyerAllocation(buyer5, 2);
+        (uint256 b5Pub,,) = presale.getBuyerAllocation(buyer5, 3);
+        (uint256 b5Priv,,) = presale.getBuyerAllocation(buyer5, 2);
         assertEq(b5Pub, 298_500e18);
         assertEq(b5Priv, 199_000e18);
     }
@@ -209,7 +209,7 @@ contract FullProtocolScenariosTest is Test {
         // USDC: 30,000 (buyer1) + 12,000 (buyer4) = 42,000 USDC -> 0.5% fee = 210 USDC, net = 41,790 USDC
         // USDT: 45,000 (buyer2) + 18,000 (buyer5) = 63,000 USDT -> 0.5% fee = 315 USDT, net = 62,685 USDT
         // ETH:  5 ETH (buyer3) -> 0.5% fee = 0.025 ETH, net = 4.975 ETH
-        (uint256 usdtFees, uint256 usdcFees, uint256 ethFees, ) = presale.getFeesCollected();
+        (uint256 usdtFees, uint256 usdcFees, uint256 ethFees,) = presale.getFeesCollected();
         assertEq(usdcFees, 210e6, "USDC 0.5% fee must equal 210 USDC");
         assertEq(usdtFees, 315e6, "USDT 0.5% fee must equal 315 USDT");
         assertEq(ethFees, 0.025 ether, "ETH 0.5% fee must equal 0.025 ETH");
@@ -311,8 +311,8 @@ contract FullProtocolScenariosTest is Test {
 
         // Warp 10 days into the 14-day cliff: 0 releasable for vested tiers
         vm.warp(tgeTime + 10 days);
-        (, , uint256 b1CliffReleasable) = presale.getBuyerAllocation(buyer1, 1);
-        (, , uint256 b2CliffReleasable) = presale.getBuyerAllocation(buyer2, 2);
+        (,, uint256 b1CliffReleasable) = presale.getBuyerAllocation(buyer1, 1);
+        (,, uint256 b2CliffReleasable) = presale.getBuyerAllocation(buyer2, 2);
         assertEq(b1CliffReleasable, 0, "Strategic must have 0 releasable during 14-day cliff");
         assertEq(b2CliffReleasable, 0, "Private must have 0 releasable during 14-day cliff");
 
@@ -356,7 +356,7 @@ contract FullProtocolScenariosTest is Test {
 
         // Warp 10 years later — zero over-minting
         vm.warp(cliffEnd + 365 days + 3650 days);
-        (, , uint256 b1After10Y) = presale.getBuyerAllocation(buyer1, 1);
+        (,, uint256 b1After10Y) = presale.getBuyerAllocation(buyer1, 1);
         assertEq(b1After10Y, 0, "Zero releasable 10 years after vesting ends");
 
         vm.prank(buyer1);
@@ -704,7 +704,7 @@ contract FullProtocolScenariosTest is Test {
         assertEq(wxmr.balanceOf(relayerGood), 1.5e18, "Relayer compensated in wXMR");
 
         // Verify invoice was created on-chain via gas-abstracted call
-        (, address claimAddr, address invToken, uint256 invAmt, bool settled, ) = invoices.invoices(relayedInvId);
+        (, address claimAddr, address invToken, uint256 invAmt, bool settled,) = invoices.invoices(relayedInvId);
         assertEq(claimAddr, merchant);
         assertEq(invToken, address(wxmr));
         assertEq(invAmt, 50e18);
@@ -900,19 +900,11 @@ contract FullProtocolScenariosTest is Test {
 
         // Step 6: Relayer executes AI ticket redemption via GasRelayer!
         bytes memory redeemCall = abi.encodeWithSelector(
-            UsageVault.redeemUsageTicket.selector,
-            aiCommit,
-            keccak256("e2e_ai_ticket_1"),
-            2_500e18,
-            aiSecret
+            UsageVault.redeemUsageTicket.selector, aiCommit, keccak256("e2e_ai_ticket_1"), 2_500e18, aiSecret
         );
         vm.prank(relayerGood);
         gasRelayer.executeWithGasAbstraction(
-            keccak256("e2e_gas_nullifier"),
-            address(ser),
-            50e18,
-            address(aiVault),
-            redeemCall
+            keccak256("e2e_gas_nullifier"), address(ser), 50e18, address(aiVault), redeemCall
         );
 
         assertEq(ser.balanceOf(relayerGood), 50e18, "Relayer earned 50 SER fee");
@@ -930,7 +922,7 @@ contract FullProtocolScenariosTest is Test {
         vm.prank(buyer3);
         presale.buyWithETH{value: 1 ether}(3);
 
-        (uint256 total, , ) = presale.getBuyerAllocation(buyer3, 3);
+        (uint256 total,,) = presale.getBuyerAllocation(buyer3, 3);
         assertEq(total, 99_500e18, "ETH purchase reflects updated $4,000 ETH/USD price");
 
         // Treasury tightens Tier 3 hardCap right to current sold amount
@@ -962,7 +954,7 @@ contract FullProtocolScenariosTest is Test {
 
         vm.startPrank(buyer3);
         presale.buyWithETH{value: 2 ether}(3);
-        (bool ok, ) = address(presale).call{value: 3 ether}("");
+        (bool ok,) = address(presale).call{value: 3 ether}("");
         require(ok, "receive failed");
         vm.stopPrank();
 

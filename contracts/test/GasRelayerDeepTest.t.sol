@@ -26,19 +26,15 @@ contract MockExecutionTarget {
         revert("MockExecutionTarget: intentional failure");
     }
 
-    function reenterRelayer(
-        address relayer,
-        bytes32 nullifier,
-        address feeToken,
-        uint256 feeAmount
-    ) external {
-        GasRelayer(relayer).executeWithGasAbstraction(
-            nullifier,
-            feeToken,
-            feeAmount,
-            address(this),
-            abi.encodeWithSelector(this.increment.selector, 1, "reenter")
-        );
+    function reenterRelayer(address relayer, bytes32 nullifier, address feeToken, uint256 feeAmount) external {
+        GasRelayer(relayer)
+            .executeWithGasAbstraction(
+                nullifier,
+                feeToken,
+                feeAmount,
+                address(this),
+                abi.encodeWithSelector(this.increment.selector, 1, "reenter")
+            );
     }
 }
 
@@ -199,11 +195,8 @@ contract GasRelayerDeepTest is Test {
 
         bytes32 nullifier = keccak256("ser_exec_nullifier");
         uint256 feeAmount = 25e18;
-        bytes memory callData = abi.encodeWithSelector(
-            MockExecutionTarget.increment.selector,
-            77,
-            "Hello Seraph Relayer"
-        );
+        bytes memory callData =
+            abi.encodeWithSelector(MockExecutionTarget.increment.selector, 77, "Hello Seraph Relayer");
 
         uint256 relayerSerBefore = ser.balanceOf(relayer);
         uint256 poolBefore = relayerContract.voucherPoolBalance(address(ser));
@@ -212,13 +205,8 @@ contract GasRelayerDeepTest is Test {
         emit RelayedCall(nullifier, address(target), relayer, address(ser), feeAmount);
 
         vm.prank(relayer);
-        bytes memory result = relayerContract.executeWithGasAbstraction(
-            nullifier,
-            address(ser),
-            feeAmount,
-            address(target),
-            callData
-        );
+        bytes memory result =
+            relayerContract.executeWithGasAbstraction(nullifier, address(ser), feeAmount, address(target), callData);
 
         // Verify decoded return values
         (uint256 newCount, bytes32 msgHash) = abi.decode(result, (uint256, bytes32));
@@ -245,23 +233,13 @@ contract GasRelayerDeepTest is Test {
 
         bytes32 nullifier = keccak256("wxmr_exec_nullifier");
         uint256 feeAmount = 0.75e18;
-        bytes memory callData = abi.encodeWithSelector(
-            MockExecutionTarget.increment.selector,
-            123,
-            "Private Relaying"
-        );
+        bytes memory callData = abi.encodeWithSelector(MockExecutionTarget.increment.selector, 123, "Private Relaying");
 
         uint256 relayerWxmrBefore = wxmr.balanceOf(relayer);
         uint256 poolBefore = relayerContract.voucherPoolBalance(address(wxmr));
 
         vm.prank(relayer);
-        relayerContract.executeWithGasAbstraction(
-            nullifier,
-            address(wxmr),
-            feeAmount,
-            address(target),
-            callData
-        );
+        relayerContract.executeWithGasAbstraction(nullifier, address(wxmr), feeAmount, address(target), callData);
 
         assertEq(target.counter(), 123);
         assertEq(wxmr.balanceOf(relayer), relayerWxmrBefore + feeAmount);
@@ -280,11 +258,7 @@ contract GasRelayerDeepTest is Test {
         uint256 poolBefore = relayerContract.voucherPoolBalance(address(ser));
         uint256 relayerBalBefore = ser.balanceOf(relayer);
 
-        bytes memory callData = abi.encodeWithSelector(
-            MockExecutionTarget.increment.selector,
-            10,
-            "Zero fee call"
-        );
+        bytes memory callData = abi.encodeWithSelector(MockExecutionTarget.increment.selector, 10, "Zero fee call");
 
         vm.prank(relayer);
         relayerContract.executeWithGasAbstraction(
@@ -317,13 +291,7 @@ contract GasRelayerDeepTest is Test {
         );
 
         vm.prank(relayer);
-        relayerContract.executeWithGasAbstraction(
-            nullifier,
-            address(ser),
-            5e18,
-            address(invoices),
-            callData
-        );
+        relayerContract.executeWithGasAbstraction(nullifier, address(ser), 5e18, address(invoices), callData);
 
         assertTrue(relayerContract.usedVouchers(nullifier));
         assertEq(ser.balanceOf(relayer), 5e18);
@@ -344,64 +312,28 @@ contract GasRelayerDeepTest is Test {
         bytes32 nullifier = keccak256("attack_nullifier_01");
 
         // 1. FORBIDDEN TARGET: seraphToken
-        bytes memory drainSerCall = abi.encodeWithSelector(
-            IERC20.transfer.selector,
-            eve,
-            100e18
-        );
+        bytes memory drainSerCall = abi.encodeWithSelector(IERC20.transfer.selector, eve, 100e18);
         vm.prank(relayer);
         vm.expectRevert(GasRelayer.ForbiddenTarget.selector);
-        relayerContract.executeWithGasAbstraction(
-            nullifier,
-            address(ser),
-            1e18,
-            address(ser),
-            drainSerCall
-        );
+        relayerContract.executeWithGasAbstraction(nullifier, address(ser), 1e18, address(ser), drainSerCall);
 
         // 2. FORBIDDEN TARGET: xmrToken
-        bytes memory drainXmrCall = abi.encodeWithSelector(
-            IERC20.transfer.selector,
-            eve,
-            10e18
-        );
+        bytes memory drainXmrCall = abi.encodeWithSelector(IERC20.transfer.selector, eve, 10e18);
         vm.prank(relayer);
         vm.expectRevert(GasRelayer.ForbiddenTarget.selector);
-        relayerContract.executeWithGasAbstraction(
-            nullifier,
-            address(ser),
-            1e18,
-            address(wxmr),
-            drainXmrCall
-        );
+        relayerContract.executeWithGasAbstraction(nullifier, address(ser), 1e18, address(wxmr), drainXmrCall);
 
         // 3. FORBIDDEN TARGET: address(this) [GasRelayer itself]
-        bytes memory selfCall = abi.encodeWithSelector(
-            GasRelayer.fundGasVoucher.selector,
-            address(ser),
-            10e18,
-            keccak256("hack")
-        );
+        bytes memory selfCall =
+            abi.encodeWithSelector(GasRelayer.fundGasVoucher.selector, address(ser), 10e18, keccak256("hack"));
         vm.prank(relayer);
         vm.expectRevert(GasRelayer.ForbiddenTarget.selector);
-        relayerContract.executeWithGasAbstraction(
-            nullifier,
-            address(ser),
-            1e18,
-            address(relayerContract),
-            selfCall
-        );
+        relayerContract.executeWithGasAbstraction(nullifier, address(ser), 1e18, address(relayerContract), selfCall);
 
         // 4. FORBIDDEN TARGET: address(0)
         vm.prank(relayer);
         vm.expectRevert(GasRelayer.ForbiddenTarget.selector);
-        relayerContract.executeWithGasAbstraction(
-            nullifier,
-            address(ser),
-            1e18,
-            address(0),
-            hex"00"
-        );
+        relayerContract.executeWithGasAbstraction(nullifier, address(ser), 1e18, address(0), hex"00");
 
         // 5. FORBIDDEN TARGET: Registered fee token (tokenGasRate[target] != 0)
         vm.prank(owner);
@@ -409,13 +341,7 @@ contract GasRelayerDeepTest is Test {
 
         vm.prank(relayer);
         vm.expectRevert(GasRelayer.ForbiddenTarget.selector);
-        relayerContract.executeWithGasAbstraction(
-            nullifier,
-            address(ser),
-            1e18,
-            address(dai),
-            hex"1234"
-        );
+        relayerContract.executeWithGasAbstraction(nullifier, address(ser), 1e18, address(dai), hex"1234");
 
         // Crucial invariant: Nullifier must NOT have been consumed by any failed forbidden call
         assertFalse(relayerContract.usedVouchers(nullifier));
@@ -435,78 +361,38 @@ contract GasRelayerDeepTest is Test {
         vm.stopPrank();
 
         bytes32 nullifier = keccak256("nullifier_to_replay");
-        bytes memory callData = abi.encodeWithSelector(
-            MockExecutionTarget.increment.selector,
-            1,
-            "First call"
-        );
+        bytes memory callData = abi.encodeWithSelector(MockExecutionTarget.increment.selector, 1, "First call");
 
         // First execution succeeds
         vm.prank(relayer);
-        relayerContract.executeWithGasAbstraction(
-            nullifier,
-            address(ser),
-            10e18,
-            address(target),
-            callData
-        );
+        relayerContract.executeWithGasAbstraction(nullifier, address(ser), 10e18, address(target), callData);
         assertTrue(relayerContract.usedVouchers(nullifier));
 
         // ATTACK 1: Exact identical replay
         vm.prank(relayer);
         vm.expectRevert(GasRelayer.VoucherAlreadyUsed.selector);
-        relayerContract.executeWithGasAbstraction(
-            nullifier,
-            address(ser),
-            10e18,
-            address(target),
-            callData
-        );
+        relayerContract.executeWithGasAbstraction(nullifier, address(ser), 10e18, address(target), callData);
 
         // ATTACK 2: Replay with different feeToken
         vm.prank(relayer);
         vm.expectRevert(GasRelayer.VoucherAlreadyUsed.selector);
-        relayerContract.executeWithGasAbstraction(
-            nullifier,
-            address(wxmr),
-            1e18,
-            address(target),
-            callData
-        );
+        relayerContract.executeWithGasAbstraction(nullifier, address(wxmr), 1e18, address(target), callData);
 
         // ATTACK 3: Replay with different target and data
         vm.prank(relayer);
         vm.expectRevert(GasRelayer.VoucherAlreadyUsed.selector);
-        relayerContract.executeWithGasAbstraction(
-            nullifier,
-            address(ser),
-            5e18,
-            address(invoices),
-            hex"1234"
-        );
+        relayerContract.executeWithGasAbstraction(nullifier, address(ser), 5e18, address(invoices), hex"1234");
 
         // ATTACK 4: Replay with 0 fee
         vm.prank(relayer);
         vm.expectRevert(GasRelayer.VoucherAlreadyUsed.selector);
-        relayerContract.executeWithGasAbstraction(
-            nullifier,
-            address(ser),
-            0,
-            address(target),
-            callData
-        );
+        relayerContract.executeWithGasAbstraction(nullifier, address(ser), 0, address(target), callData);
     }
 
     function test_ExecuteWithGasAbstraction_ZeroNullifier_Reverts() public {
         vm.prank(relayer);
         vm.expectRevert(GasRelayer.VoucherAlreadyUsed.selector);
-        relayerContract.executeWithGasAbstraction(
-            bytes32(0),
-            address(ser),
-            0,
-            address(target),
-            hex"00"
-        );
+        relayerContract.executeWithGasAbstraction(bytes32(0), address(ser), 0, address(target), hex"00");
     }
 
     /* ========================================================================= */
@@ -528,13 +414,7 @@ contract GasRelayerDeepTest is Test {
 
         vm.prank(relayer);
         vm.expectRevert(GasRelayer.TargetCallFailed.selector);
-        relayerContract.executeWithGasAbstraction(
-            nullifier,
-            address(ser),
-            50e18,
-            address(target),
-            failingCall
-        );
+        relayerContract.executeWithGasAbstraction(nullifier, address(ser), 50e18, address(target), failingCall);
 
         // Whole transaction rolls back:
         // Relayer did not receive fee
@@ -553,22 +433,12 @@ contract GasRelayerDeepTest is Test {
         vm.stopPrank();
 
         bytes32 nullifier = keccak256("excessive_fee_nullifier");
-        bytes memory callData = abi.encodeWithSelector(
-            MockExecutionTarget.increment.selector,
-            1,
-            "test"
-        );
+        bytes memory callData = abi.encodeWithSelector(MockExecutionTarget.increment.selector, 1, "test");
 
         // Relayer requests 50.0001e18 fee from a 50e18 pool
         vm.prank(relayer);
         vm.expectRevert(GasRelayer.InsufficientVoucherPool.selector);
-        relayerContract.executeWithGasAbstraction(
-            nullifier,
-            address(ser),
-            50.0001e18,
-            address(target),
-            callData
-        );
+        relayerContract.executeWithGasAbstraction(nullifier, address(ser), 50.0001e18, address(target), callData);
     }
 
     function test_ExecuteWithGasAbstraction_Reentrancy_Blocked() public {
@@ -582,23 +452,13 @@ contract GasRelayerDeepTest is Test {
         bytes32 innerNullifier = keccak256("inner_nullifier");
 
         bytes memory attackData = abi.encodeWithSelector(
-            MockExecutionTarget.reenterRelayer.selector,
-            address(relayerContract),
-            innerNullifier,
-            address(ser),
-            10e18
+            MockExecutionTarget.reenterRelayer.selector, address(relayerContract), innerNullifier, address(ser), 10e18
         );
 
         vm.prank(relayer);
         // Reentrancy is blocked by nonReentrant on GasRelayer -> causes the inner call to revert
         // which triggers TargetCallFailed in the outer call
         vm.expectRevert(GasRelayer.TargetCallFailed.selector);
-        relayerContract.executeWithGasAbstraction(
-            outerNullifier,
-            address(ser),
-            10e18,
-            address(target),
-            attackData
-        );
+        relayerContract.executeWithGasAbstraction(outerNullifier, address(ser), 10e18, address(target), attackData);
     }
 }

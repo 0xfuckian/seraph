@@ -103,13 +103,7 @@ contract ProtocolModulesTest is Test {
         );
 
         vm.prank(relayer);
-        gasRelayer.executeWithGasAbstraction(
-            voucherNullifier,
-            address(wxmr),
-            0.25e18,
-            address(invoices),
-            callData
-        );
+        gasRelayer.executeWithGasAbstraction(voucherNullifier, address(wxmr), 0.25e18, address(invoices), callData);
 
         assertEq(wxmr.balanceOf(relayer), 0.25e18);
     }

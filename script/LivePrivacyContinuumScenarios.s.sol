@@ -14,23 +14,21 @@ import "../contracts/modules/messaging/InvoiceRegistry.sol";
  * @notice Multi-actor end-to-end simulation of the Seraph Privacy Continuum.
  */
 contract LivePrivacyContinuumScenarios is Script, StdCheats {
-    address constant SER_ADDR          = 0x1d734185220Bd4024c60fC8C1897Aefc08Bcb16F;
+    address constant SER_ADDR = 0x1d734185220Bd4024c60fC8C1897Aefc08Bcb16F;
     address constant PRIVACY_POOL_ADDR = 0x06fA7CAfC96Bf988F3d601138976a448e8B99aE6;
-    address constant BRIDGE_ADDR       = 0x5dbdC525f9eA7D3076b285Bf77753a7A1AA10E8d;
-    address constant RELAYER_ADDR      = 0xD8dB7BE5F9CC850B1047E0A2D856c454cC617885;
-    address constant INVOICE_ADDR      = 0xF5eC3a1CE0A1e2905401A78984b44631e931A733;
+    address constant BRIDGE_ADDR = 0x5dbdC525f9eA7D3076b285Bf77753a7A1AA10E8d;
+    address constant RELAYER_ADDR = 0xD8dB7BE5F9CC850B1047E0A2D856c454cC617885;
+    address constant INVOICE_ADDR = 0xF5eC3a1CE0A1e2905401A78984b44631e931A733;
 
     function run() external {
-        uint256 deployerKey = vm.envOr(
-            "PRIVATE_KEY",
-            uint256(0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80)
-        );
-        uint256 aliceKey   = uint256(keccak256("seraph_alice_privacy_actor"));
-        uint256 bobKey     = uint256(keccak256("seraph_bob_merchant_actor"));
+        uint256 deployerKey =
+            vm.envOr("PRIVATE_KEY", uint256(0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80));
+        uint256 aliceKey = uint256(keccak256("seraph_alice_privacy_actor"));
+        uint256 bobKey = uint256(keccak256("seraph_bob_merchant_actor"));
         uint256 relayerKey = uint256(keccak256("seraph_bonded_relayer_actor"));
 
-        address alice   = vm.addr(aliceKey);
-        address bob     = vm.addr(bobKey);
+        address alice = vm.addr(aliceKey);
+        address bob = vm.addr(bobKey);
         address relayer = vm.addr(relayerKey);
 
         console.log("=====================================================");
@@ -75,7 +73,7 @@ contract LivePrivacyContinuumScenarios is Script, StdCheats {
 
         vm.startBroadcast(deployerKey);
         if (alice.balance < 0.05 ether) {
-            (bool s1, ) = payable(alice).call{value: 0.05 ether}("");
+            (bool s1,) = payable(alice).call{value: 0.05 ether}("");
             require(s1, "Fund alice ETH failed");
         }
         vm.stopBroadcast();
@@ -88,7 +86,8 @@ contract LivePrivacyContinuumScenarios is Script, StdCheats {
         PrivacyPool pool = PrivacyPool(payable(PRIVACY_POOL_ADDR));
 
         bytes32 blinding = keccak256(abi.encodePacked("alice_blinding_secret_1"));
-        bytes32 commitment = keccak256(abi.encodePacked("seraph_note_commitment_v1", uint8(0), uint256(50 ether), alice, blinding));
+        bytes32 commitment =
+            keccak256(abi.encodePacked("seraph_note_commitment_v1", uint8(0), uint256(50 ether), alice, blinding));
         bytes memory encMemo = abi.encodePacked("Private note deposit 50 SER");
 
         pool.shield(50 ether, commitment, encMemo);
@@ -103,14 +102,7 @@ contract LivePrivacyContinuumScenarios is Script, StdCheats {
         bytes32 stealthRecipient = keccak256(abi.encodePacked("bob_stealth_ephemeral_pubkey"));
         bytes memory invoiceMemo = abi.encodePacked("Confidential API Subscription: Tier 3 compute");
 
-        invoiceRegistry.createInvoice(
-            invoiceId,
-            stealthRecipient,
-            bob,
-            SER_ADDR,
-            25 ether,
-            invoiceMemo
-        );
+        invoiceRegistry.createInvoice(invoiceId, stealthRecipient, bob, SER_ADDR, 25 ether, invoiceMemo);
         console.log("[3] Bob created Invoice #88921 for 25 SER on InvoiceRegistry");
         vm.stopBroadcast();
     }
@@ -124,10 +116,7 @@ contract LivePrivacyContinuumScenarios is Script, StdCheats {
         voucherNullifier = keccak256(abi.encodePacked("seraph_gas_nullifier", voucherSecret));
         bytes32 voucherCommitment = keccak256(
             abi.encodePacked(
-                "seraph_gas_voucher_v1",
-                voucherSecret,
-                bytes32(uint256(5 ether)),
-                bytes32(uint256(uint160(SER_ADDR)))
+                "seraph_gas_voucher_v1", voucherSecret, bytes32(uint256(5 ether)), bytes32(uint256(uint160(SER_ADDR)))
             )
         );
 
@@ -138,7 +127,12 @@ contract LivePrivacyContinuumScenarios is Script, StdCheats {
         vm.stopBroadcast();
     }
 
-    function _executeRelayedSettlement(uint256 aliceKey, uint256 relayerKey, bytes32 invoiceId, bytes32 voucherNullifier) internal {
+    function _executeRelayedSettlement(
+        uint256 aliceKey,
+        uint256 relayerKey,
+        bytes32 invoiceId,
+        bytes32 voucherNullifier
+    ) internal {
         // Alice settles merchant invoice directly on-chain
         vm.startBroadcast(aliceKey);
         InvoiceRegistry invoiceRegistry = InvoiceRegistry(INVOICE_ADDR);
@@ -153,19 +147,11 @@ contract LivePrivacyContinuumScenarios is Script, StdCheats {
         bytes32 ephemeralPubkey = keccak256(abi.encodePacked("alice_ephemeral_msg_key"));
         bytes memory encryptedReceipt = abi.encodePacked("Order #88921 Confirmed: Payment TX Verified on Base Sepolia");
         bytes memory msgCalldata = abi.encodeWithSelector(
-            invoiceRegistry.sendEncryptedMessage.selector,
-            bobStealth,
-            ephemeralPubkey,
-            encryptedReceipt
+            invoiceRegistry.sendEncryptedMessage.selector, bobStealth, ephemeralPubkey, encryptedReceipt
         );
 
-        GasRelayer(RELAYER_ADDR).executeWithGasAbstraction(
-            voucherNullifier,
-            SER_ADDR,
-            1 ether,
-            INVOICE_ADDR,
-            msgCalldata
-        );
+        GasRelayer(RELAYER_ADDR)
+            .executeWithGasAbstraction(voucherNullifier, SER_ADDR, 1 ether, INVOICE_ADDR, msgCalldata);
         console.log("[6] Relayer executed zero-gas encrypted message delivery. Relayer earned 1 SER.");
         vm.stopBroadcast();
     }

@@ -299,7 +299,9 @@ contract PermitTaxAndPresaleStressTest is Test {
         uint256 treasuryBeforeLock = token.balanceOf(treasury);
         vm.prank(alice);
         token.lockForBridge(bob, 100_000e18, bytes32(uint256(8453)));
-        assertEq(token.balanceOf(treasury), treasuryBeforeLock + 100_000e18, "Bridge lock transfers to treasury untaxed");
+        assertEq(
+            token.balanceOf(treasury), treasuryBeforeLock + 100_000e18, "Bridge lock transfers to treasury untaxed"
+        );
         assertEq(token.totalSupply() + totalBurned, totalMinted);
 
         // Step 8: Bridge mints 75,000 SER to Bob via receiveFromBridge
@@ -338,12 +340,7 @@ contract PermitTaxAndPresaleStressTest is Test {
     }
 
     function testFuzz_SupplyConservation_RandomActionSequence(uint256 seed, uint256[16] memory rawAmounts) public {
-        address[4] memory actors = [
-            makeAddr("actor0"),
-            makeAddr("actor1"),
-            makeAddr("actor2"),
-            makeAddr("actor3")
-        ];
+        address[4] memory actors = [makeAddr("actor0"), makeAddr("actor1"), makeAddr("actor2"), makeAddr("actor3")];
 
         uint256 totalMinted = 0;
         uint256 totalBurned = 0;
@@ -430,12 +427,16 @@ contract PermitTaxAndPresaleStressTest is Test {
             }
 
             // Invariants checked after every step
-            assertEq(token.totalSupply() + totalBurned, totalMinted, "Invariant violated: totalSupply + totalBurned != totalMinted");
+            assertEq(
+                token.totalSupply() + totalBurned,
+                totalMinted,
+                "Invariant violated: totalSupply + totalBurned != totalMinted"
+            );
             assertLe(token.totalSupply(), token.MAX_SUPPLY(), "Invariant violated: totalSupply > MAX_SUPPLY");
 
             uint256 sumBalances = token.balanceOf(treasury) + token.balanceOf(address(token))
-                + token.balanceOf(actors[0]) + token.balanceOf(actors[1])
-                + token.balanceOf(actors[2]) + token.balanceOf(actors[3]);
+                + token.balanceOf(actors[0]) + token.balanceOf(actors[1]) + token.balanceOf(actors[2])
+                + token.balanceOf(actors[3]);
             assertEq(sumBalances, token.totalSupply(), "Invariant violated: sum of balances != totalSupply");
         }
     }
@@ -534,11 +535,7 @@ contract PermitTaxAndPresaleStressTest is Test {
         assertEq(usdtFees, s.usdtFees, "feesCollectedUSDT mismatch");
         assertEq(usdcFees, s.usdcFees, "feesCollectedUSDC mismatch");
         assertEq(ethFees, s.ethFees, "feesCollectedETH mismatch");
-        assertEq(
-            totalFeesUSD,
-            s.usdtFees + s.usdcFees + (s.ethFees * 3200) / 1e18,
-            "totalFeesUSD formula mismatch"
-        );
+        assertEq(totalFeesUSD, s.usdtFees + s.usdcFees + (s.ethFees * 3200) / 1e18, "totalFeesUSD formula mismatch");
 
         (uint256 sold, uint256 cap) = presale.getProgress();
         assertEq(sold, s.soldTier1 + s.soldTier2 + s.soldTier3, "getProgress sold mismatch");
@@ -572,14 +569,14 @@ contract PermitTaxAndPresaleStressTest is Test {
         // ── Prove 100.000000% release for all 20 buyers and 0 extra wei claimable ──
         _verifyFinalVestingCompleteness(buyers, s, cliffEnd);
 
-        assertEq(token.totalSupply(), presale.totalTokensSold(), "Total minted SER must equal totalTokensSold to the exact wei");
+        assertEq(
+            token.totalSupply(),
+            presale.totalTokensSold(),
+            "Total minted SER must equal totalTokensSold to the exact wei"
+        );
     }
 
-    function _runMonthlyVestingClaims(
-        address[20] memory buyers,
-        ShadowState memory s,
-        uint256 cliffEnd
-    ) internal {
+    function _runMonthlyVestingClaims(address[20] memory buyers, ShadowState memory s, uint256 cliffEnd) internal {
         for (uint256 month = 1; month <= 12; month++) {
             uint256 targetTime = month < 12 ? cliffEnd + (month * 30 days) : cliffEnd + 365 days;
             vm.warp(targetTime);
@@ -593,7 +590,9 @@ contract PermitTaxAndPresaleStressTest is Test {
                         uint256 balBefore = token.balanceOf(buyers[i]);
                         vm.prank(buyers[i]);
                         presale.claimVested(tierId);
-                        assertEq(token.balanceOf(buyers[i]) - balBefore, releasable, "Minted amount must match releasable");
+                        assertEq(
+                            token.balanceOf(buyers[i]) - balBefore, releasable, "Minted amount must match releasable"
+                        );
                     }
                 }
             }
@@ -620,11 +619,9 @@ contract PermitTaxAndPresaleStressTest is Test {
         }
     }
 
-    function _verifyFinalVestingCompleteness(
-        address[20] memory buyers,
-        ShadowState memory s,
-        uint256 cliffEnd
-    ) internal {
+    function _verifyFinalVestingCompleteness(address[20] memory buyers, ShadowState memory s, uint256 cliffEnd)
+        internal
+    {
         for (uint256 i = 0; i < 20; i++) {
             uint256 expectedBuyerSum = 0;
             for (uint256 tierId = 1; tierId <= 3; tierId++) {
@@ -649,7 +646,9 @@ contract PermitTaxAndPresaleStressTest is Test {
                     presale.claimVested(tierId);
                 }
             }
-            assertEq(token.balanceOf(buyers[i]), expectedBuyerSum, "Buyer token balance must equal exact sum of allocations");
+            assertEq(
+                token.balanceOf(buyers[i]), expectedBuyerSum, "Buyer token balance must equal exact sum of allocations"
+            );
         }
     }
 

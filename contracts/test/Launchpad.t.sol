@@ -35,9 +35,9 @@ contract LaunchpadTest is Test {
             model: SeraphLaunchpad.LaunchModel.BondingCurve,
             totalSupply: SUPPLY,
             feeWallet: feeWallet,
-            buyFeeBps: 250,          // 2.5% creator buy fee
-            sellFeeBps: 250,         // 2.5% creator sell fee
-            creatorShareBps: 10000,  // 100% to creator
+            buyFeeBps: 250, // 2.5% creator buy fee
+            sellFeeBps: 250, // 2.5% creator sell fee
+            creatorShareBps: 10000, // 100% to creator
             buybackShareBps: 0,
             dividendsShareBps: 0,
             liquidityShareBps: 0,

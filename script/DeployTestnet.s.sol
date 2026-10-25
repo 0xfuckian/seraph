@@ -21,9 +21,13 @@ import "../contracts/modules/stablecoin/CollateralVault.sol";
 contract TestnetFaucetERC20 is ERC20 {
     uint8 private immutable _dec;
 
-    constructor(string memory name_, string memory symbol_, uint8 decimals_, address initialHolder, uint256 initialUnits)
-        ERC20(name_, symbol_)
-    {
+    constructor(
+        string memory name_,
+        string memory symbol_,
+        uint8 decimals_,
+        address initialHolder,
+        uint256 initialUnits
+    ) ERC20(name_, symbol_) {
         _dec = decimals_;
         _mint(initialHolder, initialUnits * (10 ** decimals_));
     }
@@ -47,10 +51,8 @@ contract TestnetFaucetERC20 is ERC20 {
  */
 contract DeployTestnet is Script {
     function run() external {
-        uint256 deployerKey = vm.envOr(
-            "PRIVATE_KEY",
-            uint256(0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80)
-        );
+        uint256 deployerKey =
+            vm.envOr("PRIVATE_KEY", uint256(0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80));
         address deployer = vm.addr(deployerKey);
         address treasury = vm.envOr("TREASURY_ADDRESS", address(0xa287FC2B8f89023eF1c82af09aee351cCdDa8a76));
         uint256 tgeTimestamp = vm.envOr("TGE_TIMESTAMP", block.timestamp + 7 days);

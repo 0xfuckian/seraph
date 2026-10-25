@@ -41,7 +41,7 @@ contract LaunchpadInvariantHandler is Test {
         ethAmount = bound(ethAmount, 0.0005 ether, 2 ether);
         vm.deal(actor, actor.balance + ethAmount);
 
-        (uint256 quotedTokens, , , ) = launchpad.quoteBuy(address(token), ethAmount);
+        (uint256 quotedTokens,,,) = launchpad.quoteBuy(address(token), ethAmount);
         if (quotedTokens == 0) return;
 
         vm.prank(actor);
@@ -57,7 +57,7 @@ contract LaunchpadInvariantHandler is Test {
         uint256 sellAmt = (bal * sellBps) / 10_000;
         if (sellAmt == 0) return;
 
-        (uint256 netOut, , ) = launchpad.quoteSell(address(token), sellAmt);
+        (uint256 netOut,,) = launchpad.quoteSell(address(token), sellAmt);
         if (netOut == 0) return;
 
         vm.startPrank(actor);

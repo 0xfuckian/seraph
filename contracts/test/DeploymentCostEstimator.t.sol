@@ -62,7 +62,8 @@ contract DeploymentCostEstimatorTest is Test {
 
         // 5. SeraphPresale
         gStart = gasleft();
-        SeraphPresale presale = new SeraphPresale(address(ser), ctx.treasury, ctx.tUsdt, ctx.tUsdc, block.timestamp + 30 days);
+        SeraphPresale presale =
+            new SeraphPresale(address(ser), ctx.treasury, ctx.tUsdt, ctx.tUsdc, block.timestamp + 30 days);
         gEnd = gasleft();
         ctx.totalGas += (gStart - gEnd);
         console.log("5.  SeraphPresale:               ", gStart - gEnd, "gas");

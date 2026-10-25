@@ -38,10 +38,7 @@ contract DeployPresale is Script {
         // ── Resolve configurable parameters ───────────────────────────
         address treasury = vm.envOr("TREASURY_ADDRESS", address(0xa287FC2B8f89023eF1c82af09aee351cCdDa8a76));
 
-        address usdtAddress = vm.envOr(
-            "USDT_ADDRESS",
-            address(0x0000000000000000000000000000000000000001)
-        );
+        address usdtAddress = vm.envOr("USDT_ADDRESS", address(0x0000000000000000000000000000000000000001));
 
         address usdcAddress = vm.envOr(
             "USDC_ADDRESS",
@@ -74,18 +71,12 @@ contract DeployPresale is Script {
         SeraphToken token = new SeraphToken(
             address(0), // privacyPool placeholder
             treasury,
-            address(0)  // presale — set below
+            address(0) // presale — set below
         );
         console.log("[1/3] SeraphToken deployed at:  ", address(token));
 
         // 2. Deploy SeraphPresale
-        SeraphPresale presale = new SeraphPresale(
-            address(token),
-            treasury,
-            usdtAddress,
-            usdcAddress,
-            tgeTimestamp
-        );
+        SeraphPresale presale = new SeraphPresale(address(token), treasury, usdtAddress, usdcAddress, tgeTimestamp);
         console.log("[2/3] SeraphPresale deployed at:", address(presale));
 
         // 3. Link token ↔ presale

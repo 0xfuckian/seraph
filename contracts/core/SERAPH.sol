@@ -85,9 +85,8 @@ contract SeraphToken is ERC20, ERC20Burnable, ERC20Permit {
     function _update(address from, address to, uint256 amount) internal virtual override {
         // Only apply sell tax on regular transfers (not mint/burn, not from presale, not from/to self, not exempt)
         bool isSell = from != address(0) && to != address(0) && from != address(this) && to != address(this)
-            && from != presale && to != presale && from != treasury && to != treasury
-            && from != privacyPool && to != privacyPool
-            && !taxExempt[from] && !taxExempt[to];
+            && from != presale && to != presale && from != treasury && to != treasury && from != privacyPool
+            && to != privacyPool && !taxExempt[from] && !taxExempt[to];
 
         if (sellTaxEnabled && isSell && amount > 0) {
             uint256 tax = (amount * SELL_TAX_BPS) / 10000;
@@ -144,7 +143,7 @@ contract SeraphToken is ERC20, ERC20Burnable, ERC20Permit {
     function approveAndShield(uint256 amount, bytes32 commitment) external {
         require(privacyPool != address(0), "SeraphToken: privacyPool not set");
         _approve(msg.sender, privacyPool, amount);
-        (bool success, ) = privacyPool.call(
+        (bool success,) = privacyPool.call(
             abi.encodeWithSignature("shieldFor(address,uint256,bytes32,bytes)", msg.sender, amount, commitment, "")
         );
         require(success, "SeraphToken: shield call failed");
@@ -154,16 +153,13 @@ contract SeraphToken is ERC20, ERC20Burnable, ERC20Permit {
     /**
      * @notice Unshield tokens from the privacy pool back to a public address.
      */
-    function unshield(bytes32 nullifier, uint256 amount, address recipient, bytes32 root, bytes calldata proof) external {
+    function unshield(bytes32 nullifier, uint256 amount, address recipient, bytes32 root, bytes calldata proof)
+        external
+    {
         require(privacyPool != address(0), "SeraphToken: privacyPool not set");
-        (bool success, ) = privacyPool.call(
+        (bool success,) = privacyPool.call(
             abi.encodeWithSignature(
-                "unshield(bytes32,uint256,address,bytes32,bytes)",
-                nullifier,
-                amount,
-                recipient,
-                root,
-                proof
+                "unshield(bytes32,uint256,address,bytes32,bytes)", nullifier, amount, recipient, root, proof
             )
         );
         require(success, "SeraphToken: unshield call failed");

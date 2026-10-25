@@ -78,11 +78,8 @@ contract GasRelayer is ReentrancyGuard {
         if (tokenGasRate[feeToken] == 0) revert UnsupportedFeeToken();
         if (voucherNullifier == bytes32(0) || usedVouchers[voucherNullifier]) revert VoucherAlreadyUsed();
         if (
-            target == address(0) ||
-            target == address(this) ||
-            target == seraphToken ||
-            target == xmrToken ||
-            tokenGasRate[target] != 0
+            target == address(0) || target == address(this) || target == seraphToken || target == xmrToken
+                || tokenGasRate[target] != 0
         ) revert ForbiddenTarget();
         if (feeAmount > voucherPoolBalance[feeToken]) revert InsufficientVoucherPool();
 

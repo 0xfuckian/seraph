@@ -22,15 +22,15 @@ import "./DeployTestnet.s.sol";
  */
 contract LiveTestnetScenarios is Script {
     address constant LAUNCHPAD_ADDR = 0xe0349E4cC431329207e98C5205062776e058A846;
-    address constant PRESALE_ADDR   = 0x2c4156e4bFE0bE6A4e683C7Be521E1cC10B798bE;
-    address constant TUSDT_ADDR     = 0x1C4b16a6d0f53a088144Bba6f1C0854b1cF05397;
-    address constant TUSDC_ADDR     = 0xA34a029ADC16c4E85C87E7851a2f3AA86867DFd0;
+    address constant PRESALE_ADDR = 0x2c4156e4bFE0bE6A4e683C7Be521E1cC10B798bE;
+    address constant TUSDT_ADDR = 0x1C4b16a6d0f53a088144Bba6f1C0854b1cF05397;
+    address constant TUSDC_ADDR = 0xA34a029ADC16c4E85C87E7851a2f3AA86867DFd0;
 
     function run() external {
         uint256 deployerKey = vm.envUint("PRIVATE_KEY");
-        uint256 creatorKey  = uint256(keccak256("seraph_creator_actor"));
-        uint256 buyer1Key   = uint256(keccak256("seraph_buyer1_actor"));
-        uint256 buyer2Key   = uint256(keccak256("seraph_buyer2_actor"));
+        uint256 creatorKey = uint256(keccak256("seraph_creator_actor"));
+        uint256 buyer1Key = uint256(keccak256("seraph_buyer1_actor"));
+        uint256 buyer2Key = uint256(keccak256("seraph_buyer2_actor"));
 
         console.log("=====================================================");
         console.log("  SERAPH PROTOCOL - MULTI-WALLET TESTNET SCENARIOS   ");
@@ -51,11 +51,11 @@ contract LiveTestnetScenarios is Script {
 
     function _fundActors(uint256 deployerKey, address creator, address buyer1, address buyer2) internal {
         vm.startBroadcast(deployerKey);
-        (bool s1, ) = payable(creator).call{value: 0.003 ether}("");
+        (bool s1,) = payable(creator).call{value: 0.003 ether}("");
         require(s1, "Fund creator failed");
-        (bool s2, ) = payable(buyer1).call{value: 0.003 ether}("");
+        (bool s2,) = payable(buyer1).call{value: 0.003 ether}("");
         require(s2, "Fund buyer1 failed");
-        (bool s3, ) = payable(buyer2).call{value: 0.003 ether}("");
+        (bool s3,) = payable(buyer2).call{value: 0.003 ether}("");
         require(s3, "Fund buyer2 failed");
         vm.stopBroadcast();
     }
@@ -137,13 +137,8 @@ contract LiveTestnetScenarios is Script {
         console.log("Total burned SPRIV:  ", 1_000_000_000e18 - LaunchToken(spriv).totalSupply());
     }
 
-    function _runPresaleScenario(
-        uint256 deployerKey,
-        uint256 buyer1Key,
-        uint256 buyer2Key,
-        address creator
-    ) internal {
-        SeraphPresale presale    = SeraphPresale(payable(PRESALE_ADDR));
+    function _runPresaleScenario(uint256 deployerKey, uint256 buyer1Key, uint256 buyer2Key, address creator) internal {
+        SeraphPresale presale = SeraphPresale(payable(PRESALE_ADDR));
         TestnetFaucetERC20 tUsdc = TestnetFaucetERC20(TUSDC_ADDR);
         TestnetFaucetERC20 tUsdt = TestnetFaucetERC20(TUSDT_ADDR);
 
@@ -169,8 +164,8 @@ contract LiveTestnetScenarios is Script {
         presale.buyWithStablecoin(2, 600e6, TUSDT_ADDR, creator);
         vm.stopBroadcast();
 
-        (uint256 b1Total, , ) = presale.getBuyerAllocation(vm.addr(buyer1Key), 1);
-        (uint256 b2Total, , ) = presale.getBuyerAllocation(vm.addr(buyer2Key), 2);
+        (uint256 b1Total,,) = presale.getBuyerAllocation(vm.addr(buyer1Key), 1);
+        (uint256 b2Total,,) = presale.getBuyerAllocation(vm.addr(buyer2Key), 2);
         console.log("Buyer1 Tier 1 SER:   ", b1Total);
         console.log("Buyer2 Tier 2 SER:   ", b2Total);
     }

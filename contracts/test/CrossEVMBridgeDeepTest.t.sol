@@ -30,9 +30,13 @@ contract CrossEVMBridgeDeepTest is Test {
 
     event RelayerBonded(address indexed relayer, uint256 totalBond);
     event RelayerUnbonded(address indexed relayer, uint256 amount, uint256 remainingBond);
-    event BatchSubmitted(uint256 indexed batchId, bytes32 indexed sourceChainId, bytes32 stateRoot, address indexed relayer);
+    event BatchSubmitted(
+        uint256 indexed batchId, bytes32 indexed sourceChainId, bytes32 stateRoot, address indexed relayer
+    );
     event BatchChallenged(uint256 indexed batchId, address indexed challenger, address indexed slashedRelayer);
-    event TokensLocked(uint256 indexed nonce, address indexed sender, address indexed recipient, uint256 amount, bytes32 destChainId);
+    event TokensLocked(
+        uint256 indexed nonce, address indexed sender, address indexed recipient, uint256 amount, bytes32 destChainId
+    );
     event TokensClaimed(uint256 indexed batchId, bytes32 indexed nullifier, address indexed recipient, uint256 amount);
     event Paused(address account);
     event Unpaused(address account);
@@ -65,7 +69,11 @@ contract CrossEVMBridgeDeepTest is Test {
     }
 
     // Helper to compute bridge leaf
-    function computeLeaf(bytes32 nullifier, address recipient, uint256 amount, bytes32 chainId) internal pure returns (bytes32) {
+    function computeLeaf(bytes32 nullifier, address recipient, uint256 amount, bytes32 chainId)
+        internal
+        pure
+        returns (bytes32)
+    {
         return keccak256(abi.encodePacked(nullifier, recipient, amount, chainId));
     }
 
@@ -278,7 +286,7 @@ contract CrossEVMBridgeDeepTest is Test {
         assertEq(bridge.relayerBonds(eve), 0);
 
         // Verify batch is marked challenged
-        (, , , , bool challenged) = bridge.batches(badBatchId);
+        (,,,, bool challenged) = bridge.batches(badBatchId);
         assertTrue(challenged);
 
         // 5. Cannot challenge the same batch again
@@ -323,7 +331,7 @@ contract CrossEVMBridgeDeepTest is Test {
         bridge.challengeBatch(batchId, challenger);
         assertEq(challenger.balance, challengerBalBefore);
 
-        (, , , , bool challenged) = bridge.batches(batchId);
+        (,,,, bool challenged) = bridge.batches(batchId);
         assertTrue(challenged);
     }
 

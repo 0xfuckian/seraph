@@ -92,7 +92,7 @@ contract LaunchToken is ERC20, ERC20Burnable, ReentrancyGuard {
         amount = pendingDividends[holder];
         require(amount > 0, "LaunchToken: nothing to claim");
         pendingDividends[holder] = 0;
-        (bool ok, ) = holder.call{value: amount}("");
+        (bool ok,) = holder.call{value: amount}("");
         require(ok, "LaunchToken: ETH transfer failed");
         emit DividendsClaimed(holder, amount);
     }
@@ -133,9 +133,9 @@ contract LaunchToken is ERC20, ERC20Burnable, ReentrancyGuard {
  */
 contract SeraphLaunchpad is ReentrancyGuard {
     uint16 public constant BPS = 10_000;
-    uint16 public constant PLATFORM_FEE_BPS = 100;      // Fixed 1.0% platform fee per side
-    uint16 public constant MAX_CREATOR_FEE_BPS = 250;   // Max 2.5% creator fee per side
-    uint16 public constant MAX_DEV_BUY_BPS = 1_000;     // Max 10.0% dev buy at launch
+    uint16 public constant PLATFORM_FEE_BPS = 100; // Fixed 1.0% platform fee per side
+    uint16 public constant MAX_CREATOR_FEE_BPS = 250; // Max 2.5% creator fee per side
+    uint16 public constant MAX_DEV_BUY_BPS = 1_000; // Max 10.0% dev buy at launch
     uint256 public constant MAX_TOTAL_SUPPLY = 1_000_000_000_000_000e18; // Max 1 Quadrillion tokens (prevents overflow)
 
     enum LaunchModel {
@@ -223,7 +223,9 @@ contract SeraphLaunchpad is ReentrancyGuard {
     );
     event Graduated(address indexed token, uint256 quoteReserve, uint256 tokenReserve);
     event FeesClaimed(address indexed recipient, uint256 amount);
-    event ConfigUpdated(address indexed platformFeeRecipient, uint256 launchFee, uint256 phantomQuote, uint256 graduationThreshold);
+    event ConfigUpdated(
+        address indexed platformFeeRecipient, uint256 launchFee, uint256 phantomQuote, uint256 graduationThreshold
+    );
 
     error Unauthorized();
     error InvalidMetadata();
@@ -263,11 +265,8 @@ contract SeraphLaunchpad is ReentrancyGuard {
         if (p.totalSupply < 1e18 || p.totalSupply > MAX_TOTAL_SUPPLY) revert InvalidSupply();
         if (p.buyFeeBps > MAX_CREATOR_FEE_BPS || p.sellFeeBps > MAX_CREATOR_FEE_BPS) revert InvalidFeeRate();
         if (
-            uint256(p.creatorShareBps) +
-            p.buybackShareBps +
-            p.dividendsShareBps +
-            p.liquidityShareBps +
-            p.platformShareBps != BPS
+            uint256(p.creatorShareBps) + p.buybackShareBps + p.dividendsShareBps + p.liquidityShareBps
+                    + p.platformShareBps != BPS
         ) revert InvalidFeeSplit();
         if (p.devBuyBps > MAX_DEV_BUY_BPS) revert InvalidDevBuy();
         if (msg.value < launchFee) revert InsufficientLaunchFee();
@@ -301,7 +300,7 @@ contract SeraphLaunchpad is ReentrancyGuard {
             uint256 maxDevTokens = (p.totalSupply * p.devBuyBps) / BPS;
             (, uint256 refund) = _executeBuy(token, devBuyEth, 0, maxDevTokens, msg.sender);
             if (refund > 0) {
-                (bool ok, ) = msg.sender.call{value: refund}("");
+                (bool ok,) = msg.sender.call{value: refund}("");
                 if (!ok) revert TransferFailed();
             }
         }
@@ -336,14 +335,7 @@ contract SeraphLaunchpad is ReentrancyGuard {
         allTokens.push(token);
 
         emit TokenLaunched(
-            token,
-            msg.sender,
-            feeRecipient,
-            p.model,
-            p.totalSupply,
-            p.buyFeeBps,
-            p.sellFeeBps,
-            p.devBuyBps
+            token, msg.sender, feeRecipient, p.model, p.totalSupply, p.buyFeeBps, p.sellFeeBps, p.devBuyBps
         );
     }
 
@@ -351,27 +343,27 @@ contract SeraphLaunchpad is ReentrancyGuard {
     /* Trading (Bonding Curve & Locked Pool)                              */
     /* ------------------------------------------------------------------ */
 
-    function buy(
-        address token,
-        uint256 minTokensOut,
-        address recipient
-    ) external payable nonReentrant returns (uint256 tokensOut) {
+    function buy(address token, uint256 minTokensOut, address recipient)
+        external
+        payable
+        nonReentrant
+        returns (uint256 tokensOut)
+    {
         if (msg.value == 0) revert ZeroAmount();
         address to = recipient == address(0) ? msg.sender : recipient;
         uint256 refund;
         (tokensOut, refund) = _executeBuy(token, msg.value, minTokensOut, type(uint256).max, to);
         if (refund > 0) {
-            (bool ok, ) = msg.sender.call{value: refund}("");
+            (bool ok,) = msg.sender.call{value: refund}("");
             if (!ok) revert TransferFailed();
         }
     }
 
-    function sell(
-        address token,
-        uint256 tokenAmount,
-        uint256 minQuoteOut,
-        address recipient
-    ) external nonReentrant returns (uint256 netQuoteOut) {
+    function sell(address token, uint256 tokenAmount, uint256 minQuoteOut, address recipient)
+        external
+        nonReentrant
+        returns (uint256 netQuoteOut)
+    {
         if (tokenAmount == 0) revert ZeroAmount();
         LaunchInfo storage L = _launches[token];
         if (L.token == address(0)) revert UnknownToken();
@@ -395,7 +387,7 @@ contract SeraphLaunchpad is ReentrancyGuard {
 
         _distributeFees(L, platformFee, creatorFee);
 
-        (bool ok, ) = to.call{value: netQuoteOut}("");
+        (bool ok,) = to.call{value: netQuoteOut}("");
         if (!ok) revert TransferFailed();
 
         emit Trade(token, msg.sender, false, grossQuoteOut, tokenAmount, platformFee, creatorFee);
@@ -421,7 +413,7 @@ contract SeraphLaunchpad is ReentrancyGuard {
         amount = claimableFees[msg.sender];
         if (amount == 0) revert NothingToClaim();
         claimableFees[msg.sender] = 0;
-        (bool ok, ) = msg.sender.call{value: amount}("");
+        (bool ok,) = msg.sender.call{value: amount}("");
         if (!ok) revert TransferFailed();
         emit FeesClaimed(msg.sender, amount);
     }
@@ -439,11 +431,11 @@ contract SeraphLaunchpad is ReentrancyGuard {
         bool completesCurve;
     }
 
-    function _quoteBuy(
-        LaunchInfo storage L,
-        uint256 grossQuoteIn,
-        uint256 maxTokensCap
-    ) internal view returns (BuyQuote memory q) {
+    function _quoteBuy(LaunchInfo storage L, uint256 grossQuoteIn, uint256 maxTokensCap)
+        internal
+        view
+        returns (BuyQuote memory q)
+    {
         uint256 quoteReserve = L.realQuoteReserve + L.phantomQuote;
         q.platformFee = (grossQuoteIn * PLATFORM_FEE_BPS) / BPS;
         q.creatorFee = (grossQuoteIn * L.buyFeeBps) / BPS;
@@ -451,9 +443,8 @@ contract SeraphLaunchpad is ReentrancyGuard {
 
         q.tokensOut = (L.tokenReserve * q.netQuoteIn) / (quoteReserve + q.netQuoteIn);
 
-        uint256 available = L.graduated
-            ? L.tokenReserve
-            : (L.tokenReserve > L.reservedTokens ? L.tokenReserve - L.reservedTokens : 0);
+        uint256 available =
+            L.graduated ? L.tokenReserve : (L.tokenReserve > L.reservedTokens ? L.tokenReserve - L.reservedTokens : 0);
         uint256 cap = available < maxTokensCap ? available : maxTokensCap;
         q.completesCurve = !L.graduated && q.tokensOut >= available;
 
@@ -495,7 +486,10 @@ contract SeraphLaunchpad is ReentrancyGuard {
 
         emit Trade(token, recipient, true, grossQuoteIn - q.refund, q.tokensOut, q.platformFee, q.creatorFee);
 
-        if (q.completesCurve || (!L.graduated && (sellableTokens(token) == 0 || L.realQuoteReserve >= L.graduationThreshold))) {
+        if (
+            q.completesCurve
+                || (!L.graduated && (sellableTokens(token) == 0 || L.realQuoteReserve >= L.graduationThreshold))
+        ) {
             _graduate(L);
         }
         return (q.tokensOut, q.refund);

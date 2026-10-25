@@ -261,7 +261,7 @@ contract SeraphPresale is ReentrancyGuard {
 
         // Send fee to treasury (supports multisig/contract treasuries)
         if (fee > 0) {
-            (bool ok, ) = payable(treasury).call{value: fee}("");
+            (bool ok,) = payable(treasury).call{value: fee}("");
             require(ok, "Presale: ETH fee transfer failed");
             feesCollectedETH += fee;
             emit FeeCollected(buyer, fee, address(0));
@@ -363,7 +363,7 @@ contract SeraphPresale is ReentrancyGuard {
 
     function withdrawETH() external onlyTreasury nonReentrant {
         uint256 amount = address(this).balance;
-        (bool ok, ) = payable(treasury).call{value: amount}("");
+        (bool ok,) = payable(treasury).call{value: amount}("");
         require(ok, "Presale: ETH withdrawal failed");
         // Guard against underflow if the contract ever holds stray (donated) ETH
         totalRaisedETH = amount > totalRaisedETH ? 0 : totalRaisedETH - amount;

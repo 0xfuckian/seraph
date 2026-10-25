@@ -34,11 +34,7 @@ contract SecurityAuditTest is Test {
 
         token = new SeraphToken(address(0), address(multisigTreasury), address(0));
         presale = new SeraphPresale(
-            address(token),
-            address(multisigTreasury),
-            address(usdt),
-            address(usdc),
-            block.timestamp + 1 days
+            address(token), address(multisigTreasury), address(usdt), address(usdc), block.timestamp + 1 days
         );
 
         vm.prank(address(multisigTreasury));
@@ -61,11 +57,11 @@ contract SecurityAuditTest is Test {
         usdt.approve(address(presale), 20_000e6);
         // First purchase: $1,000 USDT in Strategic ($0.02)
         presale.buyWithStablecoin(1, 1_000e6, address(usdt), address(0));
-        (uint256 firstTotal, , ) = presale.getBuyerAllocation(alice, 1);
+        (uint256 firstTotal,,) = presale.getBuyerAllocation(alice, 1);
 
         // Second purchase: small $100 USDT in Strategic ($0.02) — must ADD to firstTotal, not overwrite
         presale.buyWithStablecoin(1, 100e6, address(usdt), address(0));
-        (uint256 secondTotal, , ) = presale.getBuyerAllocation(alice, 1);
+        (uint256 secondTotal,,) = presale.getBuyerAllocation(alice, 1);
         vm.stopPrank();
 
         assertGt(secondTotal, firstTotal);
@@ -83,7 +79,7 @@ contract SecurityAuditTest is Test {
         presale.buyWithStablecoin(1, 10_000e6, address(usdt), address(0));
         vm.stopPrank();
 
-        (uint256 expectedTotal, , ) = presale.getBuyerAllocation(alice, 1);
+        (uint256 expectedTotal,,) = presale.getBuyerAllocation(alice, 1);
 
         // Execute TGE
         vm.warp(block.timestamp + 2 days);
@@ -117,12 +113,12 @@ contract SecurityAuditTest is Test {
     function test_Audit3_ReceiveFallbackCreditsSenderAndWorksWithMultisigTreasury() public {
         // Send 1 ETH directly to presale contract via fallback receive()
         vm.prank(alice);
-        (bool ok, ) = address(presale).call{value: 1 ether}("");
+        (bool ok,) = address(presale).call{value: 1 ether}("");
         assertTrue(ok);
 
         // Must credit alice, NOT address(presale)
-        (uint256 aliceAlloc, , ) = presale.getBuyerAllocation(alice, 3);
-        (uint256 contractAlloc, , ) = presale.getBuyerAllocation(address(presale), 3);
+        (uint256 aliceAlloc,,) = presale.getBuyerAllocation(alice, 3);
+        (uint256 contractAlloc,,) = presale.getBuyerAllocation(address(presale), 3);
         assertGt(aliceAlloc, 0);
         assertEq(contractAlloc, 0);
         assertGt(multisigTreasury.receivedCount(), 0);
