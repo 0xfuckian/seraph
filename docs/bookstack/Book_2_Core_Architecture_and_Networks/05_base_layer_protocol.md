@@ -10,27 +10,27 @@ Unlike traditional EVM chains which record account balances directly in world st
 
 ```
                            SERAPH BASE LAYER NODE
-   ┌──────────────────────────────────────────────────────────────────┐
-   │  P2P Gossip Network (libp2p, Noise protocol, Tor/I2P routing)    │
-   ├──────────────────────────────────────────────────────────────────┤
-   │  Dual-Fee Engine (Native SER & Native XMR Settlement)            │
-   ├──────────────────────────────────────────────────────────────────┤
-   │  State Machine:                                                  │
-   │    • Incremental Merkle Tree (2^20 Capacity per tree level)      │
-   │    • Nullifier Double-Spend Prevention Engine                    │
-   │    • Multi-Asset Domain Isolation (SER, XMR, Custom Tokens)      │
-   ├──────────────────────────────────────────────────────────────────┤
-   │  Storage Engine (RocksDB / Sled persistent embedded key-value)   │
-   └──────────────────────────────────────────────────────────────────┘
+   +------------------------------------------------------------------+
+   |  P2P Gossip Network (libp2p, Noise protocol, Tor/I2P routing)    |
+   +------------------------------------------------------------------+
+   |  Dual-Fee Engine (Native SER & Native XMR Settlement)            |
+   +------------------------------------------------------------------+
+   |  State Machine:                                                  |
+   |    * Incremental Merkle Tree (2^20 Capacity per tree level)      |
+   |    * Nullifier Double-Spend Prevention Engine                    |
+   |    * Multi-Asset Domain Isolation (SER, XMR, Custom Tokens)      |
+   +------------------------------------------------------------------+
+   |  Storage Engine (RocksDB / Sled persistent embedded key-value)   |
+   +------------------------------------------------------------------+
 ```
 
 ---
 
-## 5.2 Block Structure & Consensus
+## 5.2 Block Structure, Consensus & Emergency Halt
 
 ### Block Header Specification
 Every block header on the Seraph base layer contains:
-- `version`: Protocol version integer (32-bit).
+- `version`: Protocol version integer (32-bit, default `1`).
 - `previous_block_hash`: 32-byte cryptographic hash of parent block.
 - `merkle_root`: Root of the transaction inclusion Merkle tree.
 - `state_root`: Root of the active note commitment tree after processing all transactions.
@@ -39,9 +39,13 @@ Every block header on the Seraph base layer contains:
 - `height`: Monotonically increasing block index.
 - `nonce`: Proof-of-work / validator signature depending on network phase.
 
-### Consensus Evolution
-- **Phase 0 & 1 (Devnet & Testnet)**: Authority-validated sequencing with deterministic consensus for rapid testing and low latency.
-- **Phase 2 & Beyond**: Transition to a hybrid Proof-of-Stake / RandomX-variant checkpointing engine, allowing native Monero miners to co-mine or validate Seraph blocks trustlessly.
+### Consensus Specification Across Phases:
+- **Phase 0 & Phase 1 (Core EVM & Devnet)**: Authority-validated sequencing with deterministic consensus for rapid integration and zero latency on Base Sepolia.
+- **Phase 2 (Multi-Node Sovereign Testnet)**: Transition to a hybrid Proof-of-Stake / RandomX-variant checkpointing engine:
+  - **Validator Selection**: Proportional to bonded SER stake (minimum 50,000 SER bond). Proposers are elected via verifiable random function (VRF) per slot.
+  - **Fork Choice & Finality**: LMD-GHOST fork choice with Casper-FFG checkpoint finality every 32 slots (6.4-minute epochs).
+  - **Slashing Penalties**: Equivocation (proposing two distinct blocks at the same height) triggers an immediate 100% bond slash. Inactivity results in a linear quadratic leak.
+  - **Emergency Protocol Halt**: If a consensus vulnerability is detected, an emergency halt can be triggered by a 2/3 stake supermajority or the Guardian Council multisig, pausing block progression until a security patch lands.
 
 ---
 
@@ -63,9 +67,9 @@ pub struct Transaction {
 
 ### Transaction Validation Rules:
 1. **Nullifier Uniqueness**: Every input nullifier must not currently exist in the ledger's `nullifiers` set:
-   $$\forall \mathcal{N}_i \in \text{inputs}: \mathcal{N}_i \notin \text{Ledger.nullifiers}$$
+   `For all N_i in inputs: N_i not in Ledger.nullifiers`
 2. **Atomic Nullifier Consumption**: All input nullifiers are inserted into `Ledger.nullifiers` within an atomic database transaction. If any nullifier fails, the entire transaction reverts.
-3. **Commitment Insertion**: All output commitments $C_j = \text{output}_j.\text{commitment}()$ are inserted sequentially into the commitment tree.
+3. **Commitment Insertion**: All output commitments `C_j = output_j.commitment()` are inserted sequentially into the commitment tree.
 4. **Conservation of Value**: The sum of inputs must equal the sum of outputs plus specified fees across each distinct asset class.
 
 ---

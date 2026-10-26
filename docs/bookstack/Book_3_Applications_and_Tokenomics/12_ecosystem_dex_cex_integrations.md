@@ -12,11 +12,12 @@ Seraph solves this through a dedicated **Tax Exemption Registry** and standardiz
 
 ### The Multi-Hop Double-Tax Problem
 On a standard DEX, a swap from SER to USDC often routes through an intermediary pool:
-$$\text{User} \xrightarrow{\text{Swap}} \text{Pool}_{\text{SER/WETH}} \xrightarrow{\text{Internal Transfer}} \text{Router} \xrightarrow{\text{Swap}} \text{Pool}_{\text{WETH/USDC}} \xrightarrow{} \text{User}$$
-If a 1.00% sell tax is assessed on every hop, the user would be taxed twice (or the DEX router would fail due to received amount mismatches).
+`User --(Swap)--> Pool_SER/WETH --(Internal Hop)--> Router --(Swap)--> Pool_WETH/USDC ----> User`
+
+If a 1.00% sell tax were assessed on every internal transfer hop, the user would suffer double taxation, or the router transaction would fail due to received amount discrepancies.
 
 ### The Tax Exemption Mapping (`taxExempt`)
-To ensure seamless integration with Uniswap v3, Aerodrome, Curve, and Balancer, `SERAPH.sol` includes a dynamic exemption mapping:
+To ensure smooth integration with Uniswap v3, Aerodrome, Curve, and Balancer, `SERAPH.sol` includes a dynamic exemption mapping:
 
 ```solidity
 // contracts/core/SERAPH.sol
@@ -37,14 +38,19 @@ bool isSell = from != address(0) && to != address(0) && from != address(this) &&
     && !taxExempt[from] && !taxExempt[to];
 ```
 
-### Whitelisting DEX Contracts:
-1. When a new Uniswap v3 pool or Aerodrome gauge is deployed, the Seraph Treasury (governed by the Protocol DAO) invokes:
+### Precise DEX Whitelisting Architecture:
+1. **DEX Routers and Aggregators Whitelisted**:
+   The DAO Treasury whitelists the DEX execution router (e.g., Uniswap Universal Router, Aerodrome Router):
    ```solidity
-   seraphToken.setTaxExempt(uniswapV3PoolAddress, true);
    seraphToken.setTaxExempt(universalRouterAddress, true);
    ```
-2. Once whitelisted, transfers between the router, pools, and liquidity providers execute with **0% tax**.
-3. Sells initiated by end users on public markets continue to contribute to the deflationary burn and protocol treasury.
+   When the router facilitates multi-hop swaps or handles intermediary token movements, those hops are exempt, eliminating double taxation.
+2. **DEX Pools (Liquidity Pairs) Kept Unexempt**:
+   The AMM pool contract itself (e.g. SER/WETH pair) is **not** added to `taxExempt`. When an end user sells SER to the pool, `to = poolAddress` is unexempt, so `isSell == true`, and the protocol collects the 1.00% sell tax (0.50% burned, 0.50% to treasury).
+3. **Liquidity Seeding & Rebalancing**:
+   Initial liquidity provisioning and LP rebalancing executed by the DAO Treasury are naturally exempt because `treasury` is hardcoded as exempt in `_update`.
+4. **Zero Tax on Privacy Pool**:
+   Transfers into and out of `PrivacyPool` are hardcoded exempt (`from != privacyPool && to != privacyPool`). Shielding and unshielding tokens never incur the 1.00% sell tax.
 
 ---
 

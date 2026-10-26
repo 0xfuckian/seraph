@@ -24,7 +24,7 @@ Clone the monorepo and verify all build targets:
 
 ```bash
 # Clone the repository
-git clone https://github.com/seraphprotocol/seraph.git
+git clone https://github.com/0xfuckian/seraph.git
 cd seraph
 
 # 1. Verify and compile Foundry smart contracts
@@ -51,7 +51,8 @@ All contributions to Seraph are evaluated against strict architectural guideline
 - Inherit from OpenZeppelin v5 contracts.
 - All public external functions accepting external asset transfers must utilize `nonReentrant`.
 - All fee claims and external transfers must follow the **pull-over-push** design pattern.
-- Any new contract modification must include corresponding Foundry unit tests and fuzz invariant tests.
+- Any contract modification must include corresponding Foundry unit tests and fuzz invariant tests.
+- All Solidity code must pass `forge fmt --check`.
 
 ### 2. Base Layer Standards (Rust)
 - Adhere to standard Rust formatting: `cargo fmt --check`.
@@ -76,10 +77,10 @@ All contributions to Seraph are evaluated against strict architectural guideline
    feat(core): add taxExempt mapping for DEX routers
    fix(pool): attach whenNotPaused to shield and unshield
    test(pentest): add multi-actor invariant tests for gas relayer
-   docs(bookstack): add Chapter 18 on emergency procedures
+   docs(manual): update Chapter 18 on emergency procedures
    ```
 3. **Pull Request Quality Gate**:
-   - Every PR must pass all 155+ Foundry tests with 0 reverts.
+   - Every PR must pass all 205+ Foundry tests with 0 reverts.
    - Every PR must pass all 17 Rust base-layer pentests.
-   - Every PR must pass all 43 Node.js verification tests.
+   - Every PR must pass all 59 Node.js verification tests.
    - Two approvals from core maintainers are required prior to merging into `main`.

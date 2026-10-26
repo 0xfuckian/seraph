@@ -12,17 +12,18 @@ Seraph implements two on-chain **Emergency Circuit Breakers**:
 
 ## 18.2 Access Control & The Guardian Council
 
-Emergency intervention is strictly restricted to authorized governance roles:
-- **`PrivacyPool`**: Controlled exclusively by `treasury` via the `onlyTreasury` modifier.
-- **`CrossEVMBridge`**: Controlled exclusively by `guardian` via explicit `msg.sender != guardian` checks.
+Emergency intervention is strictly governed by authorized administrative roles:
+- **`PrivacyPool`**: Gated by `onlyTreasury`.
+- **`CrossEVMBridge`**: Gated by `guardian`.
 
 ```
                          GUARDIAN SECURITY COUNCIL
                (4-of-7 Gnosis Safe Multisig with Hardware Keys)
-                                      │
-              ┌───────────────────────┴───────────────────────┐
-              ▼                                               ▼
-     `PrivacyPool.setPaused(true)`               `CrossEVMBridge.setPaused(true)`
+                                      |
+              +-----------------------+-----------------------+
+              |                                               |
+              v                                               v
+     PrivacyPool.setPaused(true)                 CrossEVMBridge.setPaused(true)
      Freezes pool transfers & withdrawals        Freezes cross-chain message processing
 ```
 
@@ -32,7 +33,19 @@ The Guardian Council is structured as a **4-of-7 Gnosis Safe multisig**:
 - 2 Independent Security Auditors
 - 2 Long-Standing Community / Validator Representatives
 - Key signers are geographically distributed across 4 different legal jurisdictions.
-- All signing operations require FIDO2/WebAuthn hardware security keys.
+- All signing operations require FIDO2 / WebAuthn hardware security keys.
+
+### Pause & Admin Authority Matrix:
+
+| Contract | Function | Authorized Role | Response Target | Timelock Requirement |
+| :--- | :--- | :--- | :--- | :--- |
+| `PrivacyPool` | `setPaused(true)` | Guardian / Treasury | < 15 minutes | Instant emergency execution |
+| `PrivacyPool` | `setPaused(false)` | DAO Treasury | Post-audit recovery | 48-hour timelock delay |
+| `PrivacyPool` | `setSpendVerifier` | DAO Treasury | Governed upgrade | 48-hour timelock delay |
+| `CrossEVMBridge` | `setPaused(true)` | Guardian Council | < 15 minutes | Instant emergency execution |
+| `CrossEVMBridge` | `challengeBatch` | Guardian / Sentinel | Inside 1-hour window | Instant 1 ETH relayer slash |
+| `SERAPH` | `setSellTaxEnabled` | DAO Treasury | Governed policy | 48-hour timelock delay |
+| `SERAPH` | `setTaxExempt` | DAO Treasury | DEX / CEX listing | 48-hour timelock delay |
 
 ---
 
@@ -57,13 +70,13 @@ In the event of an active security exploit or anomalous telemetry alert:
 2. Reproduce the vulnerability in an isolated Foundry fork test (`forge test --fork-url`).
 3. Formulate a patch (e.g., verifier replacement or logic hotfix).
 
-### Phase 3: Resolution & Remediation
-- **Verifier Replacement**: If a zero-knowledge proving bug is discovered, the Treasury can update `spendVerifier` to an upgraded verifier contract via `setSpendVerifier(newVerifier)`.
+### Phase 3: Governed Resolution & Remediation
+- **Verifier Replacement**: If a zero-knowledge circuit defect is discovered, the DAO Treasury queues `setSpendVerifier(newVerifier)` through the 48-hour timelock, allowing community inspection before activation.
 - **Bridge Slashing**: If a fraudulent relayer batch was submitted, the Guardian invokes `challengeBatch(batchId, treasury)` to slash the malicious relayer's 1.0 ETH bond and cancel the batch.
 
 ### Phase 4: Graceful Unpausing & Post-Mortem
-1. Verify the patch across all 155+ test suites and invariant harnesses.
-2. The Guardian Council signs the unpause transaction:
+1. Verify the patch across all 205+ test suites and invariant harnesses.
+2. Following the timelock window, the unpause transaction executes:
    ```solidity
    privacyPool.setPaused(false);
    crossEVMBridge.setPaused(false);
