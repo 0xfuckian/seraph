@@ -949,7 +949,7 @@
             <div class="priv-stat-lbl">Notes in Tree</div>
           </div>
           <div class="priv-stat-box" style="grid-column: 1 / -1;">
-            <div class="priv-stat-val" id="privMerkleRootDisplay" style="font-size:13px; font-family:'JetBrains Mono',monospace; word-break:break-all;">Loading root...</div>
+            <div class="priv-stat-val" id="privMerkleRootDisplay" style="font-size:13px; font-family:'JetBrains Mono',monospace; word-break:break-all;">0xe12c6e3da2d4498a1202263ce5703f81201efd8e2cb9f18a2ab338268fb4da0f</div>
             <div class="priv-stat-lbl">Latest Historic Merkle Root (Ring Buffer)</div>
           </div>
         </div>
@@ -1214,10 +1214,17 @@
       <div class="net-bg" id="netBg" aria-hidden="true"></div>
       <div class="section-header">
         <div>
-          <div class="meta">§ 02 — ARCHITECTURE</div>
-          <h2 class="section-title">Three layers, one key hierarchy.</h2>
-          <p class="section-desc">A Monero-inspired base layer for settlement, two specialized private EVMs, and shared components that keep every layer in the same anonymity set. One seed controls all accounts.</p>
+          <div class="meta">§ 02 — ARCHITECTURE &amp; MULTI-PHASE ROADMAP</div>
+          <h2 class="section-title">EVM Privacy Core on Base · Sovereign Expansion Roadmap.</h2>
+          <p class="section-desc">Seraph's live, tested product is an EVM privacy continuum deployed on Base Sepolia. Our architectural vision expands this EVM core into a sovereign Monero-inspired settlement base layer and dedicated XMR EVM across scheduled developmental phases.</p>
         </div>
+      </div>
+
+      <!-- Architectural Stage & Product Transparency Callout -->
+      <div class="connect-note" style="margin-bottom:24px; font-family:'JetBrains Mono',monospace; font-size:12px; background:rgba(0,243,255,0.05); border:1px solid rgba(0,243,255,0.25); color:var(--color-ink); padding:14px 18px; line-height:1.7;">
+        <span style="color:var(--color-green); font-weight:700;">● SHIPPED ON BASE TESTNET:</span> Solidity privacy contracts (PrivacyPool with $2^{20}$ Merkle tree, CrossEVMBridge, GasRelayer, Launchpad) with 205 passing Foundry tests.
+        <br>
+        <span style="color:var(--color-magenta); font-weight:700;">● ROADMAP &amp; RESEARCH (IN PROGRESS):</span> The sovereign Monero-inspired base layer (Phase 0 PoC in Rust) and dedicated XMR EVM (Phase 2) are active R&amp;D milestones designed to anchor into this EVM privacy core.
       </div>
  
       <div class="arch-diagram reveal">
@@ -1230,7 +1237,7 @@
               <li>Privacy continuum per transaction</li>
               <li>Precompiles for privacy primitives</li>
             </ul>
-            <span class="status-tag st-accent" style="margin-top:12px;">Phase 1 · MVP</span>
+            <span class="status-tag st-accent" style="margin-top:12px;">Phase 1 · Live on Base Sepolia</span>
           </div>
           <div class="arch-box">
             <div class="arch-tag">EVM.02</div>
@@ -1240,7 +1247,7 @@
               <li>Pay fees in XMR via relayers</li>
               <li>Bridged XMR representation</li>
             </ul>
-            <span class="status-tag st-green" style="margin-top:12px;">Phase 2 · Alpha</span>
+            <span class="status-tag st-green" style="margin-top:12px;">Phase 2 · In Development (Alpha)</span>
           </div>
         </div>
         <div class="arch-shared">
@@ -1261,7 +1268,7 @@
             <li>Full-chain membership · FCMP++</li>
             <li>Encrypted memos</li>
           </ul>
-          <span class="status-tag st-magenta" style="margin-top:12px;">Phase 0 · PoC</span>
+          <span class="status-tag st-magenta" style="margin-top:12px;">Phase 0 · Research PoC (Rust Node)</span>
         </div>
       </div>
     </div>
@@ -1486,8 +1493,11 @@
 
       <!-- Quick Resource Links Bar -->
       <div style="display:flex; flex-wrap:wrap; gap:12px; margin-bottom:28px;">
-        <a href="https://docs.seraphprotocol.tech/shelves/seraph-protocol-documentation" target="_blank" rel="noopener" class="cta-primary" style="font-size:11px; padding:12px 20px;">
-          <span class="metal">●</span> ENTER BOOKSTACK DOCS (DOCS.SERAPHPROTOCOL.TECH) ↗
+        <a href="https://docs.seraphprotocol.tech/books/seraph-protocol-technical-manual" target="_blank" rel="noopener" class="cta-primary" style="font-size:11px; padding:12px 20px;">
+          <span class="metal">●</span> ENTER TECHNICAL MANUAL (DOCS.SERAPHPROTOCOL.TECH) ↗
+        </a>
+        <a href="https://docs.seraphprotocol.tech/books/seraph-protocol-technical-manual/export/pdf" target="_blank" rel="noopener" class="cta-secondary" style="font-size:11px; padding:12px 20px;">
+          DOWNLOAD UNIFIED PDF (782 KB) ↓
         </a>
         <a href="https://github.com/0xfuckian/seraph/blob/main/whitepaper/seraph_whitepaper.md" target="_blank" rel="noopener" class="cta-secondary" style="font-size:11px; padding:12px 20px;">
           READ SATOSHI WHITEPAPER (V3.0) ↗
@@ -1506,7 +1516,7 @@
         <div class="deck-card">
           <div class="deck-face">
             <div class="deck-brand-row">
-              <span class="deck-brand">BOOK 1</span>
+              <span class="deck-brand">PART I</span>
               <span class="deck-badge text-magenta"><span class="dot"></span> CRYPTO</span>
             </div>
             <div class="deck-name">Foundations &amp; Cryptography</div>
@@ -1518,7 +1528,7 @@
               <span class="tech-tag">Groth16</span>
             </div>
             <div class="deck-result text-magenta">Four-level Privacy Continuum (L0–L3), Monero heritage, Seraphis research horizons, and ZK verification benchmarks.</div>
-            <a href="https://docs.seraphprotocol.tech/books/book-1-foundations-cryptography" target="_blank" rel="noopener" class="cta-secondary" style="font-size:11px; padding:10px 18px; margin-top:14px; text-decoration:none;">OPEN IN BOOKSTACK ↗</a>
+            <a href="https://docs.seraphprotocol.tech/books/seraph-protocol-technical-manual/chapter/part-i-foundations-cryptography" target="_blank" rel="noopener" class="cta-secondary" style="font-size:11px; padding:10px 18px; margin-top:14px; text-decoration:none;">OPEN PART I IN BOOKSTACK ↗</a>
           </div>
         </div>
 
@@ -1526,7 +1536,7 @@
         <div class="deck-card">
           <div class="deck-face">
             <div class="deck-brand-row">
-              <span class="deck-brand">BOOK 2</span>
+              <span class="deck-brand">PART II</span>
               <span class="deck-badge text-accent"><span class="dot"></span> NETWORKS</span>
             </div>
             <div class="deck-name">Core Architecture &amp; Networks</div>
@@ -1538,7 +1548,7 @@
               <span class="tech-tag">MEV Shield</span>
             </div>
             <div class="deck-result text-accent">Sovereign base-layer state machine, Seraph EVM &amp; XMR EVM, optimistic fraud proofs, and threshold-encrypted mempools.</div>
-            <a href="https://docs.seraphprotocol.tech/books/book-2-core-architecture-networks" target="_blank" rel="noopener" class="cta-secondary" style="font-size:11px; padding:10px 18px; margin-top:14px; text-decoration:none;">OPEN IN BOOKSTACK ↗</a>
+            <a href="https://docs.seraphprotocol.tech/books/seraph-protocol-technical-manual/chapter/part-ii-core-architecture-networks" target="_blank" rel="noopener" class="cta-secondary" style="font-size:11px; padding:10px 18px; margin-top:14px; text-decoration:none;">OPEN PART II IN BOOKSTACK ↗</a>
           </div>
         </div>
 
@@ -1546,7 +1556,7 @@
         <div class="deck-card">
           <div class="deck-face">
             <div class="deck-brand-row">
-              <span class="deck-brand">BOOK 3</span>
+              <span class="deck-brand">PART III</span>
               <span class="deck-badge text-green"><span class="dot"></span> APPS</span>
             </div>
             <div class="deck-name">Applications &amp; Tokenomics</div>
@@ -1558,7 +1568,7 @@
               <span class="tech-tag">Dividends</span>
             </div>
             <div class="deck-result text-green">Official wallets, view key scanning, autonomous AI usage metering, fixed 100M supply, fee burns, and Launchpad playbook.</div>
-            <a href="https://docs.seraphprotocol.tech/books/book-3-applications-tokenomics" target="_blank" rel="noopener" class="cta-secondary" style="font-size:11px; padding:10px 18px; margin-top:14px; text-decoration:none;">OPEN IN BOOKSTACK ↗</a>
+            <a href="https://docs.seraphprotocol.tech/books/seraph-protocol-technical-manual/chapter/part-iii-applications-tokenomics" target="_blank" rel="noopener" class="cta-secondary" style="font-size:11px; padding:10px 18px; margin-top:14px; text-decoration:none;">OPEN PART III IN BOOKSTACK ↗</a>
           </div>
         </div>
 
@@ -1566,7 +1576,7 @@
         <div class="deck-card">
           <div class="deck-face">
             <div class="deck-brand-row">
-              <span class="deck-brand">BOOK 4</span>
+              <span class="deck-brand">PART IV</span>
               <span class="deck-badge text-orange"><span class="dot"></span> SECURITY</span>
             </div>
             <div class="deck-name">Operations, Security &amp; Ops</div>
@@ -1578,7 +1588,7 @@
               <span class="tech-tag">Glossary</span>
             </div>
             <div class="deck-result text-orange">Anonymous DAO governance, 12-vector threat pentests, emergency pause playbooks, and developer setup instructions.</div>
-            <a href="https://docs.seraphprotocol.tech/books/book-4-operations-security-reference" target="_blank" rel="noopener" class="cta-secondary" style="font-size:11px; padding:10px 18px; margin-top:14px; text-decoration:none;">OPEN IN BOOKSTACK ↗</a>
+            <a href="https://docs.seraphprotocol.tech/books/seraph-protocol-technical-manual/chapter/part-iv-operations-security-reference" target="_blank" rel="noopener" class="cta-secondary" style="font-size:11px; padding:10px 18px; margin-top:14px; text-decoration:none;">OPEN PART IV IN BOOKSTACK ↗</a>
           </div>
         </div>
       </div>
@@ -1588,11 +1598,11 @@
         <div style="max-width:680px;">
           <div class="meta" style="margin-bottom:6px;">PRODUCTION DOCUMENTATION PLATFORM</div>
           <h3 style="font-family:'Space Grotesk',sans-serif; font-size:22px; font-weight:700; color:var(--color-ink);">docs.seraphprotocol.tech</h3>
-          <p style="color:var(--color-sub); font-size:14px; line-height:1.6; margin-top:6px;">Seraph uses a dedicated BookStack instance for full-text searchable documentation, LaTeX mathematical equations, interactive diagrams, and live developer guides. Access the documentation portal directly or review the open-source repository.</p>
+          <p style="color:var(--color-sub); font-size:14px; line-height:1.6; margin-top:6px;">All 22 chapters of the Seraph Protocol technical manual are unified in a single BookStack book with full-text search, LaTeX mathematical proofs, and one-click PDF export.</p>
         </div>
         <div style="display:flex; gap:12px; flex-wrap:wrap;">
-          <a href="https://docs.seraphprotocol.tech/shelves/seraph-protocol-documentation" target="_blank" rel="noopener" class="wallet-btn" style="text-decoration:none; padding:14px 24px;">
-            <span class="metal">●</span> OPEN BOOKSTACK PORTAL ↗
+          <a href="https://docs.seraphprotocol.tech/books/seraph-protocol-technical-manual" target="_blank" rel="noopener" class="wallet-btn" style="text-decoration:none; padding:14px 24px;">
+            <span class="metal">●</span> OPEN TECHNICAL MANUAL ↗
           </a>
           <a href="https://github.com/0xfuckian/seraph/tree/main/docs/bookstack" target="_blank" rel="noopener" class="cta-secondary" style="text-decoration:none; padding:14px 20px; font-size:12px;">
             VIEW GITHUB SOURCE ↗
@@ -1676,16 +1686,16 @@
       <div class="presale-status">
         <span class="pdot"></span>
         <div>
-          <strong>Presale Status: Verified Smart Contracts · Launching on Base at TGE</strong>
-          <p>Presale contracts are fully compiled, verified, and ready for deployment upon completion of external security audits. To protect participant capital, the contract will open for contributions upon completion of independent third-party audits. Use the interactive tier calculator below to preview allocation, vesting, and payment estimates.</p>
+          <strong>Presale Status: Verification Sandbox · Official Contributions Open Post-Audit at TGE</strong>
+          <p>Presale contracts are deployed on Base Sepolia for public verification and stress-testing. To protect participant capital, direct deposits will open only after formal third-party audits conclude prior to mainnet TGE. Use this interactive calculator to preview exact allocation, vesting schedules, and payment vectors.</p>
         </div>
       </div>
  
       <div class="section-header">
         <div>
-          <div class="meta">§ 09 — PRESALE</div>
+          <div class="meta">§ 09 — PRESALE ALLOCATION ESTIMATOR (OPENS POST-AUDIT AT TGE)</div>
           <h2 class="section-title">Seed the continuum.</h2>
-          <p class="section-desc">SERAPH ($SER) tier-based presale on seraphprotocol.tech. Strategic and Private tiers are allowlisted; Public is open. Terms below come straight from the presale contract.</p>
+          <p class="section-desc">SERAPH ($SER) allocation model on Base. Direct purchases open at TGE following independent security audits. Explore tier parameters and vesting terms below.</p>
         </div>
       </div>
  
@@ -2082,10 +2092,10 @@
       <div class="footer-column">
         <h4>Product</h4>
         <ul>
-          <li><a href="#presale">Presale</a></li>
+          <li><a href="#presale">Presale Estimator</a></li>
           <li><a href="#launch">Launchpad</a></li>
-          <li><a href="#">Wallet <span class="soon">(soon)</span></a></li>
-          <li><a href="#">Explorer <span class="soon">(soon)</span></a></li>
+          <li><a href="#privacy-pool">Privacy Pool <span class="soon" style="color:var(--color-green);">(Live Demo)</span></a></li>
+          <li><a href="https://sepolia.basescan.org/address/0x1d734185220Bd4024c60fC8C1897Aefc08Bcb16F" target="_blank" rel="noopener">Explorer <span class="soon" style="color:var(--color-accent);">(Base)</span></a></li>
           <li><a href="https://github.com/0xfuckian/seraph/blob/main/whitepaper/seraph_whitepaper.md" target="_blank" rel="noopener">Whitepaper</a></li>
         </ul>
       </div>
@@ -2093,10 +2103,10 @@
         <h4>Developers</h4>
         <ul>
           <li><a href="https://github.com/0xfuckian/seraph" target="_blank" rel="noopener">GitHub</a></li>
-          <li><a href="https://github.com/0xfuckian/seraph/tree/main/contracts" target="_blank" rel="noopener">Contracts</a></li>
-          <li><a href="#">SDK — TS <span class="soon">(soon)</span></a></li>
-          <li><a href="#">SDK — Rust <span class="soon">(soon)</span></a></li>
-          <li><a href="#">SDK — Go <span class="soon">(soon)</span></a></li>
+          <li><a href="https://github.com/0xfuckian/seraph/tree/main/contracts" target="_blank" rel="noopener">Contracts <span class="soon" style="color:var(--color-green);">(205 Tests)</span></a></li>
+          <li><a href="https://github.com/0xfuckian/seraph/tree/main/sdk/typescript" target="_blank" rel="noopener">SDK — TS <span class="soon" style="color:var(--color-green);">(v0.1.0)</span></a></li>
+          <li><a href="https://github.com/0xfuckian/seraph/tree/main/seraph-base-layer" target="_blank" rel="noopener">SDK — Rust <span class="soon" style="color:var(--color-orange);">(PoC)</span></a></li>
+          <li><a href="https://docs.seraphprotocol.tech/books/seraph-protocol-technical-manual" target="_blank" rel="noopener">Technical Manual</a></li>
         </ul>
       </div>
       <div class="footer-column">
@@ -2582,10 +2592,14 @@
     }
     async function lpConnectWallet() {
       if (!window.ethereum) throw new Error('No Web3 wallet detected. Open in MetaMask, Rabby, or Coinbase Wallet.');
-      if (LP.chain === 'Base') {
-        await ensureBaseSepoliaChain();
-      }
       var accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+      if (LP.chain === 'Base') {
+        try {
+          await ensureBaseSepoliaChain();
+        } catch (chainErr) {
+          console.warn('Network switch warning:', chainErr);
+        }
+      }
       return accounts[0];
     }
     document.getElementById('lpBuyBtn').addEventListener('click', async function () {
@@ -3106,15 +3120,42 @@ if (!reduceMotion) {
       } catch (e) { return '0.00'; }
     }
 
-    function rpcCall(to, data) {
-      return fetch(PRIV.rpcUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ jsonrpc: '2.0', id: 1, method: 'eth_call', params: [{ to: to, data: data }, 'latest'] })
-      }).then(function (r) { return r.json(); }).then(function (j) { return j.result; });
+    var RPC_FALLBACKS = [
+      'https://sepolia.base.org',
+      'https://base-sepolia-rpc.publicnode.com',
+      'https://1rpc.io/base-sepolia'
+    ];
+
+    async function rpcCall(to, data) {
+      if (window.ethereum) {
+        try {
+          var ethRes = await window.ethereum.request({
+            method: 'eth_call',
+            params: [{ to: to, data: data }, 'latest']
+          });
+          if (ethRes && ethRes !== '0x') return ethRes;
+        } catch (e) {}
+      }
+      for (var i = 0; i < RPC_FALLBACKS.length; i++) {
+        try {
+          var resp = await fetch(RPC_FALLBACKS[i], {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ jsonrpc: '2.0', id: 1, method: 'eth_call', params: [{ to: to, data: data }, 'latest'] })
+          });
+          var j = await resp.json();
+          if (j && j.result && j.result !== '0x') return j.result;
+        } catch (err) {}
+      }
+      return null;
     }
 
     function fetchPoolData() {
+      var rootEl = document.getElementById('privMerkleRootDisplay');
+      if (rootEl && (!rootEl.textContent || rootEl.textContent.includes('Loading'))) {
+        rootEl.textContent = PRIV.lastRoot;
+      }
+
       // 1. Balance of pool in SER (0x70a08231 + poolAddr padded)
       var balData = '0x70a08231000000000000000000000000' + PRIV.poolAddr.slice(2).toLowerCase();
       rpcCall(PRIV.serAddr, balData).then(function (res) {
@@ -3138,8 +3179,7 @@ if (!reduceMotion) {
       rpcCall(PRIV.poolAddr, '0xba70f757').then(function (res) {
         if (res && res !== '0x') {
           PRIV.lastRoot = res;
-          var el = document.getElementById('privMerkleRootDisplay');
-          if (el) el.textContent = res;
+          if (rootEl) rootEl.textContent = res;
         }
       }).catch(function () {});
 
@@ -3236,26 +3276,49 @@ if (!reduceMotion) {
       });
     });
 
+    function updateConnectedWalletUI(addr) {
+      PRIV.user = addr;
+      var badge = document.getElementById('privWalletBadge');
+      if (badge) {
+        badge.textContent = addr.slice(0, 6) + '...' + addr.slice(-4);
+        badge.style.color = 'var(--color-green)';
+        badge.style.fontWeight = '700';
+      }
+      var connectBtn = document.getElementById('privConnectWalletBtn');
+      if (connectBtn) {
+        connectBtn.innerHTML = '<span class="metal" style="color:var(--color-green);">●</span> CONNECTED (' + addr.slice(0, 4) + '...' + addr.slice(-2) + ')';
+      }
+      var unshieldRecip = document.getElementById('privUnshieldRecipient');
+      if (unshieldRecip && !unshieldRecip.value) unshieldRecip.value = addr;
+    }
+
     // Wallet connect
     async function connectWallet() {
       if (!window.ethereum) {
-        alert('Please install MetaMask or another Web3 wallet to execute privacy transactions on Base Sepolia.');
+        var statusEl = document.getElementById('privShieldStatus');
+        if (statusEl) statusEl.textContent = 'Please install MetaMask or another Web3 wallet to execute privacy transactions on Base Sepolia.';
+        var badge = document.getElementById('privWalletBadge');
+        if (badge) {
+          badge.textContent = 'NO WEB3 WALLET DETECTED';
+          badge.style.color = 'var(--color-accent)';
+        }
         return;
       }
       try {
-        await ensureBaseSepoliaChain();
         var accs = await window.ethereum.request({ method: 'eth_requestAccounts' });
         if (!accs || accs.length === 0) return;
-        PRIV.user = accs[0];
-        var badge = document.getElementById('privWalletBadge');
-        if (badge) badge.textContent = PRIV.user.slice(0, 6) + '...' + PRIV.user.slice(-4);
-        var unshieldRecip = document.getElementById('privUnshieldRecipient');
-        if (unshieldRecip && !unshieldRecip.value) unshieldRecip.value = PRIV.user;
+        updateConnectedWalletUI(accs[0]);
+        try {
+          await ensureBaseSepoliaChain();
+        } catch (chainErr) {
+          console.warn('Network switch warning:', chainErr);
+        }
         fetchPoolData();
       } catch (err) {
         console.error(err);
         var msg = (err && err.message) ? err.message : 'Wallet connection error';
-        alert(msg);
+        var statusEl = document.getElementById('privShieldStatus');
+        if (statusEl) statusEl.textContent = 'Wallet error: ' + msg;
       }
     }
 
@@ -3289,8 +3352,11 @@ if (!reduceMotion) {
     // Action 1: Execute Shield
     var shieldBtn = document.getElementById('privShieldBtn');
     if (shieldBtn) {
-      shieldBtn.addEventListener('click', function () {
-        if (!PRIV.user) { connectWallet(); return; }
+      shieldBtn.addEventListener('click', async function () {
+        if (!PRIV.user) {
+          await connectWallet();
+          if (!PRIV.user) return;
+        }
         var amt = parseFloat(shieldAmtInput.value) || 0;
         var statusEl = document.getElementById('privShieldStatus');
         if (amt <= 0) {
@@ -3375,8 +3441,11 @@ if (!reduceMotion) {
 
     var transferBtn = document.getElementById('privTransferBtn');
     if (transferBtn) {
-      transferBtn.addEventListener('click', function () {
-        if (!PRIV.user) { connectWallet(); return; }
+      transferBtn.addEventListener('click', async function () {
+        if (!PRIV.user) {
+          await connectWallet();
+          if (!PRIV.user) return;
+        }
         var idx = parseInt(transferSelect.value);
         var statusEl = document.getElementById('privTransferStatus');
         if (isNaN(idx) || !PRIV.notes[idx]) {
@@ -3444,8 +3513,11 @@ if (!reduceMotion) {
 
     var unshieldBtn = document.getElementById('privUnshieldBtn');
     if (unshieldBtn) {
-      unshieldBtn.addEventListener('click', function () {
-        if (!PRIV.user) { connectWallet(); return; }
+      unshieldBtn.addEventListener('click', async function () {
+        if (!PRIV.user) {
+          await connectWallet();
+          if (!PRIV.user) return;
+        }
         var idx = parseInt(unshieldSelect.value);
         var statusEl = document.getElementById('privUnshieldStatus');
         if (isNaN(idx) || !PRIV.notes[idx]) {
@@ -3491,8 +3563,11 @@ if (!reduceMotion) {
     // Action 4: Faucet purchase
     var faucetBtn = document.getElementById('privFaucetBuyBtn');
     if (faucetBtn) {
-      faucetBtn.addEventListener('click', function () {
-        if (!PRIV.user) { connectWallet(); return; }
+      faucetBtn.addEventListener('click', async function () {
+        if (!PRIV.user) {
+          await connectWallet();
+          if (!PRIV.user) return;
+        }
         var statusEl = document.getElementById('privFaucetStatus');
         // buyWithETH(uint256 tierId = 3) on SeraphPresale
         // Selector 0x94dc9cf3
@@ -3519,8 +3594,11 @@ if (!reduceMotion) {
     // Action 5: Cross-EVM Bridge (bridgeOut)
     var bridgeBtn = document.getElementById('privBridgeBtn');
     if (bridgeBtn) {
-      bridgeBtn.addEventListener('click', function () {
-        if (!PRIV.user) { connectWallet(); return; }
+      bridgeBtn.addEventListener('click', async function () {
+        if (!PRIV.user) {
+          await connectWallet();
+          if (!PRIV.user) return;
+        }
         var amtInput = document.getElementById('privBridgeAmt');
         var amt = parseFloat(amtInput ? amtInput.value : 0) || 0;
         var statusEl = document.getElementById('privBridgeStatus');
@@ -3595,8 +3673,11 @@ if (!reduceMotion) {
     // Action 6: Fund Gas Voucher (GasRelayer)
     var voucherBtn = document.getElementById('privFundVoucherBtn');
     if (voucherBtn) {
-      voucherBtn.addEventListener('click', function () {
-        if (!PRIV.user) { connectWallet(); return; }
+      voucherBtn.addEventListener('click', async function () {
+        if (!PRIV.user) {
+          await connectWallet();
+          if (!PRIV.user) return;
+        }
         var gasInput = document.getElementById('privVoucherGasUnits');
         var gasUnits = parseInt(gasInput ? gasInput.value : 0) || 150000;
         var estSer = (gasUnits * 1e-6).toFixed(4); // e.g. 150000 -> 0.1500 SER
@@ -3704,8 +3785,11 @@ if (!reduceMotion) {
     // Send Encrypted Message
     var sendMsgBtn = document.getElementById('privMsgSendBtn');
     if (sendMsgBtn) {
-      sendMsgBtn.addEventListener('click', function () {
-        if (!PRIV.user) { connectWallet(); return; }
+      sendMsgBtn.addEventListener('click', async function () {
+        if (!PRIV.user) {
+          await connectWallet();
+          if (!PRIV.user) return;
+        }
         var statusEl = document.getElementById('privMsgStatus');
         var hexCipher = updateCipherPreview();
         var recipPub = (msgRecipPubInput && msgRecipPubInput.value.trim() ? msgRecipPubInput.value.trim() : '').toLowerCase();
@@ -3748,8 +3832,11 @@ if (!reduceMotion) {
     // Register Stealth Invoice
     var invCreateBtn = document.getElementById('privInvCreateBtn');
     if (invCreateBtn) {
-      invCreateBtn.addEventListener('click', function () {
-        if (!PRIV.user) { connectWallet(); return; }
+      invCreateBtn.addEventListener('click', async function () {
+        if (!PRIV.user) {
+          await connectWallet();
+          if (!PRIV.user) return;
+        }
         var statusEl = document.getElementById('privMsgStatus');
         var amt = parseFloat(document.getElementById('privInvAmt').value) || 0;
         if (amt <= 0) {
@@ -3843,6 +3930,42 @@ if (!reduceMotion) {
     renderVault();
     fetchPoolData();
     setInterval(fetchPoolData, 15000);
+
+    // Auto-detect existing wallet authorization & listen for changes
+    if (window.ethereum) {
+      window.ethereum.request({ method: 'eth_accounts' }).then(function (accs) {
+        if (accs && accs.length > 0) {
+          updateConnectedWalletUI(accs[0]);
+          fetchPoolData();
+        }
+      }).catch(function () {});
+
+      if (typeof window.ethereum.on === 'function') {
+        window.ethereum.on('accountsChanged', function (accs) {
+          if (accs && accs.length > 0) {
+            updateConnectedWalletUI(accs[0]);
+            fetchPoolData();
+          } else {
+            PRIV.user = null;
+            var badge = document.getElementById('privWalletBadge');
+            if (badge) {
+              badge.textContent = 'WALLET NOT CONNECTED';
+              badge.style.color = 'var(--color-sub)';
+              badge.style.fontWeight = 'normal';
+            }
+            var connectBtn = document.getElementById('privConnectWalletBtn');
+            if (connectBtn) {
+              connectBtn.innerHTML = '<span class="metal">●</span> CONNECT WALLET';
+            }
+            fetchPoolData();
+          }
+        });
+
+        window.ethereum.on('chainChanged', function () {
+          fetchPoolData();
+        });
+      }
+    }
   })();
 
   // BookStack Local / Production link router

@@ -26,29 +26,33 @@ import { fileURLToPath } from "node:url";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DOCS_ROOT = path.resolve(__dirname, "../../docs/bookstack");
 
-// Book specifications mapping to directories
-const BOOKS = [
-  {
-    folder: "Book_1_Foundations_and_Cryptography",
-    name: "Book 1: Foundations & Cryptography",
-    description: "Privacy Continuum L0-L3, Monero heritage, Seraphis research horizons, formal cryptography, and ZK proving benchmarks."
-  },
-  {
-    folder: "Book_2_Core_Architecture_and_Networks",
-    name: "Book 2: Core Architecture & Networks",
-    description: "Base Layer settlement, Dual Private EVMs, Cross-EVM Bridges, Relayers, and MEV Shielding."
-  },
-  {
-    folder: "Book_3_Applications_and_Tokenomics",
-    name: "Book 3: Applications & Tokenomics",
-    description: "Wallets, First-Party Privacy Modules (xUSD CDP, AI Usage Tickets, Stealth Invoices), DEX/CEX integrations, SER Tokenomics, Presale, and Creator Launchpad."
-  },
-  {
-    folder: "Book_4_Operations_Security_and_Reference",
-    name: "Book 4: Operations, Security & Reference",
-    description: "Treasury DAO Governance, 12-Vector Threat Matrix, Emergency Circuit Breakers, Roadmap, Glossary, and Developer Setup."
-  }
-];
+// Book specifications mapping to directories (unified as ONE Book with 4 Chapters)
+const UNIFIED_BOOK = {
+  name: "Seraph Protocol — Technical Manual",
+  description: "Comprehensive engineering manual for the Seraph Protocol: Modular privacy continuum combining a Monero-inspired base layer with dual private EVMs.",
+  sections: [
+    {
+      folder: "Book_1_Foundations_and_Cryptography",
+      name: "Part I: Foundations & Cryptography",
+      description: "Privacy Continuum L0-L3, Monero heritage, Seraphis research horizons, formal cryptography, and ZK proving benchmarks."
+    },
+    {
+      folder: "Book_2_Core_Architecture_and_Networks",
+      name: "Part II: Core Architecture & Networks",
+      description: "Base Layer settlement, Dual Private EVMs, Cross-EVM Bridges, Relayers, and MEV Shielding."
+    },
+    {
+      folder: "Book_3_Applications_and_Tokenomics",
+      name: "Part III: Applications & Tokenomics",
+      description: "Wallets, First-Party Privacy Modules (xUSD CDP, AI Usage Tickets, Stealth Invoices), DEX/CEX integrations, SER Tokenomics, Presale, and Creator Launchpad."
+    },
+    {
+      folder: "Book_4_Operations_Security_and_Reference",
+      name: "Part IV: Operations, Security & Reference",
+      description: "Treasury DAO Governance, 12-Vector Threat Matrix, Emergency Circuit Breakers, Roadmap, Glossary, and Developer Setup."
+    }
+  ]
+};
 
 // CLI argument parsing
 function parseArgs() {
@@ -121,8 +125,8 @@ export async function syncDocs(options) {
   const inventory = [];
   let totalChapters = 0;
 
-  for (const book of BOOKS) {
-    const bookDir = path.join(DOCS_ROOT, book.folder);
+  for (const section of UNIFIED_BOOK.sections) {
+    const bookDir = path.join(DOCS_ROOT, section.folder);
     if (!fs.existsSync(bookDir)) {
       throw new Error(`Missing book directory: ${bookDir}`);
     }
@@ -139,17 +143,18 @@ export async function syncDocs(options) {
     });
 
     totalChapters += chapters.length;
-    inventory.push({ ...book, chapters });
+    inventory.push({ ...section, chapters });
   }
 
-  console.log(`Verified local inventory: ${inventory.length} Books, ${totalChapters} Chapters ready.`);
+  console.log(`Verified local inventory: 1 Unified Book ("${UNIFIED_BOOK.name}"), ${inventory.length} Parts, ${totalChapters} Total Chapters.`);
 
   if (options.dryRun) {
     console.log("\n[DRY RUN SUMMARY]");
-    for (const book of inventory) {
-      console.log(`\n📚 ${book.name} (${book.chapters.length} chapters):`);
-      for (const ch of book.chapters) {
-        console.log(`   📄 [${ch.filename}] -> "${ch.title}" (${ch.content.length.toLocaleString()} bytes)`);
+    console.log(`\n📚 ${UNIFIED_BOOK.name}:`);
+    for (const section of inventory) {
+      console.log(`\n   🔖 ${section.name} (${section.chapters.length} chapters):`);
+      for (const ch of section.chapters) {
+        console.log(`      📄 [${ch.filename}] -> "${ch.title}" (${ch.content.length.toLocaleString()} bytes)`);
       }
     }
     console.log("\n✅ Dry run verification passed! All 22 markdown chapters are valid.");
@@ -172,48 +177,65 @@ export async function syncDocs(options) {
   const existingBooksResp = await bookstackRequest(options.url, "books", { method: "GET" }, options.tokenId, options.tokenSecret);
   const existingBooks = existingBooksResp.data || [];
 
-  // 2. Create or find Books
-  console.log("[2/3] Upserting Books...");
-  for (const book of inventory) {
-    let remoteBook = existingBooks.find(b => b.name.toLowerCase() === book.name.toLowerCase());
-    if (!remoteBook) {
-      console.log(`   ➕ Creating Book: "${book.name}"...`);
-      remoteBook = await bookstackRequest(options.url, "books", {
-        method: "POST",
-        body: JSON.stringify({
-          name: book.name,
-          description: book.description
-        })
-      }, options.tokenId, options.tokenSecret);
-      console.log(`      Created Book ID: ${remoteBook.id}`);
-    } else {
-      console.log(`   ✔ Found existing Book ID ${remoteBook.id}: "${book.name}"`);
-    }
-    book.remoteId = remoteBook.id;
+  // 2. Create or find the ONE Unified Master Book
+  console.log("[2/3] Upserting Unified Master Book & Section Chapters...");
+  let masterBook = existingBooks.find(b => b.name.toLowerCase() === UNIFIED_BOOK.name.toLowerCase());
+  if (!masterBook) {
+    console.log(`   ➕ Creating Unified Book: "${UNIFIED_BOOK.name}"...`);
+    masterBook = await bookstackRequest(options.url, "books", {
+      method: "POST",
+      body: JSON.stringify({
+        name: UNIFIED_BOOK.name,
+        description: UNIFIED_BOOK.description
+      })
+    }, options.tokenId, options.tokenSecret);
+    console.log(`      Created Unified Book ID: ${masterBook.id}`);
+  } else {
+    console.log(`   ✔ Found existing Unified Book ID ${masterBook.id}: "${masterBook.name}"`);
   }
 
-  // 3. Upsert Chapters as Pages within each Book
-  console.log("\n[3/3] Synchronizing Chapters & Markdown Content...");
+  // Fetch full book details including existing chapters and pages
+  const bookDetails = await bookstackRequest(options.url, `books/${masterBook.id}`, { method: "GET" }, options.tokenId, options.tokenSecret);
+  const existingContents = bookDetails.contents || [];
+  const existingChapters = existingContents.filter(item => item.type === "chapter");
+  const existingPages = [];
+  for (const item of existingContents) {
+    if (item.type === "page") {
+      existingPages.push(item);
+    } else if (item.type === "chapter" && item.pages) {
+      existingPages.push(...item.pages);
+    }
+  }
+
+  // Upsert Chapters (Parts) under the unified book
+  for (const section of inventory) {
+    let remoteChapter = existingChapters.find(c => c.name.toLowerCase() === section.name.toLowerCase());
+    if (!remoteChapter) {
+      console.log(`   🔖 Creating Chapter: "${section.name}"...`);
+      remoteChapter = await bookstackRequest(options.url, "chapters", {
+        method: "POST",
+        body: JSON.stringify({
+          book_id: masterBook.id,
+          name: section.name,
+          description: section.description
+        })
+      }, options.tokenId, options.tokenSecret);
+      console.log(`      Created Chapter ID: ${remoteChapter.id}`);
+    } else {
+      console.log(`   ✔ Found existing Chapter ID ${remoteChapter.id}: "${section.name}"`);
+    }
+    section.remoteChapterId = remoteChapter.id;
+  }
+
+  // 3. Upsert Pages under their respective Chapters within the single Book
+  console.log("\n[3/3] Synchronizing Pages into Unified Book...");
   let syncedCount = 0;
 
-  for (const book of inventory) {
-    console.log(`\n📚 Synchronizing: ${book.name} (Book ID: ${book.remoteId})`);
+  for (const section of inventory) {
+    console.log(`\n📚 Chapter: ${section.name} (Chapter ID: ${section.remoteChapterId})`);
 
-    // Fetch existing pages within this book
-    const bookDetails = await bookstackRequest(options.url, `books/${book.remoteId}`, { method: "GET" }, options.tokenId, options.tokenSecret);
-    const existingPages = [];
-    if (bookDetails.contents) {
-      for (const item of bookDetails.contents) {
-        if (item.type === "page") {
-          existingPages.push(item);
-        } else if (item.type === "chapter" && item.pages) {
-          existingPages.push(...item.pages);
-        }
-      }
-    }
-
-    for (const ch of book.chapters) {
-      // Find matching page by title or chapter number
+    for (const ch of section.chapters) {
+      // Find matching page by title or chapter prefix
       const existingPage = existingPages.find(p => 
         p.name.toLowerCase() === ch.title.toLowerCase() ||
         (ch.title.includes(":") && p.name.includes(ch.title.split(":")[0]))
@@ -230,11 +252,12 @@ export async function syncDocs(options) {
         }, options.tokenId, options.tokenSecret);
         console.log(`   🔄 Updated Page ID ${existingPage.id}: "${ch.title}"`);
       } else {
-        // Create new page
+        // Create new page inside chapter and book
         const newPage = await bookstackRequest(options.url, "pages", {
           method: "POST",
           body: JSON.stringify({
-            book_id: book.remoteId,
+            book_id: masterBook.id,
+            chapter_id: section.remoteChapterId,
             name: ch.title,
             markdown: ch.content
           })
