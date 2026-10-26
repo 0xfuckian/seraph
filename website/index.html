@@ -13,6 +13,9 @@
   <meta name="twitter:title" content="Seraph Protocol — Privacy Continuum">
   <meta name="twitter:description" content="A four-level privacy continuum: Monero-inspired base layer + two private EVMs. Native SER + XMR.">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <!-- Early Anti-Flicker Theme Initializer -->
+  <script src="data:text/javascript,try{var s=localStorage.getItem('seraph_theme')||'system';var m=(typeof window!=='undefined'&&typeof window.matchMedia==='function')&&window.matchMedia('(prefers-color-scheme: dark)').matches;var d=s==='dark'||(s==='system'&&m);document.documentElement.setAttribute('data-theme',d?'dark':'light');document.documentElement.setAttribute('data-theme-setting',s);}catch(e){}"></script>
+
   <!-- Typography: IoskeleyMonoTerm -->
   <!-- Typography: IoskeleyMonoTerm (Universal Monospace Terminal Font) -->
   <style>
@@ -32,7 +35,40 @@
     }
   </style>
   <style>
-    :root {
+    :root, :root[data-theme="light"] {
+      color-scheme: light;
+      --color-white:        #ffffff;
+      --color-bg:           #ffffff;
+      --color-paper:        #f5f5f3;
+      --color-ink:          #0e1012;
+      --color-sub:          #60636a;
+      --color-line:         #d9dadd;
+      --color-accent:       #2f4cff;
+      --color-green:        #047857;
+      --color-green-bright: #34d399;
+      --color-orange:       #b45309;
+      --color-magenta:      #a21caf;
+      --color-ink-soft:     #eeeef0;
+      --color-magenta-soft: #fbeefc;
+      --color-blue-soft:    #eef1ff;
+      --color-green-soft:   #e6f7f1;
+      --color-orange-soft:  #fff2e5;
+      --color-metal:        #c0c0c0;
+      --line-shadow:        var(--color-line) 0px 0px 0px 1px;
+      --card-shadow:        var(--color-line) 0px 0px 0px 1px, rgba(0,0,0,0.04) 0px 2px 2px, var(--color-paper) 0px 0px 0px 1px;
+      --card-shadow-hover:  rgba(0,0,0,0.10) 0px 0px 0px 1px, rgba(0,0,0,0.06) 0px 4px 8px, var(--color-paper) 0px 0px 0px 1px;
+      --hero-grid-line:     var(--color-line);
+      --header-bg:          rgba(255, 255, 255, 0.94);
+      --header-border:      1px solid var(--color-line);
+      --art-showcase-bg:    #f5f5f3;
+      --art-showcase-card:  #ffffff;
+      --art-showcase-text:  #0e1012;
+      --art-showcase-sub:   #60636a;
+      --art-showcase-border:#d9dadd;
+    }
+
+    :root[data-theme="dark"] {
+      color-scheme: dark;
       --color-white:        #0d111a;
       --color-bg:           #06080c;
       --color-paper:        #121622;
@@ -53,10 +89,20 @@
       --line-shadow:        rgba(255, 255, 255, 0.10) 0px 0px 0px 1px;
       --card-shadow:        rgba(255, 255, 255, 0.08) 0px 0px 0px 1px, rgba(0, 0, 0, 0.6) 0px 4px 16px;
       --card-shadow-hover:  rgba(255, 255, 255, 0.18) 0px 0px 0px 1px, rgba(0, 0, 0, 0.85) 0px 8px 24px;
+      --hero-grid-line:     rgba(255, 255, 255, 0.06);
+      --header-bg:          rgba(6, 8, 12, 0.94);
+      --header-border:      1px solid rgba(255, 255, 255, 0.08);
+      --art-showcase-bg:    #06080c;
+      --art-showcase-card:  #0d111a;
+      --art-showcase-text:  #ffffff;
+      --art-showcase-sub:   #9da4b2;
+      --art-showcase-border:rgba(255, 255, 255, 0.08);
     }
- 
+
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    html { scroll-behavior: smooth; background: var(--color-bg); color-scheme: dark; }
+    html { scroll-behavior: smooth; background: var(--color-bg); }
+    html[data-theme="dark"] { color-scheme: dark; }
+    html[data-theme="light"] { color-scheme: light; }
     body {
       font-family: "IoskeleyMonoTerm", monospace;
       background: var(--color-bg);
@@ -77,24 +123,26 @@
     header {
       position: sticky; top: 0; z-index: 50;
       display: flex; flex-wrap: wrap; align-items: stretch;
-      background: rgba(6, 8, 12, 0.94);
+      background: var(--header-bg);
       backdrop-filter: blur(10px);
       box-shadow: var(--line-shadow);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      border-bottom: var(--header-border);
+      transition: background 0.2s ease, border-color 0.2s ease;
     }
     .logo-cell {
       flex-shrink: 0; display: flex; align-items: center; gap: 10px;
       padding: 16px 24px; border-right: var(--line-shadow);
-      text-decoration: none; color: #ffffff;
+      text-decoration: none; color: var(--color-ink);
     }
     .logo-cell:hover, .logo-cell:focus, .logo-cell:visited, .logo-cell:active {
-      text-decoration: none; color: #ffffff;
+      text-decoration: none; color: var(--color-ink);
     }
     .logo-badge {
       display: inline-flex; align-items: center; justify-content: center;
       width: 26px; height: 26px;
-      background: #ffffff; color: #06080c;
+      background: var(--color-ink); color: var(--color-bg);
       border-radius: 4px; flex-shrink: 0;
+      transition: background 0.2s ease, color 0.2s ease;
     }
     .logo-badge svg {
       width: 15px; height: 15px; display: block;
@@ -102,7 +150,7 @@
     .logo {
       font-family: "IoskeleyMonoTerm", monospace;
       font-weight: 700; font-size: 18px; letter-spacing: -0.04em;
-      color: #ffffff; text-decoration: none;
+      color: var(--color-ink); text-decoration: none;
     }
     .logo .dot { color: var(--color-accent); }
     .nav-area { flex: 1; display: flex; overflow-x: auto; }
@@ -115,8 +163,8 @@
       color: var(--color-sub); text-decoration: none;
       transition: color 0.15s; white-space: nowrap;
     }
-    .nav-link:hover { color: #ffffff; }
-    .nav-link.active { color: #ffffff; }
+    .nav-link:hover { color: var(--color-ink); }
+    .nav-link.active { color: var(--color-ink); }
     .nav-link.active .bracket { color: var(--color-accent); }
     .bracket { margin-right: 5px; color: var(--color-sub); }
     .status-cell {
@@ -126,11 +174,166 @@
     }
     .status-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--color-orange); margin-right: 8px; }
     .status-text { color: var(--color-orange); font-weight: 700; }
+
+    /* === Theme Switcher Pill === */
+    .theme-cell {
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      padding: 0 14px;
+      border-left: var(--line-shadow);
+    }
+    .theme-toggle-group {
+      display: inline-flex;
+      align-items: center;
+      background: var(--color-paper);
+      box-shadow: var(--line-shadow);
+      border-radius: 6px;
+      padding: 2px;
+      gap: 2px;
+    }
+    .theme-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: transparent;
+      color: var(--color-sub);
+      border: none;
+      border-radius: 4px;
+      padding: 5px 8px;
+      font-family: "IoskeleyMonoTerm", monospace;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      transition: background 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
+      white-space: nowrap;
+      user-select: none;
+    }
+    .theme-btn:hover {
+      color: var(--color-ink);
+    }
+    .theme-btn.active {
+      background: var(--color-white);
+      color: var(--color-ink);
+      font-weight: 700;
+      box-shadow: var(--line-shadow);
+    }
+    .theme-btn .theme-icon {
+      font-size: 11px;
+      line-height: 1;
+    }
+    @media (max-width: 680px) {
+      .theme-btn .theme-label { display: none; }
+      .theme-btn { padding: 5px 6px; }
+      .theme-cell { padding: 0 8px; }
+    }
+
+    /* === Hero & Engraving Cards === */
+    .engraving-hero-card {
+      margin-bottom: 24px;
+      background: var(--color-white);
+      border: 1px solid var(--color-line);
+      box-shadow: var(--card-shadow);
+      border-radius: 16px;
+      padding: 20px;
+      display: flex;
+      flex-direction: row;
+      gap: 24px;
+      align-items: center;
+      flex-wrap: wrap;
+      transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .engraving-hero-thumb {
+      width: 140px;
+      min-width: 140px;
+      max-width: 160px;
+      border-radius: 10px;
+      overflow: hidden;
+      background: #000000;
+      aspect-ratio: 3/4;
+      flex-shrink: 0;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+    .engraving-hero-thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .engraving-hero-meta {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+    .engraving-hero-num {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--color-sub);
+    }
+    .engraving-hero-tag {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--color-sub);
+    }
+    .engraving-hero-card h3 {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--color-ink);
+      margin: 0 0 8px 0;
+      letter-spacing: -0.01em;
+    }
+    .engraving-hero-card p {
+      font-size: 13px;
+      line-height: 1.6;
+      color: var(--color-sub);
+      margin: 0;
+    }
+
+    /* === Classical Engraving Showcase Section === */
+    .art-showcase-section {
+      background: var(--art-showcase-bg);
+      color: var(--art-showcase-text);
+      padding: 64px 24px;
+      border-top: 1px solid var(--art-showcase-border);
+      border-bottom: 1px solid var(--art-showcase-border);
+      transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+    }
+    .art-showcase-section h2 {
+      color: var(--art-showcase-text);
+    }
+    .art-showcase-section .art-tag {
+      color: var(--art-showcase-sub);
+    }
+    .art-card {
+      background: var(--art-showcase-card);
+      border: 1px solid var(--art-showcase-border);
+      border-radius: 16px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+      box-shadow: var(--card-shadow);
+    }
+    .art-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--card-shadow-hover);
+    }
+    .art-card .art-caption {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--art-showcase-text);
+      letter-spacing: -0.01em;
+    }
+
  
     .nav-toggle {
       display: none; align-items: center; justify-content: center;
       padding: 0 20px; border: none; border-left: var(--line-shadow);
-      background: var(--color-white); color: #ffffff;
+      background: var(--color-white); color: var(--color-ink);
       font-family: "IoskeleyMonoTerm", monospace; font-size: 18px; cursor: pointer;
     }
  
@@ -152,8 +355,8 @@
     .hero::before {
       content: ""; position: absolute; inset: 0; pointer-events: none;
       background-image:
-        linear-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+        linear-gradient(var(--hero-grid-line) 1px, transparent 1px),
+        linear-gradient(90deg, var(--hero-grid-line) 1px, transparent 1px);
       background-size: 56px 56px;
       opacity: 0.75;
       -webkit-mask-image: linear-gradient(to bottom, black 0%, transparent 85%);
@@ -169,7 +372,7 @@
       font-family: "IoskeleyMonoTerm", monospace;
       font-size: 48px; font-weight: 500;
       line-height: 0.94; letter-spacing: -0.04em;
-      color: #ffffff;
+      color: var(--color-ink);
     }
     .hero h1 .word-magenta { color: var(--color-magenta); }
     .hero h1 .word-orange { color: var(--color-orange); }
@@ -204,19 +407,19 @@
     .cta-label {
       display: inline-flex; align-items: center;
       padding: 12px 20px;
-      background: #161b26; color: #ffffff;
-      border: 1px solid rgba(255, 255, 255, 0.12); border-left: none;
+      background: var(--color-paper); color: var(--color-ink);
+      border: 1px solid var(--color-line); border-left: none;
     }
     .cta-secondary {
       display: inline-flex; align-items: center;
       font-family: "IoskeleyMonoTerm", monospace;
       font-size: 12px; font-weight: 500;
       letter-spacing: 0.02em;
-      background: var(--color-white); color: #ffffff;
+      background: var(--color-white); color: var(--color-ink);
       box-shadow: var(--line-shadow);
       padding: 12px 24px; text-decoration: none;
     }
-    .cta-secondary:hover { background: #1a202c; color: #ffffff; }
+    .cta-secondary:hover { background: var(--color-paper); color: var(--color-ink); }
  
     /* === Stats === */
     .stats-grid {
@@ -348,13 +551,13 @@
     .arch-box { box-shadow: var(--card-shadow); padding: 24px; background: var(--color-white); }
     .arch-box:hover { box-shadow: var(--card-shadow-hover); }
     .arch-tag { font-family: "IoskeleyMonoTerm", monospace; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em; color: var(--color-sub); }
-    .arch-name { font-family: "IoskeleyMonoTerm", monospace; font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 6px 0 8px; color: #ffffff; }
+    .arch-name { font-family: "IoskeleyMonoTerm", monospace; font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 6px 0 8px; color: var(--color-ink); }
     .arch-sub { font-size: 15px; line-height: 1.6; color: var(--color-sub); }
     .arch-features { list-style: none; margin-top: 12px; }
     .arch-features li { font-family: "IoskeleyMonoTerm", monospace; font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.02em; color: var(--color-sub); padding: 5px 0; border-top: var(--line-shadow); }
     .arch-features li:first-child { border-top: none; }
     .arch-shared { box-shadow: var(--card-shadow); border-top: 4px solid var(--color-accent); padding: 24px; margin: 24px 0; background: var(--color-paper); }
-    .arch-shared .arch-name { font-size: 18px; color: #ffffff; }
+    .arch-shared .arch-name { font-size: 18px; color: var(--color-ink); }
     .arch-shared p { font-size: 15px; line-height: 1.6; color: var(--color-sub); }
     .arch-base { border-top: 4px solid var(--color-magenta); }
  
@@ -368,30 +571,30 @@
     .bar-orange { background: var(--color-orange); }
     .bar-green { background: var(--color-green); }
     .bar-accent { background: var(--color-accent); }
-    .module-card h3 { font-family: "IoskeleyMonoTerm", monospace; font-size: 20px; font-weight: 500; line-height: 1.15; margin-bottom: 8px; color: #ffffff; }
+    .module-card h3 { font-family: "IoskeleyMonoTerm", monospace; font-size: 20px; font-weight: 500; line-height: 1.15; margin-bottom: 8px; color: var(--color-ink); }
     .module-card h3 .dot { font-size: 16px; margin-right: 6px; }
     .module-card p { font-size: 16px; font-weight: 400; line-height: 1.6; color: var(--color-sub); margin-top: auto; }
     .module-specs { list-style: none; margin: 12px 0; }
     .module-specs li { font-family: "IoskeleyMonoTerm", monospace; font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.02em; color: var(--color-sub); padding: 6px 0; border-top: var(--line-shadow); display: flex; justify-content: space-between; gap: 12px; }
     .module-specs li:first-child { border-top: none; }
-    .module-specs li .v { color: #ffffff; font-weight: 700; }
+    .module-specs li .v { color: var(--color-ink); font-weight: 700; }
  
     /* === Tokenomics === */
     .token-two { display: grid; grid-template-columns: 1.2fr 1fr; gap: 24px; align-items: start; }
     @media (max-width: 900px) { .token-two { grid-template-columns: 1fr; } }
     .alloc-row { display: grid; grid-template-columns: 1fr 220px 56px; align-items: center; gap: 16px; padding: 12px 0; border-top: var(--line-shadow); }
     .alloc-row:first-child { border-top: none; }
-    .alloc-lbl { font-size: 15px; font-weight: 500; color: #ffffff; }
+    .alloc-lbl { font-size: 15px; font-weight: 500; color: var(--color-ink); }
     .alloc-track { height: 14px; background: var(--color-paper); box-shadow: var(--line-shadow); }
     .alloc-fill { height: 100%; }
-    .alloc-pct { font-family: "IoskeleyMonoTerm", monospace; font-size: 12px; font-weight: 700; text-align: right; color: #ffffff; }
+    .alloc-pct { font-family: "IoskeleyMonoTerm", monospace; font-size: 12px; font-weight: 700; text-align: right; color: var(--color-ink); }
     @media (max-width: 640px) { .alloc-row { grid-template-columns: 1fr 1fr 40px; gap: 10px; } }
     .fee-card { box-shadow: var(--card-shadow); padding: 24px; background: var(--color-white); }
-    .fee-card h3 { font-family: "IoskeleyMonoTerm", monospace; font-size: 18px; font-weight: 700; margin-bottom: 12px; color: #ffffff; }
+    .fee-card h3 { font-family: "IoskeleyMonoTerm", monospace; font-size: 18px; font-weight: 700; margin-bottom: 12px; color: var(--color-ink); }
     .fee-card ul { list-style: none; }
     .fee-card li { font-size: 15px; line-height: 1.6; color: var(--color-sub); padding: 8px 0; border-top: var(--line-shadow); }
     .fee-card li:first-child { border-top: none; }
-    .fee-card li b { color: #ffffff; }
+    .fee-card li b { color: var(--color-ink); }
  
     /* === Roadmap === */
     .roadmap { position: relative; margin-left: 8px; }
@@ -403,21 +606,21 @@
     .road-item:nth-child(2) .road-dot { background: var(--color-magenta); }
     .road-item:nth-child(3) .road-dot { background: var(--color-accent); }
     .road-item:nth-child(4) .road-dot { background: var(--color-green); }
-    .road-item:nth-child(5) .road-dot { background: #ffffff; }
+    .road-item:nth-child(5) .road-dot { background: var(--color-ink); }
     .road-phase { font-family: "IoskeleyMonoTerm", monospace; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em; color: var(--color-sub); margin-bottom: 4px; }
-    .road-title { font-family: "IoskeleyMonoTerm", monospace; font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin-bottom: 8px; color: #ffffff; }
+    .road-title { font-family: "IoskeleyMonoTerm", monospace; font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin-bottom: 8px; color: var(--color-ink); }
     .road-item p { font-size: 15px; line-height: 1.6; color: var(--color-sub); max-width: 640px; }
  
     /* === Security === */
     .threat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
     @media (max-width: 768px) { .threat-grid { grid-template-columns: 1fr; } }
     .threat-card { box-shadow: var(--card-shadow); padding: 24px; background: var(--color-white); }
-    .threat-card h4 { font-family: "IoskeleyMonoTerm", monospace; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em; color: #ffffff; margin-bottom: 6px; }
+    .threat-card h4 { font-family: "IoskeleyMonoTerm", monospace; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em; color: var(--color-ink); margin-bottom: 6px; }
     .threat-card p { font-size: 15px; line-height: 1.6; color: var(--color-sub); }
     .sec-list { list-style: none; }
     .sec-list li { display: flex; gap: 12px; padding: 12px 0; border-top: var(--line-shadow); font-size: 15px; color: var(--color-sub); line-height: 1.5; }
     .sec-list li:first-child { border-top: none; }
-    .sec-list .m { font-family: "IoskeleyMonoTerm", monospace; font-weight: 700; color: #ffffff; flex-shrink: 0; }
+    .sec-list .m { font-family: "IoskeleyMonoTerm", monospace; font-weight: 700; color: var(--color-ink); flex-shrink: 0; }
  
     /* === Tier cards (presale) === */
     .tier-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
@@ -489,14 +692,14 @@
     .currency-tabs { display: inline-flex; box-shadow: var(--line-shadow); margin-bottom: 16px; }
     .currency-tab { font-family: "IoskeleyMonoTerm", monospace; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em; padding: 12px 20px; background: var(--color-white); color: var(--color-sub); cursor: pointer; border: none; }
     .currency-tab + .currency-tab { box-shadow: inset var(--line-shadow); }
-    .currency-tab.active { background: #ffffff; color: #06080c; }
+    .currency-tab.active { background: var(--color-ink); color: var(--color-bg); }
     .amount-wrap { display: flex; align-items: center; gap: 12px; box-shadow: var(--line-shadow); padding: 16px 20px; background: var(--color-white); margin-bottom: 16px; }
-    .amount-wrap .sym { font-family: "IoskeleyMonoTerm", monospace; font-size: 14px; font-weight: 700; color: #ffffff; }
-    .amount-input { flex: 1; border: none; outline: none; font-family: "IoskeleyMonoTerm", monospace; font-size: 36px; font-weight: 900; letter-spacing: -0.02em; color: #ffffff; background: transparent; min-width: 0; }
-    .amount-input::placeholder { color: #4b5568; }
+    .amount-wrap .sym { font-family: "IoskeleyMonoTerm", monospace; font-size: 14px; font-weight: 700; color: var(--color-ink); }
+    .amount-input { flex: 1; border: none; outline: none; font-family: "IoskeleyMonoTerm", monospace; font-size: 36px; font-weight: 900; letter-spacing: -0.02em; color: var(--color-ink); background: transparent; min-width: 0; }
+    .amount-input::placeholder { color: var(--color-sub); }
     .wallet-btn { display: inline-flex; align-items: center; font-family: "IoskeleyMonoTerm", monospace; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em; text-decoration: none; padding: 14px 28px; background: var(--color-accent); color: #ffffff; border: none; cursor: pointer; transition: background 0.15s ease, box-shadow 0.15s ease; }
     .wallet-btn:hover { background: #2563eb; box-shadow: var(--card-shadow-hover); }
-    .wallet-btn .metal { color: #ffffff; margin-right: 8px; }
+    .wallet-btn .metal { color: rgba(255, 255, 255, 0.7); margin-right: 8px; }
     .wallet-btn:disabled { background: var(--color-ink-soft); color: var(--color-sub); cursor: not-allowed; box-shadow: none; }
     .wallet-btn:disabled .metal { color: var(--color-line); }
     .connect-note { margin-top: 12px; font-size: 13px; line-height: 1.5; color: var(--color-sub); }
@@ -542,8 +745,8 @@
     .lp-toolbar { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 16px; }
     .lp-chips { display: flex; gap: 8px; flex-wrap: wrap; }
     .lp-chip { font-family: "IoskeleyMonoTerm", monospace; font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.02em; padding: 9px 14px; background: var(--color-white); color: var(--color-sub); box-shadow: var(--line-shadow); border: none; border-radius: 999px; cursor: pointer; }
-    .lp-chip:hover { color: #ffffff; }
-    .lp-chip[aria-pressed="true"] { background: #ffffff; color: #06080c; font-weight: 700; }
+    .lp-chip:hover { color: var(--color-ink); }
+    .lp-chip[aria-pressed="true"] { background: var(--color-ink); color: var(--color-bg); font-weight: 700; }
     .lp-table-wrap { overflow-x: auto; background: var(--color-white); box-shadow: var(--card-shadow); }
     .lp-table { width: 100%; border-collapse: collapse; min-width: 560px; }
     .lp-table th { font-family: "IoskeleyMonoTerm", monospace; font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.02em; color: var(--color-sub); text-align: left; padding: 14px 16px; border-bottom: var(--line-shadow); }
@@ -745,10 +948,10 @@
       cursor: pointer;
       transition: all 0.15s ease;
     }
-    .priv-tab-btn:hover { color: #ffffff; }
+    .priv-tab-btn:hover { color: var(--color-ink); }
     .priv-tab-btn.active {
-      background: #ffffff;
-      color: #06080c;
+      background: var(--color-ink);
+      color: var(--color-bg);
     }
     .priv-panel {
       display: none;
@@ -815,6 +1018,22 @@
         <span class="status-text-full">ALPHA · BASE SEPOLIA</span>
         <span class="status-text-short">ALPHA</span>
       </span>
+    </div>
+        <div class="theme-cell" id="themeCell" role="region" aria-label="Theme Selection">
+      <div class="theme-toggle-group" role="radiogroup" aria-label="Theme">
+        <button type="button" class="theme-btn" data-theme-val="light" role="radio" aria-checked="false" title="Light theme">
+          <span class="theme-icon">☼</span>
+          <span class="theme-label">LIGHT</span>
+        </button>
+        <button type="button" class="theme-btn active" data-theme-val="system" role="radio" aria-checked="true" title="Follow device system setting">
+          <span class="theme-icon">◐</span>
+          <span class="theme-label">SYS</span>
+        </button>
+        <button type="button" class="theme-btn" data-theme-val="dark" role="radio" aria-checked="false" title="Dark theme">
+          <span class="theme-icon">☾</span>
+          <span class="theme-label">DARK</span>
+        </button>
+      </div>
     </div>
     <button class="nav-toggle" id="navToggle" aria-label="Menu">☰</button>
   </header>
@@ -890,48 +1109,48 @@
     <div class="marquee" aria-hidden="true"><div class="marquee-track"><span>Privacy continuum</span><span>Private EVM</span><span>XMR base layer</span><span>FCMP++</span><span>Bulletproofs++</span><span>Stealth addresses</span><span>Privacy continuum</span><span>Private EVM</span><span>XMR base layer</span><span>FCMP++</span><span>Bulletproofs++</span><span>Stealth addresses</span></div></div>
 
     <!-- Classical Engraving Continuum Showcase (Black & White Stipple/Halftone Engravings) -->
-    <div id="art-showcase" class="section" style="background:#080a0f; color:#ffffff; padding: 64px 24px; border-top: 1px solid #181c24; border-bottom: 1px solid #181c24;">
+    <div id="art-showcase" class="section art-showcase-section">
       <div style="max-width: 1200px; margin: 0 auto;">
         <div style="text-align: center; margin-bottom: 40px;">
-          <div style="font-size: 11px; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; color: #8e94a0; margin-bottom: 14px;">
+          <div style="font-size: 11px; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; color: var(--art-showcase-sub); margin-bottom: 14px;">
             HOW SERAPH OPERATES
           </div>
-          <h2 style="font-size: clamp(26px, 4vw, 44px); font-weight: 700; color: #ffffff; letter-spacing: -0.02em; line-height: 1.15; margin: 0 auto; max-width: 840px;">
+          <h2 style="font-size: clamp(26px, 4vw, 44px); font-weight: 700; color: var(--art-showcase-text); letter-spacing: -0.02em; line-height: 1.15; margin: 0 auto; max-width: 840px;">
             One continuum. Dual EVMs. Zero lost privacy.
           </h2>
         </div>
 
         <div class="art-cards-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px;">
           <!-- Card 1: Winged Pegasus -->
-          <div class="art-card" style="background: #0d1017; border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 14px; display: flex; flex-direction: column; transition: transform 0.2s ease, border-color 0.2s ease;">
+          <div class="art-card">
             <div style="width: 100%; border-radius: 10px; overflow: hidden; background: #000000; aspect-ratio: 3/4;">
               <img src="assets/art-pegasus-bw.jpg" alt="Shield into Anonymity Set" style="width: 100%; height: 100%; object-fit: cover; display: block;" loading="lazy">
             </div>
             <div style="margin-top: 16px; display: flex; align-items: baseline; gap: 10px; padding: 4px 6px;">
               <span style="font-size: 13px; font-weight: 700; color: #71717a;">01</span>
-              <span style="font-size: 15px; font-weight: 600; color: #f4f4f5; letter-spacing: -0.01em;">Shield assets into the anonymity set</span>
+              <span class="art-caption">Shield assets into the anonymity set</span>
             </div>
           </div>
 
           <!-- Card 2: Celestial Observatory / Temple -->
-          <div class="art-card" style="background: #0d1017; border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 14px; display: flex; flex-direction: column; transition: transform 0.2s ease, border-color 0.2s ease;">
+          <div class="art-card">
             <div style="width: 100%; border-radius: 10px; overflow: hidden; background: #000000; aspect-ratio: 3/4;">
               <img src="assets/art-temple-bw.jpg" alt="Execute on Dual Private EVMs" style="width: 100%; height: 100%; object-fit: cover; display: block;" loading="lazy">
             </div>
             <div style="margin-top: 16px; display: flex; align-items: baseline; gap: 10px; padding: 4px 6px;">
               <span style="font-size: 13px; font-weight: 700; color: #71717a;">02</span>
-              <span style="font-size: 15px; font-weight: 600; color: #f4f4f5; letter-spacing: -0.01em;">Execute on dual confidential EVMs</span>
+              <span class="art-caption">Execute on dual confidential EVMs</span>
             </div>
           </div>
 
           <!-- Card 3: Sculpted Hands Exchanging Orb -->
-          <div class="art-card" style="background: #0d1017; border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 14px; display: flex; flex-direction: column; transition: transform 0.2s ease, border-color 0.2s ease;">
+          <div class="art-card">
             <div style="width: 100%; border-radius: 10px; overflow: hidden; background: #000000; aspect-ratio: 3/4;">
               <img src="assets/art-hands-bw.jpg" alt="Settle Zero-Knowledge Proofs" style="width: 100%; height: 100%; object-fit: cover; display: block;" loading="lazy">
             </div>
             <div style="margin-top: 16px; display: flex; align-items: baseline; gap: 10px; padding: 4px 6px;">
               <span style="font-size: 13px; font-weight: 700; color: #71717a;">03</span>
-              <span style="font-size: 15px; font-weight: 600; color: #f4f4f5; letter-spacing: -0.01em;">Settle with mathematical ZK proofs</span>
+              <span class="art-caption">Settle with mathematical ZK proofs</span>
             </div>
           </div>
         </div>
@@ -988,19 +1207,17 @@
       </div>
 
             <!-- Privacy Pool Hero Engraving: Fountain of Anonymity -->
-      <div class="reveal" style="margin-bottom: 24px; background: #0d111a; border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 20px; display: flex; flex-direction: row; gap: 24px; align-items: center; flex-wrap: wrap;">
-        <div style="width: 140px; min-width: 140px; max-width: 160px; border-radius: 10px; overflow: hidden; background: #000000; aspect-ratio: 3/4; flex-shrink: 0;">
-          <img src="assets/art-pool-bw.jpg" alt="Privacy Pool Sanctuary" style="width: 100%; height: 100%; object-fit: cover; display: block;" loading="lazy">
+      <div class="reveal engraving-hero-card">
+        <div class="engraving-hero-thumb">
+          <img src="assets/art-pool-bw.jpg" alt="Privacy Pool Sanctuary" loading="lazy">
         </div>
         <div style="flex: 1; min-width: 240px;">
-          <div style="display: flex; align-items: baseline; gap: 10px; margin-bottom: 8px;">
-            <span style="font-size: 13px; font-weight: 700; color: #71717a;">01B</span>
-            <span style="font-size: 12px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #9da4b2;">Cryptographic Sanctuary</span>
+          <div class="engraving-hero-meta">
+            <span class="engraving-hero-num">01B</span>
+            <span class="engraving-hero-tag">Cryptographic Sanctuary</span>
           </div>
-          <h3 style="font-size: 20px; font-weight: 700; color: #ffffff; margin: 0 0 8px 0; letter-spacing: -0.01em;">
-            The Fountain of Anonymity
-          </h3>
-          <p style="font-size: 13px; line-height: 1.6; color: #9da4b2; margin: 0;">
+          <h3>The Fountain of Anonymity</h3>
+          <p>
             Deposit public assets to mint zero-knowledge note commitments into the 2<sup>20</sup> Merkle ring buffer. Spend anonymously via deterministic nullifiers with zero on-chain linkability.
           </p>
         </div>
@@ -1324,19 +1541,17 @@
       </div>
 
       <!-- Architecture Hero Visual: Seraphim Key & Base-Layer Continuum -->
-      <div class="reveal" style="margin-bottom: 24px; background: #0d1017; border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 20px; display: flex; flex-direction: row; gap: 24px; align-items: center; flex-wrap: wrap;">
-        <div style="width: 140px; min-width: 140px; max-width: 160px; border-radius: 10px; overflow: hidden; background: #000000; aspect-ratio: 3/4; flex-shrink: 0;">
-          <img src="assets/art-seraph-bw.jpg" alt="Seraph Sovereign Key Hierarchy" style="width: 100%; height: 100%; object-fit: cover; display: block;" loading="lazy">
+      <div class="reveal engraving-hero-card">
+        <div class="engraving-hero-thumb">
+          <img src="assets/art-seraph-bw.jpg" alt="Seraph Sovereign Key Hierarchy" loading="lazy">
         </div>
         <div style="flex: 1; min-width: 240px;">
-          <div style="display: flex; align-items: baseline; gap: 10px; margin-bottom: 8px;">
-            <span style="font-size: 13px; font-weight: 700; color: #71717a;">04</span>
-            <span style="font-size: 12px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #8e94a0;">Unified Key Hierarchy &amp; Settlement</span>
+          <div class="engraving-hero-meta">
+            <span class="engraving-hero-num">04</span>
+            <span class="engraving-hero-tag">Unified Key Hierarchy &amp; Settlement</span>
           </div>
-          <h3 style="font-size: 20px; font-weight: 700; color: #ffffff; margin: 0 0 8px 0; letter-spacing: -0.01em;">
-            The Six-Winged Privacy Sovereign
-          </h3>
-          <p style="font-size: 13px; line-height: 1.6; color: #a1a1aa; margin: 0;">
+          <h3>The Six-Winged Privacy Sovereign</h3>
+          <p>
             A unified key derivation architecture uniting one-time stealth addresses, Pedersen balance commitments, Bulletproofs++ range proofs, and full-chain membership across dual EVMs and sovereign Monero settlement.
           </p>
         </div>
@@ -1396,19 +1611,17 @@
       <p class="section-desc">Each module ships as a privacy-aware contract suite with first-party wallet integration. All share the same note pool and key hierarchy.</p>
 
       <!-- Modules Hero Visual: Sovereign Cryptographic Vault -->
-      <div class="reveal" style="margin-bottom: 24px; background: #0d1017; border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 20px; display: flex; flex-direction: row; gap: 24px; align-items: center; flex-wrap: wrap;">
-        <div style="width: 140px; min-width: 140px; max-width: 160px; border-radius: 10px; overflow: hidden; background: #000000; aspect-ratio: 3/4; flex-shrink: 0;">
-          <img src="assets/art-vault-bw.jpg" alt="Sovereign Vault Primitives" style="width: 100%; height: 100%; object-fit: cover; display: block;" loading="lazy">
+      <div class="reveal engraving-hero-card">
+        <div class="engraving-hero-thumb">
+          <img src="assets/art-vault-bw.jpg" alt="Sovereign Vault Primitives" loading="lazy">
         </div>
         <div style="flex: 1; min-width: 240px;">
-          <div style="display: flex; align-items: baseline; gap: 10px; margin-bottom: 8px;">
-            <span style="font-size: 13px; font-weight: 700; color: #71717a;">05</span>
-            <span style="font-size: 12px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #8e94a0;">Provable Confidential Reserves</span>
+          <div class="engraving-hero-meta">
+            <span class="engraving-hero-num">05</span>
+            <span class="engraving-hero-tag">Provable Confidential Reserves</span>
           </div>
-          <h3 style="font-size: 20px; font-weight: 700; color: #ffffff; margin: 0 0 8px 0; letter-spacing: -0.01em;">
-            Sovereign Vault &amp; Credit Infrastructure
-          </h3>
-          <p style="font-size: 13px; line-height: 1.6; color: #a1a1aa; margin: 0;">
+          <h3>Sovereign Vault &amp; Credit Infrastructure</h3>
+          <p>
             On-chain cryptographic vaults backing over-collateralized private stablecoins (CollateralVault · xUSD), zero-leakage credit authorizers for autonomous AI agents, and frictionless gas abstraction.
           </p>
         </div>
@@ -1474,19 +1687,17 @@
       </div>
  
             <!-- Tokenomics Hero Engraving: Ouroboros & Algorithmic Equilibrium -->
-      <div class="reveal" style="margin-bottom: 24px; background: #0d111a; border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 20px; display: flex; flex-direction: row; gap: 24px; align-items: center; flex-wrap: wrap;">
-        <div style="width: 140px; min-width: 140px; max-width: 160px; border-radius: 10px; overflow: hidden; background: #000000; aspect-ratio: 3/4; flex-shrink: 0;">
-          <img src="assets/art-ouroboros-bw.jpg" alt="Ouroboros Equilibrium" style="width: 100%; height: 100%; object-fit: cover; display: block;" loading="lazy">
+      <div class="reveal engraving-hero-card">
+        <div class="engraving-hero-thumb">
+          <img src="assets/art-ouroboros-bw.jpg" alt="Ouroboros Equilibrium" loading="lazy">
         </div>
         <div style="flex: 1; min-width: 240px;">
-          <div style="display: flex; align-items: baseline; gap: 10px; margin-bottom: 8px;">
-            <span style="font-size: 13px; font-weight: 700; color: #71717a;">06</span>
-            <span style="font-size: 12px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #9da4b2;">Mathematical Scarcity</span>
+          <div class="engraving-hero-meta">
+            <span class="engraving-hero-num">06</span>
+            <span class="engraving-hero-tag">Mathematical Scarcity</span>
           </div>
-          <h3 style="font-size: 20px; font-weight: 700; color: #ffffff; margin: 0 0 8px 0; letter-spacing: -0.01em;">
-            The Ouroboros &amp; Algorithmic Equilibrium
-          </h3>
-          <p style="font-size: 13px; line-height: 1.6; color: #9da4b2; margin: 0;">
+          <h3>The Ouroboros &amp; Algorithmic Equilibrium</h3>
+          <p>
             A strict 100,000,000 SER cap with zero inflation. On-chain DEX sells burn 50% of the 1% fee directly into the null address, maintaining deflationary pressure as protocol volume scales.
           </p>
         </div>
@@ -1551,19 +1762,17 @@
       <p class="section-desc">Honest, phase-gated delivery. Nothing ships before its exit criteria pass — and the earlier phases deliberately exclude features that don't belong yet.</p>
  
             <!-- Roadmap Hero Engraving: The Celestial Navigator -->
-      <div class="reveal" style="margin-bottom: 32px; background: #0d111a; border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 20px; display: flex; flex-direction: row; gap: 24px; align-items: center; flex-wrap: wrap;">
-        <div style="width: 140px; min-width: 140px; max-width: 160px; border-radius: 10px; overflow: hidden; background: #000000; aspect-ratio: 3/4; flex-shrink: 0;">
-          <img src="assets/art-roadmap-bw.jpg" alt="Celestial Roadmap Navigator" style="width: 100%; height: 100%; object-fit: cover; display: block;" loading="lazy">
+      <div class="reveal engraving-hero-card" style="margin-bottom: 32px;">
+        <div class="engraving-hero-thumb">
+          <img src="assets/art-roadmap-bw.jpg" alt="Celestial Roadmap Navigator" loading="lazy">
         </div>
         <div style="flex: 1; min-width: 240px;">
-          <div style="display: flex; align-items: baseline; gap: 10px; margin-bottom: 8px;">
-            <span style="font-size: 13px; font-weight: 700; color: #71717a;">07</span>
-            <span style="font-size: 12px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #9da4b2;">Multi-Phase Expansion</span>
+          <div class="engraving-hero-meta">
+            <span class="engraving-hero-num">07</span>
+            <span class="engraving-hero-tag">Multi-Phase Expansion</span>
           </div>
-          <h3 style="font-size: 20px; font-weight: 700; color: #ffffff; margin: 0 0 8px 0; letter-spacing: -0.01em;">
-            The Passage Across Epochs
-          </h3>
-          <p style="font-size: 13px; line-height: 1.6; color: #9da4b2; margin: 0;">
+          <h3>The Passage Across Epochs</h3>
+          <p>
             From the live EVM core on Base Sepolia through dedicated XMR EVM execution to sovereign Rust settlement with FCMP++ full-chain membership proofs.
           </p>
         </div>
@@ -1792,19 +2001,17 @@
       </div>
 
       <!-- Governance Hero Engraving: Anonymous Council of Guardians -->
-      <div class="reveal" style="margin-bottom: 24px; background: #0d111a; border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 20px; display: flex; flex-direction: row; gap: 24px; align-items: center; flex-wrap: wrap;">
-        <div style="width: 140px; min-width: 140px; max-width: 160px; border-radius: 10px; overflow: hidden; background: #000000; aspect-ratio: 3/4; flex-shrink: 0;">
-          <img src="assets/art-council-bw.jpg" alt="Anonymous Governance Council" style="width: 100%; height: 100%; object-fit: cover; display: block;" loading="lazy">
+      <div class="reveal engraving-hero-card">
+        <div class="engraving-hero-thumb">
+          <img src="assets/art-council-bw.jpg" alt="Anonymous Governance Council" loading="lazy">
         </div>
         <div style="flex: 1; min-width: 240px;">
-          <div style="display: flex; align-items: baseline; gap: 10px; margin-bottom: 8px;">
-            <span style="font-size: 13px; font-weight: 700; color: #71717a;">09</span>
-            <span style="font-size: 12px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #9da4b2;">Decentralized Sovereignty</span>
+          <div class="engraving-hero-meta">
+            <span class="engraving-hero-num">09</span>
+            <span class="engraving-hero-tag">Decentralized Sovereignty</span>
           </div>
-          <h3 style="font-size: 20px; font-weight: 700; color: #ffffff; margin: 0 0 8px 0; letter-spacing: -0.01em;">
-            The Anonymous Council of Guardians
-          </h3>
-          <p style="font-size: 13px; line-height: 1.6; color: #9da4b2; margin: 0;">
+          <h3>The Anonymous Council of Guardians</h3>
+          <p>
             Zero-knowledge ballot tallies proving quorum and voting weights without exposing voter balances, transaction graphs, or delegate identities.
           </p>
         </div>
@@ -2063,19 +2270,17 @@
       </div>
  
             <!-- Launchpad Hero Engraving: Archimedean Bonding Spiral -->
-      <div class="reveal" style="margin-bottom: 24px; background: #0d111a; border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 20px; display: flex; flex-direction: row; gap: 24px; align-items: center; flex-wrap: wrap;">
-        <div style="width: 140px; min-width: 140px; max-width: 160px; border-radius: 10px; overflow: hidden; background: #000000; aspect-ratio: 3/4; flex-shrink: 0;">
-          <img src="assets/art-curve-bw.jpg" alt="Archimedean Bonding Spiral" style="width: 100%; height: 100%; object-fit: cover; display: block;" loading="lazy">
+      <div class="reveal engraving-hero-card">
+        <div class="engraving-hero-thumb">
+          <img src="assets/art-curve-bw.jpg" alt="Archimedean Bonding Spiral" loading="lazy">
         </div>
         <div style="flex: 1; min-width: 240px;">
-          <div style="display: flex; align-items: baseline; gap: 10px; margin-bottom: 8px;">
-            <span style="font-size: 13px; font-weight: 700; color: #71717a;">08</span>
-            <span style="font-size: 12px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #9da4b2;">Algorithmic Discovery</span>
+          <div class="engraving-hero-meta">
+            <span class="engraving-hero-num">08</span>
+            <span class="engraving-hero-tag">Algorithmic Discovery</span>
           </div>
-          <h3 style="font-size: 20px; font-weight: 700; color: #ffffff; margin: 0 0 8px 0; letter-spacing: -0.01em;">
-            The Archimedean Bonding Spiral
-          </h3>
-          <p style="font-size: 13px; line-height: 1.6; color: #9da4b2; margin: 0;">
+          <h3>The Archimedean Bonding Spiral</h3>
+          <p>
             Fair-launch token discovery governed by constant-product bonding curves. 100% of initial liquidity locks into verified smart contracts with zero team premine or insider allocations.
           </p>
         </div>
@@ -2947,7 +3152,87 @@
     lpUpdate();
     lpLoadLive();
  
+    
+    /* Theme switcher (Light / Dark / System device settings) */
+    function initThemeSwitcher() {
+      var themeBtns = (typeof document !== 'undefined' && typeof document.querySelectorAll === 'function')
+        ? document.querySelectorAll('.theme-btn')
+        : [];
+      var hasMatchMedia = typeof window !== 'undefined' && typeof window.matchMedia === 'function';
+      var systemQuery = hasMatchMedia ? window.matchMedia('(prefers-color-scheme: dark)') : { matches: false };
+      var metaTheme = (typeof document !== 'undefined' && typeof document.querySelector === 'function')
+        ? document.querySelector('meta[name="theme-color"]')
+        : null;
+
+      function getStoredTheme() {
+        try {
+          if (typeof localStorage !== 'undefined' && localStorage && typeof localStorage.getItem === 'function') {
+            return localStorage.getItem('seraph_theme') || 'system';
+          }
+          return 'system';
+        } catch (e) {
+          return 'system';
+        }
+      }
+
+      function applyTheme(setting) {
+        var isDark = setting === 'dark' || (setting === 'system' && Boolean(systemQuery && systemQuery.matches));
+        var effective = isDark ? 'dark' : 'light';
+        if (typeof document !== 'undefined' && document.documentElement && typeof document.documentElement.setAttribute === 'function') {
+          document.documentElement.setAttribute('data-theme', effective);
+          document.documentElement.setAttribute('data-theme-setting', setting);
+        }
+        if (metaTheme && typeof metaTheme.setAttribute === 'function') {
+          metaTheme.setAttribute('content', isDark ? '#06080c' : '#ffffff');
+        }
+        if (themeBtns && typeof themeBtns.forEach === 'function') {
+          themeBtns.forEach(function(btn) {
+            if (!btn || typeof btn.getAttribute !== 'function') return;
+            var val = btn.getAttribute('data-theme-val');
+            var isActive = (val === setting);
+            if (btn.classList && typeof btn.classList.toggle === 'function') {
+              btn.classList.toggle('active', isActive);
+            }
+            if (typeof btn.setAttribute === 'function') {
+              btn.setAttribute('aria-checked', isActive ? 'true' : 'false');
+            }
+          });
+        }
+        if (typeof window !== 'undefined' && typeof window.updateThreeThemes === 'function') {
+          window.updateThreeThemes(isDark);
+        }
+      }
+
+      if (themeBtns && typeof themeBtns.forEach === 'function') {
+        themeBtns.forEach(function(btn) {
+          if (!btn || typeof btn.addEventListener !== 'function') return;
+          btn.addEventListener('click', function() {
+            var val = btn.getAttribute('data-theme-val');
+            try {
+              if (typeof localStorage !== 'undefined' && localStorage && typeof localStorage.setItem === 'function') {
+                localStorage.setItem('seraph_theme', val);
+              }
+            } catch (e) {}
+            applyTheme(val);
+          });
+        });
+      }
+
+      try {
+        if (systemQuery && typeof systemQuery.addEventListener === 'function') {
+          systemQuery.addEventListener('change', function() {
+            if (getStoredTheme() === 'system') {
+              applyTheme('system');
+            }
+          });
+        }
+      } catch (e) {}
+
+      applyTheme(getStoredTheme());
+    }
+
     /* Init */
+    initThemeSwitcher();
     route();
     onScroll();
   </script>
@@ -2957,8 +3242,22 @@
   <script src="https://unpkg.com/splitting@1.1.0/dist/splitting.min.js"></script>
   <script type="module">
 import * as THREE from 'three';
+
+const themeCallbacks = [];
+window.onSeraphThemeChange = function(cb) {
+  themeCallbacks.push(cb);
+  const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+  try { cb(isDark); } catch (e) {}
+};
+window.updateThreeThemes = function(isDark) {
+  for (const cb of themeCallbacks) {
+    try { cb(isDark); } catch (e) {}
+  }
+};
  
-const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const reduceMotion = (typeof window !== 'undefined' && typeof window.matchMedia === 'function')
+  ? window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  : false;
 const allScenes = [];
  
 function createScene(el) {
@@ -3003,6 +3302,7 @@ if (!reduceMotion) {
  
   // Smooth scroll, synced with GSAP
   const lenis = new Lenis({ lerp: 0.1 });
+  window.lenis = lenis;
   lenis.on('scroll', ScrollTrigger.update);
   gsap.ticker.add((time) => lenis.raf(time * 1000));
   gsap.ticker.lagSmoothing(0);
@@ -3072,16 +3372,22 @@ if (!reduceMotion) {
     scene.add(cube);
  
     const size = 1.5;
-    // Flat colours with no shading: black left face, grey right face, white top face
-    const black = new THREE.MeshBasicMaterial({ color: 0x0e1012 });
-    const grey = new THREE.MeshBasicMaterial({ color: 0x8a8f98 });
+    const isInitialDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    const black = new THREE.MeshBasicMaterial({ color: isInitialDark ? 0x181e2b : 0x0e1012 });
+    const grey = new THREE.MeshBasicMaterial({ color: isInitialDark ? 0x3a4150 : 0x8a8f98 });
     const white = new THREE.MeshBasicMaterial({ color: 0xffffff });
-    // BoxGeometry face order: +x (right), -x, +y (top), -y, +z (left), -z
     cube.add(new THREE.Mesh(new THREE.BoxGeometry(size, size, size), [grey, black, white, black, black, black]));
- 
-    // Hairline around the white top face so it stays visible on the white page
+
     const h = size / 2, t = 0.04;
-    const hairline = new THREE.MeshBasicMaterial({ color: 0xd9dadd });
+    const hairline = new THREE.MeshBasicMaterial({ color: isInitialDark ? 0x3a4150 : 0xd9dadd });
+
+    if (window.onSeraphThemeChange) {
+      window.onSeraphThemeChange((isDark) => {
+        black.color.setHex(isDark ? 0x181e2b : 0x0e1012);
+        grey.color.setHex(isDark ? 0x3a4150 : 0x8a8f98);
+        hairline.color.setHex(isDark ? 0x3a4150 : 0xd9dadd);
+      });
+    }
     const edge = (w, d, x, z) => {
       const bar = new THREE.Mesh(new THREE.BoxGeometry(w, t, d), hairline);
       bar.position.set(x, h + 0.001, z);
@@ -3113,14 +3419,20 @@ if (!reduceMotion) {
   const ring = safeScene(document.getElementById('ringCanvas'));
   const ringLabel = document.getElementById('ringLabel');
   if (ring) {
+    const isInitialRingDark = document.documentElement.getAttribute('data-theme') === 'dark';
     const LEVELS = [
-      { label: 'Level 0 · Transparent', hex: 0xffffff },
+      { label: 'Level 0 · Transparent', hex: isInitialRingDark ? 0xffffff : 0x0e1012 },
       { label: 'Level 1 · Optional Shielding', hex: 0xa21caf },
       { label: 'Level 2 · Default Strong', hex: 0x2f4cff },
       { label: 'Level 3 · Private Compute', hex: 0x047857 }
     ];
     const outerRing = new THREE.Mesh(new THREE.TorusGeometry(1, 0.05, 24, 180), new THREE.MeshBasicMaterial({ color: LEVELS[0].hex }));
     const innerRing = new THREE.Mesh(new THREE.TorusGeometry(0.6, 0.02, 16, 180), new THREE.MeshBasicMaterial({ color: LEVELS[0].hex, transparent: true, opacity: 0.5 }));
+    if (window.onSeraphThemeChange) {
+      window.onSeraphThemeChange((isDark) => {
+        LEVELS[0].hex = isDark ? 0xffffff : 0x0e1012;
+      });
+    }
     innerRing.rotation.x = Math.PI / 2;
     ring.scene.add(outerRing, innerRing);
     ring.camera.position.z = 4;
@@ -3158,17 +3470,34 @@ if (!reduceMotion) {
     for (let i = 0; i < N; i++) {
       pts.push(new THREE.Vector3((Math.random() - 0.5) * 8, (Math.random() - 0.5) * 5, (Math.random() - 0.5) * 2));
     }
-    const points = new THREE.Points(new THREE.BufferGeometry().setFromPoints(pts), new THREE.PointsMaterial({ color: 0xffffff, size: 0.07 }));
+    const isInitialNetDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    const pointsMat = new THREE.PointsMaterial({
+      color: isInitialNetDark ? 0xffffff : 0x2f4cff,
+      size: 0.07
+    });
+    const points = new THREE.Points(new THREE.BufferGeometry().setFromPoints(pts), pointsMat);
     const linePts = [];
     for (let i = 0; i < N; i++) {
       for (let j = i + 1; j < N; j++) {
         if (pts[i].distanceTo(pts[j]) < 1.5) linePts.push(pts[i], pts[j]);
       }
     }
+    const linesMat = new THREE.LineBasicMaterial({
+      color: isInitialNetDark ? 0xffffff : 0x2f4cff,
+      transparent: true,
+      opacity: isInitialNetDark ? 0.35 : 0.25
+    });
     const lines = new THREE.LineSegments(
       new THREE.BufferGeometry().setFromPoints(linePts),
-      new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.35 })
+      linesMat
     );
+    if (window.onSeraphThemeChange) {
+      window.onSeraphThemeChange((isDark) => {
+        pointsMat.color.setHex(isDark ? 0xffffff : 0x2f4cff);
+        linesMat.color.setHex(isDark ? 0xffffff : 0x2f4cff);
+        linesMat.opacity = isDark ? 0.35 : 0.25;
+      });
+    }
     const netGroup = new THREE.Group();
     netGroup.add(points, lines);
     net.scene.add(netGroup);
@@ -3190,7 +3519,20 @@ if (!reduceMotion) {
     for (let i = 0; i < arr.length; i++) arr[i] = (Math.random() - 0.5) * 12;
     const pGeo = new THREE.BufferGeometry();
     pGeo.setAttribute('position', new THREE.BufferAttribute(arr, 3));
-    const field = new THREE.Points(pGeo, new THREE.PointsMaterial({ color: 0xffffff, size: 0.045, transparent: true, opacity: 0.85 }));
+    const isInitialPartDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    const particleMat = new THREE.PointsMaterial({
+      color: isInitialPartDark ? 0xffffff : 0x0e1012,
+      size: 0.045,
+      transparent: true,
+      opacity: isInitialPartDark ? 0.85 : 0.55
+    });
+    const field = new THREE.Points(pGeo, particleMat);
+    if (window.onSeraphThemeChange) {
+      window.onSeraphThemeChange((isDark) => {
+        particleMat.color.setHex(isDark ? 0xffffff : 0x0e1012);
+        particleMat.opacity = isDark ? 0.85 : 0.55;
+      });
+    }
     particles.scene.add(field);
     particles.camera.position.z = 6;
     let lastY = window.scrollY, speed = 0;
@@ -3480,8 +3822,8 @@ if (!reduceMotion) {
           '<b style="color:var(--color-ink); font-size:15px;">Note Vault is Encrypted at Rest (AES-GCM-256)</b><br>' +
           '<span style="font-size:12px; color:var(--color-sub); display:inline-block; margin-top:4px;">PBKDF2 SHA-256 (100k rounds) active. Enter your master passphrase to unlock note blinding factors.</span>' +
           '<div style="margin-top:16px; display:flex; justify-content:center; gap:8px; align-items:center; flex-wrap:wrap;">' +
-          '  <input type="password" id="privVaultUnlockInput" placeholder="Enter vault passphrase..." class="field input" style="width:240px; padding:6px 12px; font-size:12px; border-radius:6px; border:1px solid rgba(255,255,255,0.15); background:#06080c; color:#ffffff;">' +
-          '  <button type="button" class="lp-chip" id="privVaultUnlockBtn" style="background:#ffffff; color:#06080c; font-weight:700;">Unlock Vault</button>' +
+          '  <input type="password" id="privVaultUnlockInput" placeholder="Enter vault passphrase..." class="field input" style="width:240px; padding:6px 12px; font-size:12px; border-radius:6px; border:1px solid var(--color-line); background:var(--color-paper); color:var(--color-ink);">' +
+          '  <button type="button" class="lp-chip" id="privVaultUnlockBtn" style="background:var(--color-ink); color:var(--color-bg); font-weight:700;">Unlock Vault</button>' +
           '</div>' +
           '<div id="privUnlockError" style="color:#ef4444; font-size:11px; margin-top:8px;"></div>' +
           '</td></tr>';
