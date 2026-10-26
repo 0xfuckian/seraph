@@ -33,30 +33,30 @@
   </style>
   <style>
     :root {
-      --color-white:      #ffffff;
-      --color-bg:         #ffffff;
-      --color-paper:      #f5f5f3;
-      --color-ink:        #0e1012;
-      --color-sub:        #60636a;
-      --color-line:       #d9dadd;
-      --color-accent:     #2f4cff;
-      --color-green:      #047857;
+      --color-white:        #0d111a;
+      --color-bg:           #06080c;
+      --color-paper:        #121622;
+      --color-ink:          #ffffff;
+      --color-sub:          #9da4b2;
+      --color-line:         rgba(255, 255, 255, 0.10);
+      --color-accent:       #3b82f6;
+      --color-green:        #10b981;
       --color-green-bright: #34d399;
-      --color-orange:     #b45309;
-      --color-magenta:    #a21caf;
-      --color-ink-soft:   #eeeef0;
-      --color-magenta-soft: #fbeefc;
-      --color-blue-soft:    #eef1ff;
-      --color-green-soft:   #e6f7f1;
-      --color-orange-soft:  #fff2e5;
-      --color-metal:        #c0c0c0;
-      --line-shadow:       var(--color-line) 0px 0px 0px 1px;
-      --card-shadow:       var(--color-line) 0px 0px 0px 1px, rgba(0,0,0,0.04) 0px 2px 2px, var(--color-paper) 0px 0px 0px 1px;
-      --card-shadow-hover: rgba(0,0,0,0.10) 0px 0px 0px 1px, rgba(0,0,0,0.06) 0px 4px 8px, var(--color-paper) 0px 0px 0px 1px;
+      --color-orange:       #f59e0b;
+      --color-magenta:      #d946ef;
+      --color-ink-soft:     #181e2b;
+      --color-magenta-soft: rgba(217, 70, 239, 0.16);
+      --color-blue-soft:    rgba(59, 130, 246, 0.16);
+      --color-green-soft:   rgba(16, 185, 129, 0.16);
+      --color-orange-soft:  rgba(245, 158, 11, 0.16);
+      --color-metal:        #3a4150;
+      --line-shadow:        rgba(255, 255, 255, 0.10) 0px 0px 0px 1px;
+      --card-shadow:        rgba(255, 255, 255, 0.08) 0px 0px 0px 1px, rgba(0, 0, 0, 0.6) 0px 4px 16px;
+      --card-shadow-hover:  rgba(255, 255, 255, 0.18) 0px 0px 0px 1px, rgba(0, 0, 0, 0.85) 0px 8px 24px;
     }
  
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
+    html { scroll-behavior: smooth; background: var(--color-bg); color-scheme: dark; }
     body {
       font-family: "IoskeleyMonoTerm", monospace;
       background: var(--color-bg);
@@ -77,22 +77,23 @@
     header {
       position: sticky; top: 0; z-index: 50;
       display: flex; flex-wrap: wrap; align-items: stretch;
-      background: color-mix(in oklab, var(--color-white) 95%, transparent);
-      backdrop-filter: blur(2px);
+      background: rgba(6, 8, 12, 0.94);
+      backdrop-filter: blur(10px);
       box-shadow: var(--line-shadow);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     }
     .logo-cell {
       flex-shrink: 0; display: flex; align-items: center; gap: 10px;
       padding: 16px 24px; border-right: var(--line-shadow);
-      text-decoration: none; color: var(--color-ink);
+      text-decoration: none; color: #ffffff;
     }
     .logo-cell:hover, .logo-cell:focus, .logo-cell:visited, .logo-cell:active {
-      text-decoration: none; color: var(--color-ink);
+      text-decoration: none; color: #ffffff;
     }
     .logo-badge {
       display: inline-flex; align-items: center; justify-content: center;
       width: 26px; height: 26px;
-      background: var(--color-ink); color: #ffffff;
+      background: #ffffff; color: #06080c;
       border-radius: 4px; flex-shrink: 0;
     }
     .logo-badge svg {
@@ -101,7 +102,7 @@
     .logo {
       font-family: "IoskeleyMonoTerm", monospace;
       font-weight: 700; font-size: 18px; letter-spacing: -0.04em;
-      color: var(--color-ink); text-decoration: none;
+      color: #ffffff; text-decoration: none;
     }
     .logo .dot { color: var(--color-accent); }
     .nav-area { flex: 1; display: flex; overflow-x: auto; }
@@ -114,8 +115,8 @@
       color: var(--color-sub); text-decoration: none;
       transition: color 0.15s; white-space: nowrap;
     }
-    .nav-link:hover { color: var(--color-ink); }
-    .nav-link.active { color: var(--color-ink); }
+    .nav-link:hover { color: #ffffff; }
+    .nav-link.active { color: #ffffff; }
     .nav-link.active .bracket { color: var(--color-accent); }
     .bracket { margin-right: 5px; color: var(--color-sub); }
     .status-cell {
@@ -129,7 +130,7 @@
     .nav-toggle {
       display: none; align-items: center; justify-content: center;
       padding: 0 20px; border: none; border-left: var(--line-shadow);
-      background: var(--color-white); color: var(--color-ink);
+      background: var(--color-white); color: #ffffff;
       font-family: "IoskeleyMonoTerm", monospace; font-size: 18px; cursor: pointer;
     }
  
@@ -151,10 +152,10 @@
     .hero::before {
       content: ""; position: absolute; inset: 0; pointer-events: none;
       background-image:
-        linear-gradient(var(--color-line) 1px, transparent 1px),
-        linear-gradient(90deg, var(--color-line) 1px, transparent 1px);
+        linear-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
       background-size: 56px 56px;
-      opacity: 0.35;
+      opacity: 0.75;
       -webkit-mask-image: linear-gradient(to bottom, black 0%, transparent 85%);
       mask-image: linear-gradient(to bottom, black 0%, transparent 85%);
     }
@@ -168,7 +169,7 @@
       font-family: "IoskeleyMonoTerm", monospace;
       font-size: 48px; font-weight: 500;
       line-height: 0.94; letter-spacing: -0.04em;
-      color: var(--color-ink);
+      color: #ffffff;
     }
     .hero h1 .word-magenta { color: var(--color-magenta); }
     .hero h1 .word-orange { color: var(--color-orange); }
@@ -198,22 +199,24 @@
     .cta-arrow {
       display: inline-flex; align-items: center; justify-content: center;
       width: 32px; height: 32px;
-      background: var(--color-accent); color: var(--color-white);
+      background: var(--color-accent); color: #ffffff;
     }
     .cta-label {
       display: inline-flex; align-items: center;
       padding: 12px 20px;
-      background: var(--color-ink); color: var(--color-white);
+      background: #161b26; color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.12); border-left: none;
     }
     .cta-secondary {
       display: inline-flex; align-items: center;
       font-family: "IoskeleyMonoTerm", monospace;
       font-size: 12px; font-weight: 500;
       letter-spacing: 0.02em;
-      background: var(--color-white); color: var(--color-ink);
+      background: var(--color-white); color: #ffffff;
       box-shadow: var(--line-shadow);
       padding: 12px 24px; text-decoration: none;
     }
+    .cta-secondary:hover { background: #1a202c; color: #ffffff; }
  
     /* === Stats === */
     .stats-grid {
@@ -342,16 +345,16 @@
     .arch-diagram { display: flex; flex-direction: column; }
     .arch-top { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
     @media (max-width: 768px) { .arch-top { grid-template-columns: 1fr; } }
-    .arch-box { box-shadow: var(--card-shadow); padding: 24px; }
+    .arch-box { box-shadow: var(--card-shadow); padding: 24px; background: var(--color-white); }
     .arch-box:hover { box-shadow: var(--card-shadow-hover); }
     .arch-tag { font-family: "IoskeleyMonoTerm", monospace; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em; color: var(--color-sub); }
-    .arch-name { font-family: "IoskeleyMonoTerm", monospace; font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 6px 0 8px; }
+    .arch-name { font-family: "IoskeleyMonoTerm", monospace; font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 6px 0 8px; color: #ffffff; }
     .arch-sub { font-size: 15px; line-height: 1.6; color: var(--color-sub); }
     .arch-features { list-style: none; margin-top: 12px; }
     .arch-features li { font-family: "IoskeleyMonoTerm", monospace; font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.02em; color: var(--color-sub); padding: 5px 0; border-top: var(--line-shadow); }
     .arch-features li:first-child { border-top: none; }
     .arch-shared { box-shadow: var(--card-shadow); border-top: 4px solid var(--color-accent); padding: 24px; margin: 24px 0; background: var(--color-paper); }
-    .arch-shared .arch-name { font-size: 18px; }
+    .arch-shared .arch-name { font-size: 18px; color: #ffffff; }
     .arch-shared p { font-size: 15px; line-height: 1.6; color: var(--color-sub); }
     .arch-base { border-top: 4px solid var(--color-magenta); }
  
@@ -365,30 +368,30 @@
     .bar-orange { background: var(--color-orange); }
     .bar-green { background: var(--color-green); }
     .bar-accent { background: var(--color-accent); }
-    .module-card h3 { font-family: "IoskeleyMonoTerm", monospace; font-size: 20px; font-weight: 500; line-height: 1.15; margin-bottom: 8px; }
+    .module-card h3 { font-family: "IoskeleyMonoTerm", monospace; font-size: 20px; font-weight: 500; line-height: 1.15; margin-bottom: 8px; color: #ffffff; }
     .module-card h3 .dot { font-size: 16px; margin-right: 6px; }
     .module-card p { font-size: 16px; font-weight: 400; line-height: 1.6; color: var(--color-sub); margin-top: auto; }
     .module-specs { list-style: none; margin: 12px 0; }
     .module-specs li { font-family: "IoskeleyMonoTerm", monospace; font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.02em; color: var(--color-sub); padding: 6px 0; border-top: var(--line-shadow); display: flex; justify-content: space-between; gap: 12px; }
     .module-specs li:first-child { border-top: none; }
-    .module-specs li .v { color: var(--color-ink); font-weight: 700; }
+    .module-specs li .v { color: #ffffff; font-weight: 700; }
  
     /* === Tokenomics === */
     .token-two { display: grid; grid-template-columns: 1.2fr 1fr; gap: 24px; align-items: start; }
     @media (max-width: 900px) { .token-two { grid-template-columns: 1fr; } }
     .alloc-row { display: grid; grid-template-columns: 1fr 220px 56px; align-items: center; gap: 16px; padding: 12px 0; border-top: var(--line-shadow); }
     .alloc-row:first-child { border-top: none; }
-    .alloc-lbl { font-size: 15px; font-weight: 500; }
+    .alloc-lbl { font-size: 15px; font-weight: 500; color: #ffffff; }
     .alloc-track { height: 14px; background: var(--color-paper); box-shadow: var(--line-shadow); }
     .alloc-fill { height: 100%; }
-    .alloc-pct { font-family: "IoskeleyMonoTerm", monospace; font-size: 12px; font-weight: 700; text-align: right; }
+    .alloc-pct { font-family: "IoskeleyMonoTerm", monospace; font-size: 12px; font-weight: 700; text-align: right; color: #ffffff; }
     @media (max-width: 640px) { .alloc-row { grid-template-columns: 1fr 1fr 40px; gap: 10px; } }
-    .fee-card { box-shadow: var(--card-shadow); padding: 24px; }
-    .fee-card h3 { font-family: "IoskeleyMonoTerm", monospace; font-size: 18px; font-weight: 700; margin-bottom: 12px; }
+    .fee-card { box-shadow: var(--card-shadow); padding: 24px; background: var(--color-white); }
+    .fee-card h3 { font-family: "IoskeleyMonoTerm", monospace; font-size: 18px; font-weight: 700; margin-bottom: 12px; color: #ffffff; }
     .fee-card ul { list-style: none; }
     .fee-card li { font-size: 15px; line-height: 1.6; color: var(--color-sub); padding: 8px 0; border-top: var(--line-shadow); }
     .fee-card li:first-child { border-top: none; }
-    .fee-card li b { color: var(--color-ink); }
+    .fee-card li b { color: #ffffff; }
  
     /* === Roadmap === */
     .roadmap { position: relative; margin-left: 8px; }
@@ -400,21 +403,21 @@
     .road-item:nth-child(2) .road-dot { background: var(--color-magenta); }
     .road-item:nth-child(3) .road-dot { background: var(--color-accent); }
     .road-item:nth-child(4) .road-dot { background: var(--color-green); }
-    .road-item:nth-child(5) .road-dot { background: var(--color-ink); }
+    .road-item:nth-child(5) .road-dot { background: #ffffff; }
     .road-phase { font-family: "IoskeleyMonoTerm", monospace; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em; color: var(--color-sub); margin-bottom: 4px; }
-    .road-title { font-family: "IoskeleyMonoTerm", monospace; font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin-bottom: 8px; }
+    .road-title { font-family: "IoskeleyMonoTerm", monospace; font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin-bottom: 8px; color: #ffffff; }
     .road-item p { font-size: 15px; line-height: 1.6; color: var(--color-sub); max-width: 640px; }
  
     /* === Security === */
     .threat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
     @media (max-width: 768px) { .threat-grid { grid-template-columns: 1fr; } }
-    .threat-card { box-shadow: var(--card-shadow); padding: 24px; }
-    .threat-card h4 { font-family: "IoskeleyMonoTerm", monospace; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em; color: var(--color-ink); margin-bottom: 6px; }
+    .threat-card { box-shadow: var(--card-shadow); padding: 24px; background: var(--color-white); }
+    .threat-card h4 { font-family: "IoskeleyMonoTerm", monospace; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em; color: #ffffff; margin-bottom: 6px; }
     .threat-card p { font-size: 15px; line-height: 1.6; color: var(--color-sub); }
     .sec-list { list-style: none; }
     .sec-list li { display: flex; gap: 12px; padding: 12px 0; border-top: var(--line-shadow); font-size: 15px; color: var(--color-sub); line-height: 1.5; }
     .sec-list li:first-child { border-top: none; }
-    .sec-list .m { font-family: "IoskeleyMonoTerm", monospace; font-weight: 700; color: var(--color-ink); flex-shrink: 0; }
+    .sec-list .m { font-family: "IoskeleyMonoTerm", monospace; font-weight: 700; color: #ffffff; flex-shrink: 0; }
  
     /* === Tier cards (presale) === */
     .tier-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
@@ -486,14 +489,14 @@
     .currency-tabs { display: inline-flex; box-shadow: var(--line-shadow); margin-bottom: 16px; }
     .currency-tab { font-family: "IoskeleyMonoTerm", monospace; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em; padding: 12px 20px; background: var(--color-white); color: var(--color-sub); cursor: pointer; border: none; }
     .currency-tab + .currency-tab { box-shadow: inset var(--line-shadow); }
-    .currency-tab.active { background: var(--color-ink); color: var(--color-white); }
+    .currency-tab.active { background: #ffffff; color: #06080c; }
     .amount-wrap { display: flex; align-items: center; gap: 12px; box-shadow: var(--line-shadow); padding: 16px 20px; background: var(--color-white); margin-bottom: 16px; }
-    .amount-wrap .sym { font-family: "IoskeleyMonoTerm", monospace; font-size: 14px; font-weight: 700; color: var(--color-sub); }
-    .amount-input { flex: 1; border: none; outline: none; font-family: "IoskeleyMonoTerm", monospace; font-size: 36px; font-weight: 900; letter-spacing: -0.02em; color: var(--color-ink); background: transparent; min-width: 0; }
-    .amount-input::placeholder { color: var(--color-line); }
-    .wallet-btn { display: inline-flex; align-items: center; font-family: "IoskeleyMonoTerm", monospace; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em; text-decoration: none; padding: 14px 28px; background: var(--color-ink); color: var(--color-white); border: none; cursor: pointer; transition: box-shadow 0.15s ease; }
-    .wallet-btn:hover { box-shadow: var(--card-shadow-hover); }
-    .wallet-btn .metal { color: var(--color-metal); margin-right: 8px; }
+    .amount-wrap .sym { font-family: "IoskeleyMonoTerm", monospace; font-size: 14px; font-weight: 700; color: #ffffff; }
+    .amount-input { flex: 1; border: none; outline: none; font-family: "IoskeleyMonoTerm", monospace; font-size: 36px; font-weight: 900; letter-spacing: -0.02em; color: #ffffff; background: transparent; min-width: 0; }
+    .amount-input::placeholder { color: #4b5568; }
+    .wallet-btn { display: inline-flex; align-items: center; font-family: "IoskeleyMonoTerm", monospace; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em; text-decoration: none; padding: 14px 28px; background: var(--color-accent); color: #ffffff; border: none; cursor: pointer; transition: background 0.15s ease, box-shadow 0.15s ease; }
+    .wallet-btn:hover { background: #2563eb; box-shadow: var(--card-shadow-hover); }
+    .wallet-btn .metal { color: #ffffff; margin-right: 8px; }
     .wallet-btn:disabled { background: var(--color-ink-soft); color: var(--color-sub); cursor: not-allowed; box-shadow: none; }
     .wallet-btn:disabled .metal { color: var(--color-line); }
     .connect-note { margin-top: 12px; font-size: 13px; line-height: 1.5; color: var(--color-sub); }
@@ -539,8 +542,8 @@
     .lp-toolbar { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 16px; }
     .lp-chips { display: flex; gap: 8px; flex-wrap: wrap; }
     .lp-chip { font-family: "IoskeleyMonoTerm", monospace; font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.02em; padding: 9px 14px; background: var(--color-white); color: var(--color-sub); box-shadow: var(--line-shadow); border: none; border-radius: 999px; cursor: pointer; }
-    .lp-chip:hover { color: var(--color-ink); }
-    .lp-chip[aria-pressed="true"] { background: var(--color-ink); color: var(--color-white); }
+    .lp-chip:hover { color: #ffffff; }
+    .lp-chip[aria-pressed="true"] { background: #ffffff; color: #06080c; font-weight: 700; }
     .lp-table-wrap { overflow-x: auto; background: var(--color-white); box-shadow: var(--card-shadow); }
     .lp-table { width: 100%; border-collapse: collapse; min-width: 560px; }
     .lp-table th { font-family: "IoskeleyMonoTerm", monospace; font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.02em; color: var(--color-sub); text-align: left; padding: 14px 16px; border-bottom: var(--line-shadow); }
@@ -742,10 +745,10 @@
       cursor: pointer;
       transition: all 0.15s ease;
     }
-    .priv-tab-btn:hover { color: var(--color-ink); }
+    .priv-tab-btn:hover { color: #ffffff; }
     .priv-tab-btn.active {
-      background: var(--color-ink);
-      color: var(--color-white);
+      background: #ffffff;
+      color: #06080c;
     }
     .priv-panel {
       display: none;
@@ -984,6 +987,24 @@
         </div>
       </div>
 
+            <!-- Privacy Pool Hero Engraving: Fountain of Anonymity -->
+      <div class="reveal" style="margin-bottom: 24px; background: #0d111a; border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 20px; display: flex; flex-direction: row; gap: 24px; align-items: center; flex-wrap: wrap;">
+        <div style="width: 140px; min-width: 140px; max-width: 160px; border-radius: 10px; overflow: hidden; background: #000000; aspect-ratio: 3/4; flex-shrink: 0;">
+          <img src="assets/art-pool-bw.jpg" alt="Privacy Pool Sanctuary" style="width: 100%; height: 100%; object-fit: cover; display: block;" loading="lazy">
+        </div>
+        <div style="flex: 1; min-width: 240px;">
+          <div style="display: flex; align-items: baseline; gap: 10px; margin-bottom: 8px;">
+            <span style="font-size: 13px; font-weight: 700; color: #71717a;">01B</span>
+            <span style="font-size: 12px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #9da4b2;">Cryptographic Sanctuary</span>
+          </div>
+          <h3 style="font-size: 20px; font-weight: 700; color: #ffffff; margin: 0 0 8px 0; letter-spacing: -0.01em;">
+            The Fountain of Anonymity
+          </h3>
+          <p style="font-size: 13px; line-height: 1.6; color: #9da4b2; margin: 0;">
+            Deposit public assets to mint zero-knowledge note commitments into the 2<sup>20</sup> Merkle ring buffer. Spend anonymously via deterministic nullifiers with zero on-chain linkability.
+          </p>
+        </div>
+      </div>
       <div class="priv-dock">
         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; margin-bottom:24px;">
           <div style="display:flex; align-items:center; gap:12px;">
@@ -1443,6 +1464,24 @@
         </div>
       </div>
  
+            <!-- Tokenomics Hero Engraving: Ouroboros & Algorithmic Equilibrium -->
+      <div class="reveal" style="margin-bottom: 24px; background: #0d111a; border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 20px; display: flex; flex-direction: row; gap: 24px; align-items: center; flex-wrap: wrap;">
+        <div style="width: 140px; min-width: 140px; max-width: 160px; border-radius: 10px; overflow: hidden; background: #000000; aspect-ratio: 3/4; flex-shrink: 0;">
+          <img src="assets/art-ouroboros-bw.jpg" alt="Ouroboros Equilibrium" style="width: 100%; height: 100%; object-fit: cover; display: block;" loading="lazy">
+        </div>
+        <div style="flex: 1; min-width: 240px;">
+          <div style="display: flex; align-items: baseline; gap: 10px; margin-bottom: 8px;">
+            <span style="font-size: 13px; font-weight: 700; color: #71717a;">06</span>
+            <span style="font-size: 12px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #9da4b2;">Mathematical Scarcity</span>
+          </div>
+          <h3 style="font-size: 20px; font-weight: 700; color: #ffffff; margin: 0 0 8px 0; letter-spacing: -0.01em;">
+            The Ouroboros &amp; Algorithmic Equilibrium
+          </h3>
+          <p style="font-size: 13px; line-height: 1.6; color: #9da4b2; margin: 0;">
+            A strict 100,000,000 SER cap with zero inflation. On-chain DEX sells burn 50% of the 1% fee directly into the null address, maintaining deflationary pressure as protocol volume scales.
+          </p>
+        </div>
+      </div>
       <div class="token-two reveal">
         <div>
           <div class="alloc-row">
@@ -1502,6 +1541,24 @@
       <h2 class="section-title">From PoC to mainnet.</h2>
       <p class="section-desc">Honest, phase-gated delivery. Nothing ships before its exit criteria pass — and the earlier phases deliberately exclude features that don't belong yet.</p>
  
+            <!-- Roadmap Hero Engraving: The Celestial Navigator -->
+      <div class="reveal" style="margin-bottom: 32px; background: #0d111a; border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 20px; display: flex; flex-direction: row; gap: 24px; align-items: center; flex-wrap: wrap;">
+        <div style="width: 140px; min-width: 140px; max-width: 160px; border-radius: 10px; overflow: hidden; background: #000000; aspect-ratio: 3/4; flex-shrink: 0;">
+          <img src="assets/art-roadmap-bw.jpg" alt="Celestial Roadmap Navigator" style="width: 100%; height: 100%; object-fit: cover; display: block;" loading="lazy">
+        </div>
+        <div style="flex: 1; min-width: 240px;">
+          <div style="display: flex; align-items: baseline; gap: 10px; margin-bottom: 8px;">
+            <span style="font-size: 13px; font-weight: 700; color: #71717a;">07</span>
+            <span style="font-size: 12px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #9da4b2;">Multi-Phase Expansion</span>
+          </div>
+          <h3 style="font-size: 20px; font-weight: 700; color: #ffffff; margin: 0 0 8px 0; letter-spacing: -0.01em;">
+            The Passage Across Epochs
+          </h3>
+          <p style="font-size: 13px; line-height: 1.6; color: #9da4b2; margin: 0;">
+            From the live EVM core on Base Sepolia through dedicated XMR EVM execution to sovereign Rust settlement with FCMP++ full-chain membership proofs.
+          </p>
+        </div>
+      </div>
       <div class="roadmap reveal">
         <div class="road-item">
           <span class="road-dot"></span>
@@ -1722,6 +1779,25 @@
           <div class="meta">§ 08 — GOVERNANCE</div>
           <h2 class="section-title">Self-custody control.</h2>
           <p class="section-desc">SER token holders govern through on-chain voting, treasury proposals, and module upgrades. Votes are private by default — ZK ballot proofs.</p>
+        </div>
+      </div>
+
+      <!-- Governance Hero Engraving: Anonymous Council of Guardians -->
+      <div class="reveal" style="margin-bottom: 24px; background: #0d111a; border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 20px; display: flex; flex-direction: row; gap: 24px; align-items: center; flex-wrap: wrap;">
+        <div style="width: 140px; min-width: 140px; max-width: 160px; border-radius: 10px; overflow: hidden; background: #000000; aspect-ratio: 3/4; flex-shrink: 0;">
+          <img src="assets/art-council-bw.jpg" alt="Anonymous Governance Council" style="width: 100%; height: 100%; object-fit: cover; display: block;" loading="lazy">
+        </div>
+        <div style="flex: 1; min-width: 240px;">
+          <div style="display: flex; align-items: baseline; gap: 10px; margin-bottom: 8px;">
+            <span style="font-size: 13px; font-weight: 700; color: #71717a;">09</span>
+            <span style="font-size: 12px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #9da4b2;">Decentralized Sovereignty</span>
+          </div>
+          <h3 style="font-size: 20px; font-weight: 700; color: #ffffff; margin: 0 0 8px 0; letter-spacing: -0.01em;">
+            The Anonymous Council of Guardians
+          </h3>
+          <p style="font-size: 13px; line-height: 1.6; color: #9da4b2; margin: 0;">
+            Zero-knowledge ballot tallies proving quorum and voting weights without exposing voter balances, transaction graphs, or delegate identities.
+          </p>
         </div>
       </div>
       <div class="module-grid">
@@ -1977,6 +2053,24 @@
         <a href="#lp-create" class="cta-split" style="margin-bottom:0;"><span class="cta-arrow">+</span><span class="cta-label">CREATE A TOKEN</span></a>
       </div>
  
+            <!-- Launchpad Hero Engraving: Archimedean Bonding Spiral -->
+      <div class="reveal" style="margin-bottom: 24px; background: #0d111a; border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 20px; display: flex; flex-direction: row; gap: 24px; align-items: center; flex-wrap: wrap;">
+        <div style="width: 140px; min-width: 140px; max-width: 160px; border-radius: 10px; overflow: hidden; background: #000000; aspect-ratio: 3/4; flex-shrink: 0;">
+          <img src="assets/art-curve-bw.jpg" alt="Archimedean Bonding Spiral" style="width: 100%; height: 100%; object-fit: cover; display: block;" loading="lazy">
+        </div>
+        <div style="flex: 1; min-width: 240px;">
+          <div style="display: flex; align-items: baseline; gap: 10px; margin-bottom: 8px;">
+            <span style="font-size: 13px; font-weight: 700; color: #71717a;">08</span>
+            <span style="font-size: 12px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #9da4b2;">Algorithmic Discovery</span>
+          </div>
+          <h3 style="font-size: 20px; font-weight: 700; color: #ffffff; margin: 0 0 8px 0; letter-spacing: -0.01em;">
+            The Archimedean Bonding Spiral
+          </h3>
+          <p style="font-size: 13px; line-height: 1.6; color: #9da4b2; margin: 0;">
+            Fair-launch token discovery governed by constant-product bonding curves. 100% of initial liquidity locks into verified smart contracts with zero team premine or insider allocations.
+          </p>
+        </div>
+      </div>
       <div class="lp-toolbar">
         <div class="lp-chips" id="lpStatus" role="group" aria-label="Sort tokens">
           <button type="button" class="lp-chip" aria-pressed="true" data-status="trending">Trending</button>
@@ -3011,7 +3105,7 @@ if (!reduceMotion) {
   const ringLabel = document.getElementById('ringLabel');
   if (ring) {
     const LEVELS = [
-      { label: 'Level 0 · Transparent', hex: 0x0e1012 },
+      { label: 'Level 0 · Transparent', hex: 0xffffff },
       { label: 'Level 1 · Optional Shielding', hex: 0xa21caf },
       { label: 'Level 2 · Default Strong', hex: 0x2f4cff },
       { label: 'Level 3 · Private Compute', hex: 0x047857 }
@@ -3055,7 +3149,7 @@ if (!reduceMotion) {
     for (let i = 0; i < N; i++) {
       pts.push(new THREE.Vector3((Math.random() - 0.5) * 8, (Math.random() - 0.5) * 5, (Math.random() - 0.5) * 2));
     }
-    const points = new THREE.Points(new THREE.BufferGeometry().setFromPoints(pts), new THREE.PointsMaterial({ color: 0x2f4cff, size: 0.06 }));
+    const points = new THREE.Points(new THREE.BufferGeometry().setFromPoints(pts), new THREE.PointsMaterial({ color: 0xffffff, size: 0.07 }));
     const linePts = [];
     for (let i = 0; i < N; i++) {
       for (let j = i + 1; j < N; j++) {
@@ -3064,7 +3158,7 @@ if (!reduceMotion) {
     }
     const lines = new THREE.LineSegments(
       new THREE.BufferGeometry().setFromPoints(linePts),
-      new THREE.LineBasicMaterial({ color: 0x2f4cff, transparent: true, opacity: 0.25 })
+      new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.35 })
     );
     const netGroup = new THREE.Group();
     netGroup.add(points, lines);
@@ -3087,7 +3181,7 @@ if (!reduceMotion) {
     for (let i = 0; i < arr.length; i++) arr[i] = (Math.random() - 0.5) * 12;
     const pGeo = new THREE.BufferGeometry();
     pGeo.setAttribute('position', new THREE.BufferAttribute(arr, 3));
-    const field = new THREE.Points(pGeo, new THREE.PointsMaterial({ color: 0x0e1012, size: 0.03, transparent: true, opacity: 0.55 }));
+    const field = new THREE.Points(pGeo, new THREE.PointsMaterial({ color: 0xffffff, size: 0.045, transparent: true, opacity: 0.85 }));
     particles.scene.add(field);
     particles.camera.position.z = 6;
     let lastY = window.scrollY, speed = 0;
