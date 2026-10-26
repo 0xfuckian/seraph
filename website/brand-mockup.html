@@ -4,8 +4,21 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Seraph Protocol — Privacy Continuum</title>
-  <!-- itsua.com design system: Space Grotesk + JetBrains Mono -->
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Typography: IoskeleyMonoTerm -->
+    <!-- Typography: IoskeleyMonoTerm -->
+  <style>
+    @font-face {
+      font-family: 'IoskeleyMonoTerm';
+      src: url('fonts/IoskeleyMonoTerm-Regular.ttf') format('truetype'),
+           url('/fonts/IoskeleyMonoTerm-Regular.ttf') format('truetype');
+      font-weight: 100 900;
+      font-style: normal;
+      font-display: swap;
+    }
+    *, *::before, *::after {
+      font-family: 'IoskeleyMonoTerm', monospace !important;
+    }
+  </style>
   <style>
     :root {
       /* === itsua.com exact color values === */
@@ -38,13 +51,13 @@
 
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      font-family: "Space Grotesk", system-ui, sans-serif;
+      font-family: "IoskeleyMonoTerm", system-ui, sans-serif;
       background: var(--color-bg);
       color: var(--color-ink);
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
     }
-    .font-mono { font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
+    .font-mono { font-family: "IoskeleyMonoTerm", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; }
 
     /* === Navigation (exact itsua.com pattern) === */
     header {
@@ -59,7 +72,7 @@
       padding: 16px 24px; border-right: var(--line-shadow);
     }
     .logo {
-      font-family: "Space Grotesk", sans-serif;
+      font-family: "IoskeleyMonoTerm", sans-serif;
       font-weight: 700; font-size: 18px; letter-spacing: -0.04em;
       color: var(--color-ink); text-decoration: none;
     }
@@ -67,7 +80,7 @@
     .nav-area { flex: 1; display: flex; overflow-x: auto; }
     .nav-link {
       display: flex; align-items: center;
-      font-family: "JetBrains Mono", monospace;
+      font-family: "IoskeleyMonoTerm", monospace;
       font-size: 12px; font-weight: 500; text-transform: uppercase;
       letter-spacing: 0.02em;
       padding: 16px 22px; border-right: var(--line-shadow);
@@ -79,7 +92,7 @@
     .bracket { margin-right: 6px; color: var(--color-sub); }
     .status-cell {
       flex-shrink: 0; display: flex; align-items: center; padding: 16px 24px;
-      font-family: "JetBrains Mono", monospace;
+      font-family: "IoskeleyMonoTerm", monospace;
       font-size: 12px; font-weight: 500; border-left: var(--line-shadow);
     }
     .status-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--color-green-bright); margin-right: 8px; }
@@ -87,7 +100,7 @@
 
     /* === Meta / Section Labels === */
     .meta {
-      font-family: "JetBrains Mono", monospace;
+      font-family: "IoskeleyMonoTerm", monospace;
       font-size: 11px; font-weight: 500;
       text-transform: uppercase; letter-spacing: 0.02em;
       color: var(--color-sub);
@@ -105,7 +118,7 @@
       margin-bottom: 16px;
     }
     .hero h1 {
-      font-family: "Space Grotesk", sans-serif;
+      font-family: "IoskeleyMonoTerm", sans-serif;
       font-size: 48px; font-weight: 500;
       line-height: 0.94; letter-spacing: -0.04em;
       color: var(--color-ink);
@@ -130,7 +143,7 @@
     /* === Split CTA Button (exact itsua.com) === */
     .cta-split {
       display: inline-flex; align-items: center;
-      font-family: "JetBrains Mono", monospace;
+      font-family: "IoskeleyMonoTerm", monospace;
       font-size: 12px; font-weight: 500;
       text-decoration: none; letter-spacing: 0.02em;
       overflow: hidden; margin-bottom: 12px;
@@ -147,7 +160,7 @@
     }
     .cta-secondary {
       display: inline-flex; align-items: center;
-      font-family: "JetBrains Mono", monospace;
+      font-family: "IoskeleyMonoTerm", monospace;
       font-size: 12px; font-weight: 500;
       letter-spacing: 0.02em;
       background: var(--color-white); color: var(--color-ink);
@@ -166,14 +179,14 @@
     .stat-cell {
       text-align: center; padding: 16px 8px;
       border-right: var(--line-shadow);
-      font-family: "JetBrains Mono", monospace;
+      font-family: "IoskeleyMonoTerm", monospace;
       font-size: 11px; font-weight: 400;
       text-transform: uppercase; letter-spacing: 0.02em;
       color: var(--color-sub);
     }
     .stat-cell:last-child { border-right: none; }
     .stat-number {
-      font-family: "Space Grotesk", sans-serif;
+      font-family: "IoskeleyMonoTerm", sans-serif;
       font-size: 32px; font-weight: 500;
       line-height: 0.96; letter-spacing: -0.02em;
     }
@@ -197,7 +210,7 @@
     }
     .section-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 48px; }
     .section-title {
-      font-family: "Space Grotesk", sans-serif;
+      font-family: "IoskeleyMonoTerm", sans-serif;
       font-size: 44px; font-weight: 500;
       line-height: 0.95; letter-spacing: -0.03em;
     }
@@ -208,7 +221,7 @@
       max-width: 560px;
     }
     .view-all {
-      font-family: "JetBrains Mono", monospace;
+      font-family: "IoskeleyMonoTerm", monospace;
       font-size: 12px; font-weight: 500;
       letter-spacing: 0.02em;
       color: var(--color-sub); text-decoration: none;
@@ -238,14 +251,14 @@
     }
     .deck-brand-row {
       display: flex; justify-content: space-between; align-items: center;
-      font-family: "JetBrains Mono", monospace;
+      font-family: "IoskeleyMonoTerm", monospace;
       font-size: 11px; font-weight: 500;
       color: var(--color-sub); margin-bottom: 16px;
     }
     .deck-brand { font-weight: 600; }
     .deck-badge {
       display: flex; align-items: center; gap: 6px;
-      font-family: "JetBrains Mono", monospace;
+      font-family: "IoskeleyMonoTerm", monospace;
       font-size: 10px; font-weight: 700;
     }
     .deck-badge .dot { width: 6px; height: 6px; border-radius: 50%; }
@@ -254,13 +267,13 @@
     .deck-badge.text-green .dot { background: var(--color-green); color: var(--color-white); }
 
     .deck-name {
-      font-family: "Space Grotesk", sans-serif;
+      font-family: "IoskeleyMonoTerm", sans-serif;
       font-size: 24px; font-weight: 500;
       line-height: 1.05; letter-spacing: -0.01em;
       margin-bottom: 8px;
     }
     .deck-domain {
-      font-family: "JetBrains Mono", monospace;
+      font-family: "IoskeleyMonoTerm", monospace;
       font-size: 11px; font-weight: 700;
       text-transform: uppercase; letter-spacing: 0.02em;
       color: var(--color-sub); margin-bottom: 12px;
@@ -270,7 +283,7 @@
     .deck-domain.text-green { color: var(--color-green); }
 
     .deck-result {
-      font-family: "Space Grotesk", sans-serif;
+      font-family: "IoskeleyMonoTerm", sans-serif;
       font-size: 16px; font-weight: 500;
       color: var(--color-ink);
       margin-top: auto; margin-bottom: 12px;
@@ -281,7 +294,7 @@
 
     .tech-tags { display: flex; flex-wrap: wrap; gap: 6px; }
     .tech-tag {
-      font-family: "JetBrains Mono", monospace;
+      font-family: "IoskeleyMonoTerm", monospace;
       font-size: 10px; font-weight: 600;
       text-transform: uppercase; letter-spacing: 0.02em;
       padding: 3px 8px; border-radius: 9999px;
@@ -314,7 +327,7 @@
     .bar-accent { background: var(--color-accent); }
 
     .module-card h3 {
-      font-family: "Space Grotesk", sans-serif;
+      font-family: "IoskeleyMonoTerm", sans-serif;
       font-size: 20px; font-weight: 500;
       line-height: 1.15; margin-bottom: 8px;
     }
@@ -361,7 +374,7 @@
     }
     .progress-labels {
       display: flex; justify-content: space-between;
-      font-family: "JetBrains Mono", monospace;
+      font-family: "IoskeleyMonoTerm", monospace;
       font-size: 11px; font-weight: 700;
       text-transform: uppercase; letter-spacing: 0.02em;
       color: var(--color-sub);
@@ -371,14 +384,14 @@
     /* === Countdown === */
     .countdown {
       display: flex; gap: 16px;
-      font-family: "Space Grotesk", sans-serif;
+      font-family: "IoskeleyMonoTerm", sans-serif;
       font-size: 32px; font-weight: 900;
       line-height: 0.9; letter-spacing: -0.02em;
     }
     .countdown .num { color: var(--color-ink); }
     .countdown .num-accent { color: var(--color-accent); }
     .countdown .label {
-      font-family: "JetBrains Mono", monospace;
+      font-family: "IoskeleyMonoTerm", monospace;
       font-size: 10px; font-weight: 700;
       text-transform: uppercase; letter-spacing: 0.02em;
       color: var(--color-sub);
@@ -406,7 +419,7 @@
     }
     .tier-card:hover { box-shadow: var(--card-shadow-hover); }
     .tier-card .tier-badge {
-      font-family: "JetBrains Mono", monospace;
+      font-family: "IoskeleyMonoTerm", monospace;
       font-size: 10px; font-weight: 700;
       text-transform: uppercase; letter-spacing: 0.02em;
       padding: 4px 12px;
@@ -422,20 +435,20 @@
     .tier-badge.text-accent .dot { background: var(--color-accent); }
     .tier-badge.text-green .dot { background: var(--color-green); }
     .tier-name {
-      font-family: "Space Grotesk", sans-serif;
+      font-family: "IoskeleyMonoTerm", sans-serif;
       font-size: 24px; font-weight: 900;
       line-height: 1.05; letter-spacing: -0.01em;
       margin-bottom: 8px;
     }
     .tier-detail {
-      font-family: "JetBrains Mono", monospace;
+      font-family: "IoskeleyMonoTerm", monospace;
       font-size: 11px; font-weight: 700;
       text-transform: uppercase; letter-spacing: 0.02em;
       color: var(--color-sub);
       margin-bottom: 16px;
     }
     .tier-price {
-      font-family: "Space Grotesk", sans-serif;
+      font-family: "IoskeleyMonoTerm", sans-serif;
       font-size: 32px; font-weight: 900;
       line-height: 0.9; letter-spacing: -0.02em;
       color: var(--color-ink);
@@ -470,7 +483,7 @@
     /* === Wallet Connect Button === */
     .wallet-btn {
       display: inline-flex; align-items: center;
-      font-family: "JetBrains Mono", monospace;
+      font-family: "IoskeleyMonoTerm", monospace;
       font-size: 12px; font-weight: 700;
       text-transform: uppercase; letter-spacing: 0.02em;
       text-decoration: none;
@@ -488,7 +501,7 @@
     footer {
       padding: 48px 24px;
       border-top: var(--line-shadow);
-      font-family: "Space Grotesk", sans-serif;
+      font-family: "IoskeleyMonoTerm", sans-serif;
       font-size: 14px; line-height: 1.6;
       color: var(--color-sub);
     }
@@ -503,7 +516,7 @@
       gap: 32px;
     }
     .footer-column h4 {
-      font-family: "JetBrains Mono", monospace;
+      font-family: "IoskeleyMonoTerm", monospace;
       font-size: 11px; font-weight: 700;
       text-transform: uppercase; letter-spacing: 0.02em;
       color: var(--color-sub); margin-bottom: 16px;
@@ -817,7 +830,7 @@
     <div class="progress-bar">
       <div class="progress-fill"></div>
     </div>
-    <div style="display: flex; justify-content: space-between; font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 700; color: var(--color-sub);">
+    <div style="display: flex; justify-content: space-between; font-family: 'IoskeleyMonoTerm', monospace; font-size: 11px; font-weight: 700; color: var(--color-sub);">
       <span>38M / 100M SER</span>
       <span>$2.1M / $4.0M USDT</span>
     </div>
@@ -877,16 +890,16 @@
     <div class="struct-line"></div>
     <div class="meta">Accepted currencies</div>
     <div style="display: flex; gap: 16px; flex-wrap: wrap;">
-      <div style="display: flex; align-items: center; gap: 8px; font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 500; color: var(--color-sub);">
+      <div style="display: flex; align-items: center; gap: 8px; font-family: 'IoskeleyMonoTerm', monospace; font-size: 12px; font-weight: 500; color: var(--color-sub);">
         <span class="metal-text">●</span> USDT (ERC-20, BEP-20, Solana)
       </div>
-      <div style="display: flex; align-items: center; gap: 8px; font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 500; color: var(--color-sub);">
+      <div style="display: flex; align-items: center; gap: 8px; font-family: 'IoskeleyMonoTerm', monospace; font-size: 12px; font-weight: 500; color: var(--color-sub);">
         <span class="metal-text">●</span> USDC (ERC-20, Polygon)
       </div>
-      <div style="display: flex; align-items: center; gap: 8px; font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 500; color: var(--color-sub);">
+      <div style="display: flex; align-items: center; gap: 8px; font-family: 'IoskeleyMonoTerm', monospace; font-size: 12px; font-weight: 500; color: var(--color-sub);">
         <span class="metal-text">●</span> ETH (Ethereum)
       </div>
-      <div style="display: flex; align-items: center; gap: 8px; font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 500; color: var(--color-sub);">
+      <div style="display: flex; align-items: center; gap: 8px; font-family: 'IoskeleyMonoTerm', monospace; font-size: 12px; font-weight: 500; color: var(--color-sub);">
         <span class="metal-text">●</span> XMR (Monero)
       </div>
     </div>
@@ -897,11 +910,11 @@
         <span class="cta-arrow">→</span>
         <span class="cta-label">CONNECT WALLET</span>
       </div>
-      <div style="font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.02em; color: var(--color-sub); margin-top: 8px;">
+      <div style="font-family: 'IoskeleyMonoTerm', monospace; font-size: 10px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.02em; color: var(--color-sub); margin-top: 8px;">
         ERC-20 · BEP-20 · Solana · EVM
       </div>
       <div class="struct-line"></div>
-      <div style="display: flex; align-items: center; gap: 8px; font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.02em; color: var(--color-sub);">
+      <div style="display: flex; align-items: center; gap: 8px; font-family: 'IoskeleyMonoTerm', monospace; font-size: 10px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.02em; color: var(--color-sub);">
         <span class="metal-text">●</span>
         <span>0.5% presale fee · 1% sell tax post-TGE · 50% auto-burn · 50% to treasury</span>
       </div>

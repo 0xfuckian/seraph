@@ -1,3 +1,13 @@
+@font-face {
+  font-family: 'IoskeleyMonoTerm';
+  src: url('/fonts/IoskeleyMonoTerm-Regular.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+*, *::before, *::after {
+  font-family: 'IoskeleyMonoTerm', monospace !important;
+}
 :root {
   --color-white: #ffffff;
   --color-bg: #ffffff;
@@ -24,7 +34,7 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
 html { scroll-behavior: smooth; }
 body {
-  font-family: "Space Grotesk", system-ui, -apple-system, sans-serif;
+  font-family: "IoskeleyMonoTerm", system-ui, -apple-system, sans-serif;
   background: var(--color-bg);
   color: var(--color-ink);
   -webkit-font-smoothing: antialiased;
@@ -58,7 +68,7 @@ header {
   width: 15px; height: 15px; display: block;
 }
 .logo {
-  font-family: "Space Grotesk", sans-serif;
+  font-family: "IoskeleyMonoTerm", sans-serif;
   font-weight: 700; font-size: 18px; letter-spacing: -0.04em;
   color: var(--color-ink);
 }
@@ -69,7 +79,7 @@ header {
 /* Status cell */
 .status-cell {
   flex-shrink: 0; display: flex; align-items: center; padding: 16px 20px;
-  font-family: "JetBrains Mono", monospace;
+  font-family: "IoskeleyMonoTerm", monospace;
   font-size: 11px; font-weight: 500; border-left: var(--line-shadow);
 }
 .status-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 8px; }
@@ -86,7 +96,7 @@ header {
 }
 .section-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 36px; gap: 24px; flex-wrap: wrap; }
 .section-title {
-  font-family: "Space Grotesk", sans-serif;
+  font-family: "IoskeleyMonoTerm", sans-serif;
   font-size: 44px; font-weight: 600;
   line-height: 0.95; letter-spacing: -0.03em;
 }
@@ -98,7 +108,7 @@ header {
 }
 
 .meta {
-  font-family: "JetBrains Mono", monospace;
+  font-family: "IoskeleyMonoTerm", monospace;
   font-size: 11px; font-weight: 500;
   text-transform: uppercase; letter-spacing: 0.02em;
   color: var(--color-sub);
@@ -122,7 +132,7 @@ header {
 }
 .presale-banner.live .pdot { background: var(--color-green); }
 .presale-banner strong {
-  font-family: "JetBrains Mono", monospace;
+  font-family: "IoskeleyMonoTerm", monospace;
   font-size: 12px; font-weight: 700; text-transform: uppercase;
   letter-spacing: 0.02em; display: block; margin-bottom: 6px;
   color: var(--color-ink);
@@ -133,9 +143,9 @@ header {
 .target-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-bottom: 40px; }
 @media (max-width: 768px) { .target-row { grid-template-columns: 1fr; } }
 .target-cell { box-shadow: var(--card-shadow); padding: 24px; background: var(--color-white); }
-.target-cell .num { font-family: "Space Grotesk", sans-serif; font-size: 48px; font-weight: 700; line-height: 0.9; letter-spacing: -0.02em; }
+.target-cell .num { font-family: "IoskeleyMonoTerm", sans-serif; font-size: 48px; font-weight: 700; line-height: 0.9; letter-spacing: -0.02em; }
 .target-cell .num .unit { font-size: 0.5em; }
-.target-cell .lbl { font-family: "JetBrains Mono", monospace; font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.02em; color: var(--color-sub); margin-top: 10px; }
+.target-cell .lbl { font-family: "IoskeleyMonoTerm", monospace; font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.02em; color: var(--color-sub); margin-top: 10px; }
 .text-accent { color: var(--color-accent); }
 .text-magenta { color: var(--color-magenta); }
 .text-green { color: var(--color-green); }
@@ -159,11 +169,11 @@ header {
 .tier-card.active::after {
   content: "SELECTED";
   position: absolute; top: 12px; right: 16px;
-  font-family: "JetBrains Mono", monospace; font-size: 9px; font-weight: 700;
+  font-family: "IoskeleyMonoTerm", monospace; font-size: 9px; font-weight: 700;
   letter-spacing: 0.05em; color: var(--color-accent);
 }
 .tier-badge {
-  font-family: "JetBrains Mono", monospace;
+  font-family: "IoskeleyMonoTerm", monospace;
   font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em;
   padding: 4px 10px; display: inline-flex; align-items: center; gap: 6px;
   margin-bottom: 12px; align-self: flex-start;
@@ -175,13 +185,13 @@ header {
 .tier-badge.text-magenta .dot { background: var(--color-magenta); }
 .tier-badge.text-accent .dot { background: var(--color-accent); }
 .tier-badge.text-green .dot { background: var(--color-green); }
-.tier-name { font-family: "Space Grotesk", sans-serif; font-size: 24px; font-weight: 700; line-height: 1.05; letter-spacing: -0.01em; margin-bottom: 6px; }
-.tier-detail { font-family: "JetBrains Mono", monospace; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.02em; color: var(--color-sub); margin-bottom: 14px; }
-.tier-price { font-family: "Space Grotesk", sans-serif; font-size: 32px; font-weight: 700; line-height: 0.9; letter-spacing: -0.02em; color: var(--color-ink); margin-bottom: 16px; }
+.tier-name { font-family: "IoskeleyMonoTerm", sans-serif; font-size: 24px; font-weight: 700; line-height: 1.05; letter-spacing: -0.01em; margin-bottom: 6px; }
+.tier-detail { font-family: "IoskeleyMonoTerm", monospace; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.02em; color: var(--color-sub); margin-bottom: 14px; }
+.tier-price { font-family: "IoskeleyMonoTerm", sans-serif; font-size: 32px; font-weight: 700; line-height: 0.9; letter-spacing: -0.02em; color: var(--color-ink); margin-bottom: 16px; }
 .tier-price .unit { font-size: 0.5em; color: var(--color-sub); }
 .tier-list { list-style: none; margin: 0 0 14px; }
 .tier-list li {
-  font-family: "JetBrains Mono", monospace;
+  font-family: "IoskeleyMonoTerm", monospace;
   font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.02em;
   color: var(--color-sub); padding: 6px 0; border-top: var(--line-shadow);
   display: flex; justify-content: space-between; gap: 12px;
@@ -190,7 +200,7 @@ header {
 .tier-list li .v { color: var(--color-ink); font-weight: 700; }
 .tier-progress { height: 6px; background: var(--color-paper); box-shadow: var(--line-shadow); margin: 12px 0 6px; }
 .tier-progress .tp-fill { height: 100%; width: 0%; background: var(--color-accent); transition: width 0.6s ease; }
-.tp-labels { display: flex; justify-content: space-between; font-family: "JetBrains Mono", monospace; font-size: 10px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.02em; color: var(--color-sub); }
+.tp-labels { display: flex; justify-content: space-between; font-family: "IoskeleyMonoTerm", monospace; font-size: 10px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.02em; color: var(--color-sub); }
 
 /* Purchase Flow */
 .purchase-panel { display: grid; grid-template-columns: 1.4fr 1fr; gap: 24px; margin-top: 16px; margin-bottom: 48px; }
@@ -198,7 +208,7 @@ header {
 .purchase-controls, .purchase-summary { background: var(--color-white); box-shadow: var(--card-shadow); padding: 28px; }
 .currency-tabs { display: inline-flex; box-shadow: var(--line-shadow); margin-bottom: 20px; }
 .currency-tab {
-  font-family: "JetBrains Mono", monospace;
+  font-family: "IoskeleyMonoTerm", monospace;
   font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em;
   padding: 12px 20px; background: var(--color-white); color: var(--color-sub);
   cursor: pointer; border: none; transition: all 0.15s;
@@ -210,16 +220,16 @@ header {
   box-shadow: var(--line-shadow); padding: 14px 20px;
   background: var(--color-white); margin-bottom: 12px;
 }
-.amount-wrap .sym { font-family: "JetBrains Mono", monospace; font-size: 16px; font-weight: 700; color: var(--color-sub); }
+.amount-wrap .sym { font-family: "IoskeleyMonoTerm", monospace; font-size: 16px; font-weight: 700; color: var(--color-sub); }
 .amount-input {
   flex: 1; border: none; outline: none;
-  font-family: "Space Grotesk", sans-serif;
+  font-family: "IoskeleyMonoTerm", sans-serif;
   font-size: 32px; font-weight: 700; letter-spacing: -0.02em;
   color: var(--color-ink); background: transparent; min-width: 0;
 }
 .balance-row {
   display: flex; justify-content: space-between; align-items: center;
-  font-family: "JetBrains Mono", monospace; font-size: 11px; color: var(--color-sub);
+  font-family: "IoskeleyMonoTerm", monospace; font-size: 11px; color: var(--color-sub);
   margin-bottom: 20px;
 }
 .max-btn {
@@ -229,7 +239,7 @@ header {
 
 .action-btn {
   width: 100%; display: inline-flex; align-items: center; justify-content: center;
-  font-family: "JetBrains Mono", monospace; font-size: 13px; font-weight: 700;
+  font-family: "IoskeleyMonoTerm", monospace; font-size: 13px; font-weight: 700;
   text-transform: uppercase; letter-spacing: 0.03em;
   padding: 16px 28px; background: var(--color-accent); color: var(--color-white);
   border: none; cursor: pointer; transition: all 0.15s ease; gap: 8px;
@@ -241,7 +251,7 @@ header {
 
 .notice-box {
   margin-top: 16px; padding: 12px 16px; font-size: 13px; line-height: 1.5;
-  box-shadow: var(--line-shadow); font-family: "JetBrains Mono", monospace;
+  box-shadow: var(--line-shadow); font-family: "IoskeleyMonoTerm", monospace;
 }
 .notice-box.warning { background: var(--color-orange-soft); color: var(--color-orange); }
 .notice-box.success { background: var(--color-green-soft); color: var(--color-green); }
@@ -250,7 +260,7 @@ header {
 .spec-row { display: flex; justify-content: space-between; align-items: baseline; padding: 12px 0; border-bottom: var(--line-shadow); font-size: 14px; }
 .spec-row:last-child { border-bottom: none; }
 .spec-row .k { color: var(--color-sub); }
-.spec-row .v { font-family: "JetBrains Mono", monospace; font-size: 13px; font-weight: 700; }
+.spec-row .v { font-family: "IoskeleyMonoTerm", monospace; font-size: 13px; font-weight: 700; }
 .spec-row .v.accent { color: var(--color-accent); }
 
 /* Allocation / Vesting panel */
@@ -261,8 +271,8 @@ header {
 .alloc-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 16px 0; }
 @media (max-width: 600px) { .alloc-stats { grid-template-columns: 1fr; } }
 .alloc-stat-box { padding: 12px; background: var(--color-paper); box-shadow: var(--line-shadow); }
-.alloc-stat-val { font-family: "Space Grotesk", sans-serif; font-size: 22px; font-weight: 700; }
-.alloc-stat-lbl { font-family: "JetBrains Mono", monospace; font-size: 10px; color: var(--color-sub); text-transform: uppercase; margin-top: 4px; }
+.alloc-stat-val { font-family: "IoskeleyMonoTerm", sans-serif; font-size: 22px; font-weight: 700; }
+.alloc-stat-lbl { font-family: "IoskeleyMonoTerm", monospace; font-size: 10px; color: var(--color-sub); text-transform: uppercase; margin-top: 4px; }
 
 /* Structural lines */
 .struct-line { border-top: 1px solid var(--color-line); margin: 40px 0; }
@@ -275,15 +285,15 @@ header {
   cursor: pointer; list-style: none;
   display: flex; justify-content: space-between; align-items: center; gap: 16px;
   padding: 18px 20px;
-  font-family: "Space Grotesk", sans-serif; font-size: 16px; font-weight: 600;
+  font-family: "IoskeleyMonoTerm", sans-serif; font-size: 16px; font-weight: 600;
 }
 .faq-item summary::-webkit-details-marker { display: none; }
-.faq-item summary::after { content: "+"; font-family: "JetBrains Mono", monospace; font-size: 18px; color: var(--color-accent); }
+.faq-item summary::after { content: "+"; font-family: "IoskeleyMonoTerm", monospace; font-size: 18px; color: var(--color-accent); }
 .faq-item[open] summary::after { content: "–"; }
 .faq-item p { padding: 0 20px 18px; font-size: 14px; line-height: 1.6; color: var(--color-sub); }
 
 /* Footer */
-footer { padding: 48px 24px; border-top: var(--line-shadow); font-family: "Space Grotesk", sans-serif; font-size: 13px; line-height: 1.6; color: var(--color-sub); }
+footer { padding: 48px 24px; border-top: var(--line-shadow); font-family: "IoskeleyMonoTerm", sans-serif; font-size: 13px; line-height: 1.6; color: var(--color-sub); }
 .footer-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 16px; }
 .copyright { padding-top: 16px; border-top: var(--line-shadow); font-size: 11px; color: var(--color-sub); }
 

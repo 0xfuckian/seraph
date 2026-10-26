@@ -13,8 +13,24 @@
   <meta name="twitter:title" content="Seraph Protocol — Privacy Continuum">
   <meta name="twitter:description" content="A four-level privacy continuum: Monero-inspired base layer + two private EVMs. Native SER + XMR.">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-  <!-- itsua.com design system: Space Grotesk + JetBrains Mono -->
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Typography: IoskeleyMonoTerm -->
+  <!-- Typography: IoskeleyMonoTerm (Universal Monospace Terminal Font) -->
+  <style>
+    @font-face {
+      font-family: 'IoskeleyMonoTerm';
+      src: url('fonts/IoskeleyMonoTerm-Regular.ttf') format('truetype'),
+           url('/fonts/IoskeleyMonoTerm-Regular.ttf') format('truetype');
+      font-weight: 100 900;
+      font-style: normal;
+      font-display: swap;
+    }
+    *, *::before, *::after {
+      font-family: 'IoskeleyMonoTerm', monospace !important;
+    }
+    html, body, button, input, select, textarea, h1, h2, h3, h4, h5, h6, p, a, span, table, th, td, div, code, pre, label {
+      font-family: 'IoskeleyMonoTerm', monospace !important;
+    }
+  </style>
   <style>
     :root {
       --color-white:      #ffffff;
@@ -42,7 +58,7 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
     html { scroll-behavior: smooth; }
     body {
-      font-family: "Space Grotesk", system-ui, sans-serif;
+      font-family: "IoskeleyMonoTerm", monospace;
       background: var(--color-bg);
       color: var(--color-ink);
       -webkit-font-smoothing: antialiased;
@@ -83,7 +99,7 @@
       width: 15px; height: 15px; display: block;
     }
     .logo {
-      font-family: "Space Grotesk", sans-serif;
+      font-family: "IoskeleyMonoTerm", monospace;
       font-weight: 700; font-size: 18px; letter-spacing: -0.04em;
       color: var(--color-ink); text-decoration: none;
     }
@@ -91,7 +107,7 @@
     .nav-area { flex: 1; display: flex; overflow-x: auto; }
     .nav-link {
       display: flex; align-items: center;
-      font-family: "JetBrains Mono", monospace;
+      font-family: "IoskeleyMonoTerm", monospace;
       font-size: 11px; font-weight: 500; text-transform: uppercase;
       letter-spacing: 0.02em;
       padding: 16px 15px; border-right: var(--line-shadow);
@@ -104,7 +120,7 @@
     .bracket { margin-right: 5px; color: var(--color-sub); }
     .status-cell {
       flex-shrink: 0; display: flex; align-items: center; padding: 16px 20px;
-      font-family: "JetBrains Mono", monospace;
+      font-family: "IoskeleyMonoTerm", monospace;
       font-size: 11px; font-weight: 500; border-left: var(--line-shadow);
     }
     .status-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--color-orange); margin-right: 8px; }
@@ -114,12 +130,12 @@
       display: none; align-items: center; justify-content: center;
       padding: 0 20px; border: none; border-left: var(--line-shadow);
       background: var(--color-white); color: var(--color-ink);
-      font-family: "JetBrains Mono", monospace; font-size: 18px; cursor: pointer;
+      font-family: "IoskeleyMonoTerm", monospace; font-size: 18px; cursor: pointer;
     }
  
     /* === Meta === */
     .meta {
-      font-family: "JetBrains Mono", monospace;
+      font-family: "IoskeleyMonoTerm", monospace;
       font-size: 11px; font-weight: 500;
       text-transform: uppercase; letter-spacing: 0.02em;
       color: var(--color-sub);
@@ -149,7 +165,7 @@
       margin-bottom: 16px;
     }
     .hero h1 {
-      font-family: "Space Grotesk", sans-serif;
+      font-family: "IoskeleyMonoTerm", monospace;
       font-size: 48px; font-weight: 500;
       line-height: 0.94; letter-spacing: -0.04em;
       color: var(--color-ink);
@@ -174,7 +190,7 @@
     /* === CTAs === */
     .cta-split {
       display: inline-flex; align-items: center;
-      font-family: "JetBrains Mono", monospace;
+      font-family: "IoskeleyMonoTerm", monospace;
       font-size: 12px; font-weight: 500;
       text-decoration: none; letter-spacing: 0.02em;
       overflow: hidden; margin-bottom: 12px; cursor: pointer;
@@ -191,7 +207,7 @@
     }
     .cta-secondary {
       display: inline-flex; align-items: center;
-      font-family: "JetBrains Mono", monospace;
+      font-family: "IoskeleyMonoTerm", monospace;
       font-size: 12px; font-weight: 500;
       letter-spacing: 0.02em;
       background: var(--color-white); color: var(--color-ink);
@@ -210,14 +226,14 @@
     .stat-cell {
       text-align: center; padding: 16px 8px;
       border-right: var(--line-shadow);
-      font-family: "JetBrains Mono", monospace;
+      font-family: "IoskeleyMonoTerm", monospace;
       font-size: 11px; font-weight: 400;
       text-transform: uppercase; letter-spacing: 0.02em;
       color: var(--color-sub);
     }
     .stat-cell:last-child { border-right: none; }
     .stat-number {
-      font-family: "Space Grotesk", sans-serif;
+      font-family: "IoskeleyMonoTerm", monospace;
       font-size: 32px; font-weight: 500;
       line-height: 0.96; letter-spacing: -0.02em;
     }
@@ -241,7 +257,7 @@
     }
     .section-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 48px; gap: 24px; flex-wrap: wrap; }
     .section-title {
-      font-family: "Space Grotesk", sans-serif;
+      font-family: "IoskeleyMonoTerm", monospace;
       font-size: 44px; font-weight: 500;
       line-height: 0.95; letter-spacing: -0.03em;
     }
@@ -252,7 +268,7 @@
       max-width: 560px;
     }
     .view-all {
-      font-family: "JetBrains Mono", monospace;
+      font-family: "IoskeleyMonoTerm", monospace;
       font-size: 12px; font-weight: 500;
       letter-spacing: 0.02em;
       color: var(--color-sub); text-decoration: none;
@@ -275,12 +291,12 @@
     .cont-level:last-child { border-right: none; }
     @media (max-width: 900px) { .cont-level { border-bottom: var(--line-shadow); } }
     .cont-num {
-      font-family: "Space Grotesk", sans-serif;
+      font-family: "IoskeleyMonoTerm", monospace;
       font-size: 56px; font-weight: 900; line-height: 0.9;
       color: var(--c); letter-spacing: -0.03em;
     }
     .cont-name {
-      font-family: "JetBrains Mono", monospace;
+      font-family: "IoskeleyMonoTerm", monospace;
       font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em;
       color: var(--color-ink); margin: 14px 0 8px;
     }
@@ -292,28 +308,28 @@
     .deck-card { background: var(--color-white); box-shadow: var(--card-shadow); transition: box-shadow 0.15s ease; display: flex; flex-direction: column; }
     .deck-card:hover { box-shadow: var(--card-shadow-hover); }
     .deck-face { padding: 24px; display: flex; flex-direction: column; flex: 1; }
-    .deck-brand-row { display: flex; justify-content: space-between; align-items: center; font-family: "JetBrains Mono", monospace; font-size: 11px; font-weight: 500; color: var(--color-sub); margin-bottom: 16px; }
+    .deck-brand-row { display: flex; justify-content: space-between; align-items: center; font-family: "IoskeleyMonoTerm", monospace; font-size: 11px; font-weight: 500; color: var(--color-sub); margin-bottom: 16px; }
     .deck-brand { font-weight: 600; }
-    .deck-badge { display: flex; align-items: center; gap: 6px; font-family: "JetBrains Mono", monospace; font-size: 10px; font-weight: 700; }
+    .deck-badge { display: flex; align-items: center; gap: 6px; font-family: "IoskeleyMonoTerm", monospace; font-size: 10px; font-weight: 700; }
     .deck-badge .dot { width: 6px; height: 6px; border-radius: 50%; }
     .deck-badge.text-magenta .dot { background: var(--color-magenta); }
     .deck-badge.text-accent .dot { background: var(--color-accent); }
     .deck-badge.text-green .dot { background: var(--color-green); }
-    .deck-name { font-family: "Space Grotesk", sans-serif; font-size: 24px; font-weight: 500; line-height: 1.05; letter-spacing: -0.01em; margin-bottom: 8px; }
-    .deck-domain { font-family: "JetBrains Mono", monospace; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em; color: var(--color-sub); margin-bottom: 12px; }
+    .deck-name { font-family: "IoskeleyMonoTerm", monospace; font-size: 24px; font-weight: 500; line-height: 1.05; letter-spacing: -0.01em; margin-bottom: 8px; }
+    .deck-domain { font-family: "IoskeleyMonoTerm", monospace; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em; color: var(--color-sub); margin-bottom: 12px; }
     .deck-domain.text-magenta { color: var(--color-magenta); }
     .deck-domain.text-accent { color: var(--color-accent); }
     .deck-domain.text-green { color: var(--color-green); }
-    .deck-result { font-family: "Space Grotesk", sans-serif; font-size: 16px; font-weight: 500; color: var(--color-ink); margin-top: auto; margin-bottom: 12px; }
+    .deck-result { font-family: "IoskeleyMonoTerm", monospace; font-size: 16px; font-weight: 500; color: var(--color-ink); margin-top: auto; margin-bottom: 12px; }
     .deck-result.text-magenta { color: var(--color-magenta); }
     .deck-result.text-accent { color: var(--color-accent); }
     .deck-result.text-green { color: var(--color-green); }
     .tech-tags { display: flex; flex-wrap: wrap; gap: 6px; }
-    .tech-tag { font-family: "JetBrains Mono", monospace; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.02em; padding: 3px 8px; border-radius: 9999px; background: var(--color-ink-soft); color: var(--color-ink); }
+    .tech-tag { font-family: "IoskeleyMonoTerm", monospace; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.02em; padding: 3px 8px; border-radius: 9999px; background: var(--color-ink-soft); color: var(--color-ink); }
  
     /* === Status tags === */
     .status-tag {
-      font-family: "JetBrains Mono", monospace;
+      font-family: "IoskeleyMonoTerm", monospace;
       font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em;
       padding: 3px 8px; align-self: flex-start; display: inline-block;
     }
@@ -328,11 +344,11 @@
     @media (max-width: 768px) { .arch-top { grid-template-columns: 1fr; } }
     .arch-box { box-shadow: var(--card-shadow); padding: 24px; }
     .arch-box:hover { box-shadow: var(--card-shadow-hover); }
-    .arch-tag { font-family: "JetBrains Mono", monospace; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em; color: var(--color-sub); }
-    .arch-name { font-family: "Space Grotesk", sans-serif; font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 6px 0 8px; }
+    .arch-tag { font-family: "IoskeleyMonoTerm", monospace; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em; color: var(--color-sub); }
+    .arch-name { font-family: "IoskeleyMonoTerm", monospace; font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 6px 0 8px; }
     .arch-sub { font-size: 15px; line-height: 1.6; color: var(--color-sub); }
     .arch-features { list-style: none; margin-top: 12px; }
-    .arch-features li { font-family: "JetBrains Mono", monospace; font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.02em; color: var(--color-sub); padding: 5px 0; border-top: var(--line-shadow); }
+    .arch-features li { font-family: "IoskeleyMonoTerm", monospace; font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.02em; color: var(--color-sub); padding: 5px 0; border-top: var(--line-shadow); }
     .arch-features li:first-child { border-top: none; }
     .arch-shared { box-shadow: var(--card-shadow); border-top: 4px solid var(--color-accent); padding: 24px; margin: 24px 0; background: var(--color-paper); }
     .arch-shared .arch-name { font-size: 18px; }
@@ -349,11 +365,11 @@
     .bar-orange { background: var(--color-orange); }
     .bar-green { background: var(--color-green); }
     .bar-accent { background: var(--color-accent); }
-    .module-card h3 { font-family: "Space Grotesk", sans-serif; font-size: 20px; font-weight: 500; line-height: 1.15; margin-bottom: 8px; }
+    .module-card h3 { font-family: "IoskeleyMonoTerm", monospace; font-size: 20px; font-weight: 500; line-height: 1.15; margin-bottom: 8px; }
     .module-card h3 .dot { font-size: 16px; margin-right: 6px; }
     .module-card p { font-size: 16px; font-weight: 400; line-height: 1.6; color: var(--color-sub); margin-top: auto; }
     .module-specs { list-style: none; margin: 12px 0; }
-    .module-specs li { font-family: "JetBrains Mono", monospace; font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.02em; color: var(--color-sub); padding: 6px 0; border-top: var(--line-shadow); display: flex; justify-content: space-between; gap: 12px; }
+    .module-specs li { font-family: "IoskeleyMonoTerm", monospace; font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.02em; color: var(--color-sub); padding: 6px 0; border-top: var(--line-shadow); display: flex; justify-content: space-between; gap: 12px; }
     .module-specs li:first-child { border-top: none; }
     .module-specs li .v { color: var(--color-ink); font-weight: 700; }
  
@@ -365,10 +381,10 @@
     .alloc-lbl { font-size: 15px; font-weight: 500; }
     .alloc-track { height: 14px; background: var(--color-paper); box-shadow: var(--line-shadow); }
     .alloc-fill { height: 100%; }
-    .alloc-pct { font-family: "JetBrains Mono", monospace; font-size: 12px; font-weight: 700; text-align: right; }
+    .alloc-pct { font-family: "IoskeleyMonoTerm", monospace; font-size: 12px; font-weight: 700; text-align: right; }
     @media (max-width: 640px) { .alloc-row { grid-template-columns: 1fr 1fr 40px; gap: 10px; } }
     .fee-card { box-shadow: var(--card-shadow); padding: 24px; }
-    .fee-card h3 { font-family: "Space Grotesk", sans-serif; font-size: 18px; font-weight: 700; margin-bottom: 12px; }
+    .fee-card h3 { font-family: "IoskeleyMonoTerm", monospace; font-size: 18px; font-weight: 700; margin-bottom: 12px; }
     .fee-card ul { list-style: none; }
     .fee-card li { font-size: 15px; line-height: 1.6; color: var(--color-sub); padding: 8px 0; border-top: var(--line-shadow); }
     .fee-card li:first-child { border-top: none; }
@@ -385,20 +401,20 @@
     .road-item:nth-child(3) .road-dot { background: var(--color-accent); }
     .road-item:nth-child(4) .road-dot { background: var(--color-green); }
     .road-item:nth-child(5) .road-dot { background: var(--color-ink); }
-    .road-phase { font-family: "JetBrains Mono", monospace; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em; color: var(--color-sub); margin-bottom: 4px; }
-    .road-title { font-family: "Space Grotesk", sans-serif; font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin-bottom: 8px; }
+    .road-phase { font-family: "IoskeleyMonoTerm", monospace; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em; color: var(--color-sub); margin-bottom: 4px; }
+    .road-title { font-family: "IoskeleyMonoTerm", monospace; font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin-bottom: 8px; }
     .road-item p { font-size: 15px; line-height: 1.6; color: var(--color-sub); max-width: 640px; }
  
     /* === Security === */
     .threat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
     @media (max-width: 768px) { .threat-grid { grid-template-columns: 1fr; } }
     .threat-card { box-shadow: var(--card-shadow); padding: 24px; }
-    .threat-card h4 { font-family: "JetBrains Mono", monospace; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em; color: var(--color-ink); margin-bottom: 6px; }
+    .threat-card h4 { font-family: "IoskeleyMonoTerm", monospace; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em; color: var(--color-ink); margin-bottom: 6px; }
     .threat-card p { font-size: 15px; line-height: 1.6; color: var(--color-sub); }
     .sec-list { list-style: none; }
     .sec-list li { display: flex; gap: 12px; padding: 12px 0; border-top: var(--line-shadow); font-size: 15px; color: var(--color-sub); line-height: 1.5; }
     .sec-list li:first-child { border-top: none; }
-    .sec-list .m { font-family: "JetBrains Mono", monospace; font-weight: 700; color: var(--color-ink); flex-shrink: 0; }
+    .sec-list .m { font-family: "IoskeleyMonoTerm", monospace; font-weight: 700; color: var(--color-ink); flex-shrink: 0; }
  
     /* === Tier cards (presale) === */
     .tier-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
@@ -415,7 +431,7 @@
     .tier-card:hover, .tier-card.active { box-shadow: var(--card-shadow-hover); }
     .tier-card.active { border-top-color: var(--color-accent); }
     .tier-card .tier-badge {
-      font-family: "JetBrains Mono", monospace;
+      font-family: "IoskeleyMonoTerm", monospace;
       font-size: 10px; font-weight: 700;
       text-transform: uppercase; letter-spacing: 0.02em;
       padding: 4px 12px;
@@ -429,14 +445,14 @@
     .tier-badge.text-magenta .dot { background: var(--color-magenta); }
     .tier-badge.text-accent .dot { background: var(--color-accent); }
     .tier-badge.text-green .dot { background: var(--color-green); }
-    .tier-name { font-family: "Space Grotesk", sans-serif; font-size: 24px; font-weight: 900; line-height: 1.05; letter-spacing: -0.01em; margin-bottom: 8px; }
-    .tier-detail { font-family: "JetBrains Mono", monospace; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em; color: var(--color-sub); margin-bottom: 16px; }
-    .tier-price { font-family: "Space Grotesk", sans-serif; font-size: 32px; font-weight: 900; line-height: 0.9; letter-spacing: -0.02em; color: var(--color-ink); margin-bottom: 16px; }
+    .tier-name { font-family: "IoskeleyMonoTerm", monospace; font-size: 24px; font-weight: 900; line-height: 1.05; letter-spacing: -0.01em; margin-bottom: 8px; }
+    .tier-detail { font-family: "IoskeleyMonoTerm", monospace; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em; color: var(--color-sub); margin-bottom: 16px; }
+    .tier-price { font-family: "IoskeleyMonoTerm", monospace; font-size: 32px; font-weight: 900; line-height: 0.9; letter-spacing: -0.02em; color: var(--color-ink); margin-bottom: 16px; }
     .tier-price .unit { font-size: 0.5em; color: var(--color-sub); }
     .tier-desc { font-size: 15px; font-weight: 400; line-height: 1.6; color: var(--color-sub); margin-top: auto; }
     .tier-list { list-style: none; margin: 0 0 14px; }
     .tier-list li {
-      font-family: "JetBrains Mono", monospace;
+      font-family: "IoskeleyMonoTerm", monospace;
       font-size: 11px; font-weight: 500;
       text-transform: uppercase; letter-spacing: 0.02em;
       color: var(--color-sub);
@@ -448,19 +464,19 @@
     .tier-list li .v { color: var(--color-ink); font-weight: 700; }
     .tier-progress { height: 6px; background: var(--color-paper); box-shadow: var(--line-shadow); margin: 12px 0 6px; }
     .tier-progress .tp-fill { height: 100%; width: 0%; background: var(--color-accent); transition: width 0.6s ease; }
-    .tp-labels { display: flex; justify-content: space-between; font-family: "JetBrains Mono", monospace; font-size: 10px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.02em; color: var(--color-sub); }
+    .tp-labels { display: flex; justify-content: space-between; font-family: "IoskeleyMonoTerm", monospace; font-size: 10px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.02em; color: var(--color-sub); }
  
     /* === Presale status === */
     .presale-status { display: flex; align-items: flex-start; gap: 16px; box-shadow: var(--line-shadow); padding: 20px 24px; background: var(--color-paper); margin-bottom: 64px; }
     .presale-status .pdot { width: 12px; height: 12px; border-radius: 50%; background: var(--color-orange); flex-shrink: 0; margin-top: 4px; }
-    .presale-status strong { font-family: "JetBrains Mono", monospace; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em; display: block; margin-bottom: 6px; color: var(--color-ink); }
+    .presale-status strong { font-family: "IoskeleyMonoTerm", monospace; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em; display: block; margin-bottom: 6px; color: var(--color-ink); }
     .presale-status p { font-size: 15px; line-height: 1.6; color: var(--color-sub); }
  
     .target-row { display: flex; gap: 24px; flex-wrap: wrap; margin-bottom: 48px; }
     .target-cell { flex: 1; min-width: 200px; box-shadow: var(--card-shadow); padding: 24px; }
-    .target-cell .num { font-family: "Space Grotesk", sans-serif; font-size: 48px; font-weight: 900; line-height: 0.9; letter-spacing: -0.02em; }
+    .target-cell .num { font-family: "IoskeleyMonoTerm", monospace; font-size: 48px; font-weight: 900; line-height: 0.9; letter-spacing: -0.02em; }
     .target-cell .num .unit { font-size: 0.5em; }
-    .target-cell .lbl { font-family: "JetBrains Mono", monospace; font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.02em; color: var(--color-sub); margin-top: 10px; }
+    .target-cell .lbl { font-family: "IoskeleyMonoTerm", monospace; font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.02em; color: var(--color-sub); margin-top: 10px; }
     @media (min-width: 768px) { .target-cell .num { font-size: 64px; } }
  
     /* === Purchase flow === */
@@ -468,14 +484,14 @@
     @media (max-width: 900px) { .purchase-panel { grid-template-columns: 1fr; } }
     .purchase-controls, .purchase-summary { background: var(--color-white); box-shadow: var(--card-shadow); padding: 24px; }
     .currency-tabs { display: inline-flex; box-shadow: var(--line-shadow); margin-bottom: 16px; }
-    .currency-tab { font-family: "JetBrains Mono", monospace; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em; padding: 12px 20px; background: var(--color-white); color: var(--color-sub); cursor: pointer; border: none; }
+    .currency-tab { font-family: "IoskeleyMonoTerm", monospace; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em; padding: 12px 20px; background: var(--color-white); color: var(--color-sub); cursor: pointer; border: none; }
     .currency-tab + .currency-tab { box-shadow: inset var(--line-shadow); }
     .currency-tab.active { background: var(--color-ink); color: var(--color-white); }
     .amount-wrap { display: flex; align-items: center; gap: 12px; box-shadow: var(--line-shadow); padding: 16px 20px; background: var(--color-white); margin-bottom: 16px; }
-    .amount-wrap .sym { font-family: "JetBrains Mono", monospace; font-size: 14px; font-weight: 700; color: var(--color-sub); }
-    .amount-input { flex: 1; border: none; outline: none; font-family: "Space Grotesk", sans-serif; font-size: 36px; font-weight: 900; letter-spacing: -0.02em; color: var(--color-ink); background: transparent; min-width: 0; }
+    .amount-wrap .sym { font-family: "IoskeleyMonoTerm", monospace; font-size: 14px; font-weight: 700; color: var(--color-sub); }
+    .amount-input { flex: 1; border: none; outline: none; font-family: "IoskeleyMonoTerm", monospace; font-size: 36px; font-weight: 900; letter-spacing: -0.02em; color: var(--color-ink); background: transparent; min-width: 0; }
     .amount-input::placeholder { color: var(--color-line); }
-    .wallet-btn { display: inline-flex; align-items: center; font-family: "JetBrains Mono", monospace; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em; text-decoration: none; padding: 14px 28px; background: var(--color-ink); color: var(--color-white); border: none; cursor: pointer; transition: box-shadow 0.15s ease; }
+    .wallet-btn { display: inline-flex; align-items: center; font-family: "IoskeleyMonoTerm", monospace; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em; text-decoration: none; padding: 14px 28px; background: var(--color-ink); color: var(--color-white); border: none; cursor: pointer; transition: box-shadow 0.15s ease; }
     .wallet-btn:hover { box-shadow: var(--card-shadow-hover); }
     .wallet-btn .metal { color: var(--color-metal); margin-right: 8px; }
     .wallet-btn:disabled { background: var(--color-ink-soft); color: var(--color-sub); cursor: not-allowed; box-shadow: none; }
@@ -484,7 +500,7 @@
     .spec-row { display: flex; justify-content: space-between; align-items: baseline; padding: 12px 0; border-bottom: var(--line-shadow); font-size: 15px; }
     .spec-row:last-child { border-bottom: none; }
     .spec-row .k { color: var(--color-sub); }
-    .spec-row .v { font-family: "JetBrains Mono", monospace; font-size: 13px; font-weight: 700; }
+    .spec-row .v { font-family: "IoskeleyMonoTerm", monospace; font-size: 13px; font-weight: 700; }
     .spec-row .v.accent { color: var(--color-accent); }
  
     /* === FAQ === */
@@ -494,10 +510,10 @@
       cursor: pointer; list-style: none;
       display: flex; justify-content: space-between; align-items: center; gap: 16px;
       padding: 18px 20px;
-      font-family: "Space Grotesk", sans-serif; font-size: 16px; font-weight: 600;
+      font-family: "IoskeleyMonoTerm", monospace; font-size: 16px; font-weight: 600;
     }
     .faq-item summary::-webkit-details-marker { display: none; }
-    .faq-item summary::after { content: "+"; font-family: "JetBrains Mono", monospace; font-size: 18px; color: var(--color-accent); }
+    .faq-item summary::after { content: "+"; font-family: "IoskeleyMonoTerm", monospace; font-size: 18px; color: var(--color-accent); }
     .faq-item[open] summary::after { content: "–"; }
     .faq-item p { padding: 0 20px 18px; font-size: 15px; line-height: 1.6; color: var(--color-sub); }
  
@@ -512,8 +528,8 @@
  
     /* === Launchpad form === */
     .field { display: block; margin-bottom: 16px; }
-    .field > span { display: block; font-family: "JetBrains Mono", monospace; font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.02em; color: var(--color-sub); margin-bottom: 6px; }
-    .field input, .field textarea { width: 100%; font-family: "Space Grotesk", sans-serif; font-size: 16px; color: var(--color-ink); background: var(--color-white); border: none; box-shadow: var(--line-shadow); padding: 12px 14px; outline: none; resize: vertical; }
+    .field > span { display: block; font-family: "IoskeleyMonoTerm", monospace; font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.02em; color: var(--color-sub); margin-bottom: 6px; }
+    .field input, .field textarea { width: 100%; font-family: "IoskeleyMonoTerm", monospace; font-size: 16px; color: var(--color-ink); background: var(--color-white); border: none; box-shadow: var(--line-shadow); padding: 12px 14px; outline: none; resize: vertical; }
     .field input:focus, .field textarea:focus { box-shadow: 0 0 0 2px var(--color-accent); }
     .field input:disabled { background: var(--color-paper); color: var(--color-sub); cursor: not-allowed; }
     .check { display: flex; gap: 10px; align-items: flex-start; font-size: 14px; line-height: 1.5; color: var(--color-sub); margin: 8px 0 20px; }
@@ -522,21 +538,21 @@
     /* === Launchpad: Pons-style listing + Argus-style create === */
     .lp-toolbar { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 16px; }
     .lp-chips { display: flex; gap: 8px; flex-wrap: wrap; }
-    .lp-chip { font-family: "JetBrains Mono", monospace; font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.02em; padding: 9px 14px; background: var(--color-white); color: var(--color-sub); box-shadow: var(--line-shadow); border: none; border-radius: 999px; cursor: pointer; }
+    .lp-chip { font-family: "IoskeleyMonoTerm", monospace; font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.02em; padding: 9px 14px; background: var(--color-white); color: var(--color-sub); box-shadow: var(--line-shadow); border: none; border-radius: 999px; cursor: pointer; }
     .lp-chip:hover { color: var(--color-ink); }
     .lp-chip[aria-pressed="true"] { background: var(--color-ink); color: var(--color-white); }
     .lp-table-wrap { overflow-x: auto; background: var(--color-white); box-shadow: var(--card-shadow); }
     .lp-table { width: 100%; border-collapse: collapse; min-width: 560px; }
-    .lp-table th { font-family: "JetBrains Mono", monospace; font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.02em; color: var(--color-sub); text-align: left; padding: 14px 16px; border-bottom: var(--line-shadow); }
+    .lp-table th { font-family: "IoskeleyMonoTerm", monospace; font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.02em; color: var(--color-sub); text-align: left; padding: 14px 16px; border-bottom: var(--line-shadow); }
     .lp-table td { padding: 14px 16px; border-bottom: var(--line-shadow); font-size: 15px; vertical-align: middle; }
     .lp-table tbody tr:last-child td { border-bottom: none; }
     .lp-table tbody tr:hover { background: var(--color-paper); }
-    .lp-table .lp-num { text-align: right; font-family: "JetBrains Mono", monospace; font-size: 13px; font-weight: 500; }
+    .lp-table .lp-num { text-align: right; font-family: "IoskeleyMonoTerm", monospace; font-size: 13px; font-weight: 500; }
     .lp-token { display: flex; align-items: center; gap: 12px; }
-    .lp-avatar { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-family: "Space Grotesk", sans-serif; font-weight: 700; flex-shrink: 0; }
+    .lp-avatar { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #fff; font-family: "IoskeleyMonoTerm", monospace; font-weight: 700; flex-shrink: 0; }
     .lp-name { font-weight: 600; }
-    .lp-sub { font-family: "JetBrains Mono", monospace; font-size: 11px; color: var(--color-sub); }
-    .lp-chain { font-family: "JetBrains Mono", monospace; font-size: 10px; font-weight: 700; text-transform: uppercase; padding: 3px 8px; background: var(--color-ink-soft); }
+    .lp-sub { font-family: "IoskeleyMonoTerm", monospace; font-size: 11px; color: var(--color-sub); }
+    .lp-chain { font-family: "IoskeleyMonoTerm", monospace; font-size: 10px; font-weight: 700; text-transform: uppercase; padding: 3px 8px; background: var(--color-ink-soft); }
     .lp-up { color: var(--color-green); }
     .lp-down { color: var(--color-orange); }
     .lp-bar { width: 120px; height: 6px; background: var(--color-paper); box-shadow: var(--line-shadow); }
@@ -546,12 +562,12 @@
     @media (max-width: 960px) { .lp-grid { grid-template-columns: 1fr; } }
     .lp-stack { display: flex; flex-direction: column; gap: 24px; }
     .lp-card { background: var(--color-white); box-shadow: var(--card-shadow); padding: 24px; }
-    .lp-h { font-family: "Space Grotesk", sans-serif; font-size: 20px; font-weight: 700; margin-bottom: 16px; }
+    .lp-h { font-family: "IoskeleyMonoTerm", monospace; font-size: 20px; font-weight: 700; margin-bottom: 16px; }
     .lp-two { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
     @media (max-width: 560px) { .lp-two { grid-template-columns: 1fr; } }
     .lp-drop { border: 1px dashed var(--color-line); padding: 16px; text-align: center; font-size: 13px; color: var(--color-sub); margin-bottom: 16px; }
     .lp-details { margin-bottom: 16px; }
-    .lp-details summary { cursor: pointer; font-family: "JetBrains Mono", monospace; font-size: 12px; font-weight: 500; text-transform: uppercase; color: var(--color-sub); padding: 8px 0; }
+    .lp-details summary { cursor: pointer; font-family: "IoskeleyMonoTerm", monospace; font-size: 12px; font-weight: 500; text-transform: uppercase; color: var(--color-sub); padding: 8px 0; }
     .lp-details .field { margin-top: 12px; }
     .lp-field-count { float: right; font-weight: 500; color: var(--color-sub); }
     .lp-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-top: 12px; }
@@ -559,19 +575,19 @@
     .lp-opt .t { font-weight: 600; }
     .lp-opt .d { font-size: 13px; color: var(--color-sub); }
     .lp-opt[aria-pressed="true"] { box-shadow: 0 0 0 2px var(--color-accent); }
-    .lp-rate { display: flex; justify-content: space-between; font-family: "JetBrains Mono", monospace; font-size: 12px; text-transform: uppercase; color: var(--color-sub); margin-bottom: 8px; }
+    .lp-rate { display: flex; justify-content: space-between; font-family: "IoskeleyMonoTerm", monospace; font-size: 12px; text-transform: uppercase; color: var(--color-sub); margin-bottom: 8px; }
     .lp-rate output { color: var(--color-ink); font-weight: 700; }
     input[type="range"] { width: 100%; accent-color: var(--color-accent); }
     .lp-split { display: grid; grid-template-columns: 1fr 110px; gap: 12px; align-items: center; padding: 10px 0; border-top: var(--line-shadow); font-size: 15px; }
-    .lp-split input { width: 100%; font-family: "JetBrains Mono", monospace; font-size: 14px; text-align: right; padding: 8px 10px; border: none; outline: none; box-shadow: var(--line-shadow); background: var(--color-white); color: var(--color-ink); }
+    .lp-split input { width: 100%; font-family: "IoskeleyMonoTerm", monospace; font-size: 14px; text-align: right; padding: 8px 10px; border: none; outline: none; box-shadow: var(--line-shadow); background: var(--color-white); color: var(--color-ink); }
     .lp-split input:focus { box-shadow: 0 0 0 2px var(--color-accent); }
-    .lp-total { margin-top: 12px; font-family: "JetBrains Mono", monospace; font-size: 12px; font-weight: 700; padding: 10px 12px; background: var(--color-paper); }
+    .lp-total { margin-top: 12px; font-family: "IoskeleyMonoTerm", monospace; font-size: 12px; font-weight: 700; padding: 10px 12px; background: var(--color-paper); }
     .lp-total.bad { color: var(--color-magenta); }
     .lp-preview { position: sticky; top: 96px; background: var(--color-white); box-shadow: var(--card-shadow); }
     @media (max-width: 960px) { .lp-preview { position: static; } }
-    .lp-preview-img { height: 240px; display: flex; align-items: center; justify-content: center; color: #fff; font-family: "Space Grotesk", sans-serif; font-size: 44px; font-weight: 900; letter-spacing: -0.02em; background: oklch(0.62 0.13 200); }
+    .lp-preview-img { height: 240px; display: flex; align-items: center; justify-content: center; color: #fff; font-family: "IoskeleyMonoTerm", monospace; font-size: 44px; font-weight: 900; letter-spacing: -0.02em; background: oklch(0.62 0.13 200); }
     .lp-preview-body { padding: 20px; }
-    .lp-pv-title { font-family: "Space Grotesk", sans-serif; font-size: 24px; font-weight: 700; margin-bottom: 4px; }
+    .lp-pv-title { font-family: "IoskeleyMonoTerm", monospace; font-size: 24px; font-weight: 700; margin-bottom: 4px; }
  
     /* === Motion + 3D layer === */
     #architecture > :not(.net-bg), #roadmap > :not(.particle-bg), #modules > :not(.shader-card) { position: relative; z-index: 1; }
@@ -584,10 +600,10 @@
     .particle-bg { opacity: 0.5; }
     .ring-stage { position: relative; height: 340px; margin-bottom: 48px; }
     .ring-canvas { position: absolute; inset: 0; }
-    .ring-label { position: absolute; left: 50%; bottom: 8px; transform: translateX(-50%); margin: 0; font-family: "JetBrains Mono", monospace; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em; color: var(--color-ink); white-space: nowrap; }
+    .ring-label { position: absolute; left: 50%; bottom: 8px; transform: translateX(-50%); margin: 0; font-family: "IoskeleyMonoTerm", monospace; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em; color: var(--color-ink); white-space: nowrap; }
     .shader-card { position: relative; height: 360px; margin-top: 48px; background: var(--color-ink); box-shadow: var(--card-shadow); overflow: hidden; }
     .marquee { overflow: hidden; border-top: var(--line-shadow); border-bottom: var(--line-shadow); padding: 18px 0; }
-    .marquee-track { display: flex; width: max-content; gap: 56px; font-family: "Space Grotesk", sans-serif; font-size: clamp(28px, 5vw, 56px); font-weight: 500; letter-spacing: -0.02em; white-space: nowrap; }
+    .marquee-track { display: flex; width: max-content; gap: 56px; font-family: "IoskeleyMonoTerm", monospace; font-size: clamp(28px, 5vw, 56px); font-weight: 500; letter-spacing: -0.02em; white-space: nowrap; }
     .marquee-track span { color: var(--color-sub); }
     .marquee-track span:nth-child(3n+1) { color: var(--color-ink); }
     .char, .word { display: inline-block; }
@@ -597,12 +613,12 @@
     }
  
     /* === Footer === */
-    footer { padding: 48px 24px; border-top: var(--line-shadow); font-family: "Space Grotesk", sans-serif; font-size: 14px; line-height: 1.6; color: var(--color-sub); }
+    footer { padding: 48px 24px; border-top: var(--line-shadow); font-family: "IoskeleyMonoTerm", monospace; font-size: 14px; line-height: 1.6; color: var(--color-sub); }
     .footer-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; flex-wrap: wrap; gap: 16px; }
     footer .logo { font-weight: 700; font-size: 18px; }
     footer .logo .dot { color: var(--color-accent); }
     .footer-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px; }
-    .footer-column h4 { font-family: "JetBrains Mono", monospace; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em; color: var(--color-sub); margin-bottom: 16px; }
+    .footer-column h4 { font-family: "IoskeleyMonoTerm", monospace; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.02em; color: var(--color-sub); margin-bottom: 16px; }
     .footer-column ul { list-style: none; }
     .footer-column li { margin-bottom: 8px; }
     .footer-column a { color: var(--color-sub); text-decoration: none; transition: color 0.15s; }
@@ -691,14 +707,14 @@
       padding: 16px;
     }
     .priv-stat-val {
-      font-family: 'Space Grotesk', sans-serif;
+      font-family: 'IoskeleyMonoTerm', monospace;
       font-size: 24px;
       font-weight: 700;
       color: var(--color-ink);
       letter-spacing: -0.02em;
     }
     .priv-stat-lbl {
-      font-family: 'JetBrains Mono', monospace;
+      font-family: 'IoskeleyMonoTerm', monospace;
       font-size: 11px;
       font-weight: 500;
       text-transform: uppercase;
@@ -713,7 +729,7 @@
       margin-bottom: 24px;
     }
     .priv-tab-btn {
-      font-family: 'JetBrains Mono', monospace;
+      font-family: 'IoskeleyMonoTerm', monospace;
       font-size: 11px;
       font-weight: 700;
       text-transform: uppercase;
@@ -738,7 +754,7 @@
       display: block;
     }
     .priv-note-card {
-      font-family: 'JetBrains Mono', monospace;
+      font-family: 'IoskeleyMonoTerm', monospace;
       font-size: 12px;
       background: var(--color-paper);
       box-shadow: var(--line-shadow);
@@ -748,7 +764,7 @@
     }
     .priv-badge {
       display: inline-block;
-      font-family: 'JetBrains Mono', monospace;
+      font-family: 'IoskeleyMonoTerm', monospace;
       font-size: 10px;
       font-weight: 700;
       text-transform: uppercase;
@@ -824,7 +840,7 @@
       <div style="margin: 14px 0 6px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center;">
         <span class="status-tag st-orange">RESEARCH &amp; TESTNET</span>
         <span class="status-tag st-orange">UNAUDITED PROTOTYPE</span>
-        <span style="font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--color-sub); text-transform:uppercase;">Core circuits &amp; privacy pools in developer testing · Audits pending</span>
+        <span style="font-family:'IoskeleyMonoTerm', monospace; font-size:11px; color:var(--color-sub); text-transform:uppercase;">Core circuits &amp; privacy pools in developer testing · Audits pending</span>
       </div>
       <div class="meta">§ 00 — THE PRIVACY CONTINUUM</div>
       <h1>
@@ -838,7 +854,7 @@
         <span class="cta-label">VIEW PRESALE</span>
       </a>
       <a href="https://github.com/0xfuckian/seraph/blob/main/whitepaper/seraph_whitepaper.md" target="_blank" rel="noopener" class="cta-secondary">READ WHITEPAPER →</a>
-      <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.02em; color: var(--color-sub); margin-top: 8px;">
+      <div style="font-family: 'IoskeleyMonoTerm', monospace; font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.02em; color: var(--color-sub); margin-top: 8px;">
         In active research &amp; development · Open-source · Verified contracts (Audits pending)
       </div>
       <div class="struct-line-accent"></div>
@@ -869,6 +885,56 @@
     </div>
  
     <div class="marquee" aria-hidden="true"><div class="marquee-track"><span>Privacy continuum</span><span>Private EVM</span><span>XMR base layer</span><span>FCMP++</span><span>Bulletproofs++</span><span>Stealth addresses</span><span>Privacy continuum</span><span>Private EVM</span><span>XMR base layer</span><span>FCMP++</span><span>Bulletproofs++</span><span>Stealth addresses</span></div></div>
+
+    <!-- Classical Engraving Continuum Showcase (Black & White Stipple/Halftone Engravings) -->
+    <div id="art-showcase" class="section" style="background:#080a0f; color:#ffffff; padding: 64px 24px; border-top: 1px solid #181c24; border-bottom: 1px solid #181c24;">
+      <div style="max-width: 1200px; margin: 0 auto;">
+        <div style="text-align: center; margin-bottom: 40px;">
+          <div style="font-size: 11px; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; color: #8e94a0; margin-bottom: 14px;">
+            HOW SERAPH OPERATES
+          </div>
+          <h2 style="font-size: clamp(26px, 4vw, 44px); font-weight: 700; color: #ffffff; letter-spacing: -0.02em; line-height: 1.15; margin: 0 auto; max-width: 840px;">
+            One continuum. Dual EVMs. Zero lost privacy.
+          </h2>
+        </div>
+
+        <div class="art-cards-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px;">
+          <!-- Card 1: Winged Pegasus -->
+          <div class="art-card" style="background: #0d1017; border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 14px; display: flex; flex-direction: column; transition: transform 0.2s ease, border-color 0.2s ease;">
+            <div style="width: 100%; border-radius: 10px; overflow: hidden; background: #000000; aspect-ratio: 3/4;">
+              <img src="assets/art-pegasus-bw.jpg" alt="Shield into Anonymity Set" style="width: 100%; height: 100%; object-fit: cover; display: block;" loading="lazy">
+            </div>
+            <div style="margin-top: 16px; display: flex; align-items: baseline; gap: 10px; padding: 4px 6px;">
+              <span style="font-size: 13px; font-weight: 700; color: #71717a;">01</span>
+              <span style="font-size: 15px; font-weight: 600; color: #f4f4f5; letter-spacing: -0.01em;">Shield assets into the anonymity set</span>
+            </div>
+          </div>
+
+          <!-- Card 2: Celestial Observatory / Temple -->
+          <div class="art-card" style="background: #0d1017; border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 14px; display: flex; flex-direction: column; transition: transform 0.2s ease, border-color 0.2s ease;">
+            <div style="width: 100%; border-radius: 10px; overflow: hidden; background: #000000; aspect-ratio: 3/4;">
+              <img src="assets/art-temple-bw.jpg" alt="Execute on Dual Private EVMs" style="width: 100%; height: 100%; object-fit: cover; display: block;" loading="lazy">
+            </div>
+            <div style="margin-top: 16px; display: flex; align-items: baseline; gap: 10px; padding: 4px 6px;">
+              <span style="font-size: 13px; font-weight: 700; color: #71717a;">02</span>
+              <span style="font-size: 15px; font-weight: 600; color: #f4f4f5; letter-spacing: -0.01em;">Execute on dual confidential EVMs</span>
+            </div>
+          </div>
+
+          <!-- Card 3: Sculpted Hands Exchanging Orb -->
+          <div class="art-card" style="background: #0d1017; border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 14px; display: flex; flex-direction: column; transition: transform 0.2s ease, border-color 0.2s ease;">
+            <div style="width: 100%; border-radius: 10px; overflow: hidden; background: #000000; aspect-ratio: 3/4;">
+              <img src="assets/art-hands-bw.jpg" alt="Settle Zero-Knowledge Proofs" style="width: 100%; height: 100%; object-fit: cover; display: block;" loading="lazy">
+            </div>
+            <div style="margin-top: 16px; display: flex; align-items: baseline; gap: 10px; padding: 4px 6px;">
+              <span style="font-size: 13px; font-weight: 700; color: #71717a;">03</span>
+              <span style="font-size: 15px; font-weight: 600; color: #f4f4f5; letter-spacing: -0.01em;">Settle with mathematical ZK proofs</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
  
     <!-- § 01 Privacy Continuum -->
     <div id="privacy" class="section">
@@ -922,10 +988,10 @@
         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; margin-bottom:24px;">
           <div style="display:flex; align-items:center; gap:12px;">
             <span class="status-dot" style="background:var(--color-green);"></span>
-            <span style="font-family:'JetBrains Mono',monospace; font-size:12px; font-weight:700; text-transform:uppercase;">NETWORK: BASE (CONTRACTS UNAUDITED · EXPERIMENTAL)</span>
+            <span style="font-family:'IoskeleyMonoTerm', monospace; font-size:12px; font-weight:700; text-transform:uppercase;">NETWORK: BASE (CONTRACTS UNAUDITED · EXPERIMENTAL)</span>
           </div>
           <div style="display:flex; align-items:center; gap:12px;">
-            <span id="privWalletBadge" style="font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--color-sub);">WALLET NOT CONNECTED</span>
+            <span id="privWalletBadge" style="font-family:'IoskeleyMonoTerm', monospace; font-size:12px; color:var(--color-sub);">WALLET NOT CONNECTED</span>
             <button type="button" class="wallet-btn" id="privConnectWalletBtn" style="padding:10px 18px; font-size:11px;"><span class="metal">●</span> CONNECT WALLET</button>
           </div>
         </div>
@@ -949,7 +1015,7 @@
             <div class="priv-stat-lbl">Notes in Tree</div>
           </div>
           <div class="priv-stat-box" style="grid-column: 1 / -1;">
-            <div class="priv-stat-val" id="privMerkleRootDisplay" style="font-size:13px; font-family:'JetBrains Mono',monospace; word-break:break-all;">0xe12c6e3da2d4498a1202263ce5703f81201efd8e2cb9f18a2ab338268fb4da0f</div>
+            <div class="priv-stat-val" id="privMerkleRootDisplay" style="font-size:13px; font-family:'IoskeleyMonoTerm', monospace; word-break:break-all;">0xe12c6e3da2d4498a1202263ce5703f81201efd8e2cb9f18a2ab338268fb4da0f</div>
             <div class="priv-stat-lbl">Latest Historic Merkle Root (Ring Buffer)</div>
           </div>
         </div>
@@ -994,7 +1060,7 @@
           <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px;">
             <div>
               <label class="field"><span>Select Input Note to Spend</span>
-                <select id="privTransferNoteSelect" style="width:100%; font-family:'Space Grotesk',sans-serif; font-size:15px; padding:12px; box-shadow:var(--line-shadow); border:none; background:var(--color-white); outline:none;">
+                <select id="privTransferNoteSelect" style="width:100%; font-family:'IoskeleyMonoTerm', monospace; font-size:15px; padding:12px; box-shadow:var(--line-shadow); border:none; background:var(--color-white); outline:none;">
                   <option value="">No shielded notes available</option>
                 </select>
               </label>
@@ -1021,7 +1087,7 @@
           <div style="display:grid; grid-template-columns: 1fr 1fr; gap:16px;">
             <div>
               <label class="field"><span>Select Input Note to Unshield</span>
-                <select id="privUnshieldNoteSelect" style="width:100%; font-family:'Space Grotesk',sans-serif; font-size:15px; padding:12px; box-shadow:var(--line-shadow); border:none; background:var(--color-white); outline:none;">
+                <select id="privUnshieldNoteSelect" style="width:100%; font-family:'IoskeleyMonoTerm', monospace; font-size:15px; padding:12px; box-shadow:var(--line-shadow); border:none; background:var(--color-white); outline:none;">
                   <option value="">No shielded notes available</option>
                 </select>
               </label>
@@ -1049,14 +1115,14 @@
             <div>
               <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px; margin-bottom:8px;">
                 <label class="field"><span>Source Chain</span>
-                  <select id="privBridgeSource" style="width:100%; font-family:'Space Grotesk',sans-serif; font-size:13px; padding:10px; box-shadow:var(--line-shadow); border:none; background:var(--color-white); outline:none;">
+                  <select id="privBridgeSource" style="width:100%; font-family:'IoskeleyMonoTerm', monospace; font-size:13px; padding:10px; box-shadow:var(--line-shadow); border:none; background:var(--color-white); outline:none;">
                     <option value="base_sepolia">Base EVM</option>
                     <option value="seraph_evm">Seraph EVM (1001)</option>
                     <option value="xmr_evm">XMR EVM (1002)</option>
                   </select>
                 </label>
                 <label class="field"><span>Destination Chain</span>
-                  <select id="privBridgeDest" style="width:100%; font-family:'Space Grotesk',sans-serif; font-size:13px; padding:10px; box-shadow:var(--line-shadow); border:none; background:var(--color-white); outline:none;">
+                  <select id="privBridgeDest" style="width:100%; font-family:'IoskeleyMonoTerm', monospace; font-size:13px; padding:10px; box-shadow:var(--line-shadow); border:none; background:var(--color-white); outline:none;">
                     <option value="seraph_evm">Seraph EVM (1001)</option>
                     <option value="xmr_evm">XMR EVM (1002)</option>
                     <option value="base_sepolia">Base EVM</option>
@@ -1067,7 +1133,7 @@
               <div style="display:grid; grid-template-columns: 1fr 120px; gap:12px; margin-bottom:8px;">
                 <label class="field"><span>Bridge Amount</span><input type="number" id="privBridgeAmt" placeholder="50.0" step="any" min="0.001"></label>
                 <label class="field"><span>Asset</span>
-                  <select id="privBridgeAsset" style="width:100%; font-family:'Space Grotesk',sans-serif; font-size:13px; padding:10px; box-shadow:var(--line-shadow); border:none; background:var(--color-white); outline:none;">
+                  <select id="privBridgeAsset" style="width:100%; font-family:'IoskeleyMonoTerm', monospace; font-size:13px; padding:10px; box-shadow:var(--line-shadow); border:none; background:var(--color-white); outline:none;">
                     <option value="SER">SER</option>
                     <option value="wXMR">wXMR</option>
                   </select>
@@ -1089,7 +1155,7 @@
                 <div style="border-top:var(--line-shadow); padding-top:8px; margin-top:8px;">
                   <div style="font-weight:700; margin-bottom:4px; font-size:11px; text-transform:uppercase;">Gas Relayer Voucher Tool:</div>
                   <div style="display:flex; gap:8px; align-items:center;">
-                    <input type="number" id="privVoucherGasUnits" placeholder="Gas units (e.g. 150000)" style="font-family:'Space Grotesk',sans-serif; font-size:12px; padding:6px 10px; box-shadow:var(--line-shadow); border:none; flex:1;">
+                    <input type="number" id="privVoucherGasUnits" placeholder="Gas units (e.g. 150000)" style="font-family:'IoskeleyMonoTerm', monospace; font-size:12px; padding:6px 10px; box-shadow:var(--line-shadow); border:none; flex:1;">
                     <button type="button" class="lp-chip" id="privFundVoucherBtn" style="padding:6px 12px; font-size:11px;">Fund Gas Voucher</button>
                   </div>
                   <div id="privVoucherEstimate" style="color:var(--color-sub); font-size:10px; margin-top:4px;">Rate: 150k gas ≈ 0.15 SER or 0.0015 wXMR</div>
@@ -1117,7 +1183,7 @@
               <!-- Sub-mode: Send Message -->
               <div id="msgSubModeSend">
                 <label class="field"><span>Recipient Public Key (32-byte hex)</span><input type="text" id="privMsgRecipientPubkey" placeholder="0x... (e.g. 0x8a7f9c2d...)"></label>
-                <label class="field"><span>Secret Message Payload</span><textarea id="privMsgPayload" rows="3" placeholder="Enter confidential message, contract memo, or OTC trade confirmation..." style="width:100%; font-family:'Space Grotesk',sans-serif; font-size:14px; padding:10px; box-shadow:var(--line-shadow); border:none; background:var(--color-white); outline:none;"></textarea></label>
+                <label class="field"><span>Secret Message Payload</span><textarea id="privMsgPayload" rows="3" placeholder="Enter confidential message, contract memo, or OTC trade confirmation..." style="width:100%; font-family:'IoskeleyMonoTerm', monospace; font-size:14px; padding:10px; box-shadow:var(--line-shadow); border:none; background:var(--color-white); outline:none;"></textarea></label>
                 <button type="button" class="wallet-btn" id="privMsgSendBtn" style="width:100%;"><span class="metal">●</span> BROADCAST ENCRYPTED MESSAGE (ON-CHAIN) →</button>
               </div>
 
@@ -1127,7 +1193,7 @@
                 <div style="display:grid; grid-template-columns: 1fr 100px; gap:8px;">
                   <label class="field"><span>Invoice Amount</span><input type="number" id="privInvAmt" placeholder="100.0" step="any"></label>
                   <label class="field"><span>Token</span>
-                    <select id="privInvToken" style="width:100%; font-family:'Space Grotesk',sans-serif; font-size:13px; padding:10px; box-shadow:var(--line-shadow); border:none; background:var(--color-white); outline:none;">
+                    <select id="privInvToken" style="width:100%; font-family:'IoskeleyMonoTerm', monospace; font-size:13px; padding:10px; box-shadow:var(--line-shadow); border:none; background:var(--color-white); outline:none;">
                       <option value="SER">SER</option>
                       <option value="wXMR">wXMR</option>
                     </select>
@@ -1141,7 +1207,7 @@
               <div id="msgSubModeInbox" style="display:none;">
                 <label class="field"><span>Your Incoming View Key</span><input type="text" id="privMsgViewKey" placeholder="0x... (auto-derived from connected wallet)"></label>
                 <button type="button" class="lp-chip" id="privMsgScanBtn" style="width:100%; padding:10px; margin-bottom:12px;">Scan &amp; Decrypt Recent Messages</button>
-                <div id="privMsgFeed" style="max-height:200px; overflow-y:auto; font-family:'JetBrains Mono',monospace; font-size:11px;"></div>
+                <div id="privMsgFeed" style="max-height:200px; overflow-y:auto; font-family:'IoskeleyMonoTerm', monospace; font-size:11px;"></div>
               </div>
             </div>
 
@@ -1151,7 +1217,7 @@
                 <div style="color:var(--color-sub); margin-bottom:4px;">Cipher Mode: <b style="color:var(--color-ink);">Keccak256 CTR (Rust note.rs parity)</b></div>
                 <div style="color:var(--color-sub); margin-bottom:4px;">Ephemeral Secret ($r$): <span id="privMsgEphemeralDisplay" style="color:var(--color-accent); font-size:11px;">[Generated on send]</span></div>
                 <div style="color:var(--color-sub); margin-bottom:4px;">Ephemeral Public Key ($R = rG$): <span id="privMsgRDisplay" style="color:var(--color-green); font-size:11px;">[Ready]</span></div>
-                <div style="color:var(--color-sub);">Encrypted Ciphertext Preview: <div id="privMsgCipherPreview" style="font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--color-orange); word-break:break-all; margin-top:4px;">—</div></div>
+                <div style="color:var(--color-sub);">Encrypted Ciphertext Preview: <div id="privMsgCipherPreview" style="font-family:'IoskeleyMonoTerm', monospace; font-size:10px; color:var(--color-orange); word-break:break-all; margin-top:4px;">—</div></div>
               </div>
             </div>
           </div>
@@ -1221,10 +1287,29 @@
       </div>
 
       <!-- Architectural Stage & Product Transparency Callout -->
-      <div class="connect-note" style="margin-bottom:24px; font-family:'JetBrains Mono',monospace; font-size:12px; background:rgba(0,243,255,0.05); border:1px solid rgba(0,243,255,0.25); color:var(--color-ink); padding:14px 18px; line-height:1.7;">
+      <div class="connect-note" style="margin-bottom:24px; font-family:'IoskeleyMonoTerm', monospace; font-size:12px; background:rgba(0,243,255,0.05); border:1px solid rgba(0,243,255,0.25); color:var(--color-ink); padding:14px 18px; line-height:1.7;">
         <span style="color:var(--color-green); font-weight:700;">● SHIPPED ON BASE TESTNET:</span> Solidity privacy contracts (PrivacyPool with $2^{20}$ Merkle tree, CrossEVMBridge, GasRelayer, Launchpad) with 205 passing Foundry tests.
         <br>
         <span style="color:var(--color-magenta); font-weight:700;">● ROADMAP &amp; RESEARCH (IN PROGRESS):</span> The sovereign Monero-inspired base layer (Phase 0 PoC in Rust) and dedicated XMR EVM (Phase 2) are active R&amp;D milestones designed to anchor into this EVM privacy core.
+      </div>
+
+      <!-- Architecture Hero Visual: Seraphim Key & Base-Layer Continuum -->
+      <div class="reveal" style="margin-bottom: 24px; background: #0d1017; border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 20px; display: flex; flex-direction: row; gap: 24px; align-items: center; flex-wrap: wrap;">
+        <div style="width: 140px; min-width: 140px; max-width: 160px; border-radius: 10px; overflow: hidden; background: #000000; aspect-ratio: 3/4; flex-shrink: 0;">
+          <img src="assets/art-seraph-bw.jpg" alt="Seraph Sovereign Key Hierarchy" style="width: 100%; height: 100%; object-fit: cover; display: block;" loading="lazy">
+        </div>
+        <div style="flex: 1; min-width: 240px;">
+          <div style="display: flex; align-items: baseline; gap: 10px; margin-bottom: 8px;">
+            <span style="font-size: 13px; font-weight: 700; color: #71717a;">04</span>
+            <span style="font-size: 12px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #8e94a0;">Unified Key Hierarchy &amp; Settlement</span>
+          </div>
+          <h3 style="font-size: 20px; font-weight: 700; color: #ffffff; margin: 0 0 8px 0; letter-spacing: -0.01em;">
+            The Six-Winged Privacy Sovereign
+          </h3>
+          <p style="font-size: 13px; line-height: 1.6; color: #a1a1aa; margin: 0;">
+            A unified key derivation architecture uniting one-time stealth addresses, Pedersen balance commitments, Bulletproofs++ range proofs, and full-chain membership across dual EVMs and sovereign Monero settlement.
+          </p>
+        </div>
       </div>
  
       <div class="arch-diagram reveal">
@@ -1279,6 +1364,25 @@
       <div class="meta">§ 03 — FIRST-PARTY MODULES</div>
       <h2 class="section-title">Built-in privacy primitives.</h2>
       <p class="section-desc">Each module ships as a privacy-aware contract suite with first-party wallet integration. All share the same note pool and key hierarchy.</p>
+
+      <!-- Modules Hero Visual: Sovereign Cryptographic Vault -->
+      <div class="reveal" style="margin-bottom: 24px; background: #0d1017; border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 20px; display: flex; flex-direction: row; gap: 24px; align-items: center; flex-wrap: wrap;">
+        <div style="width: 140px; min-width: 140px; max-width: 160px; border-radius: 10px; overflow: hidden; background: #000000; aspect-ratio: 3/4; flex-shrink: 0;">
+          <img src="assets/art-vault-bw.jpg" alt="Sovereign Vault Primitives" style="width: 100%; height: 100%; object-fit: cover; display: block;" loading="lazy">
+        </div>
+        <div style="flex: 1; min-width: 240px;">
+          <div style="display: flex; align-items: baseline; gap: 10px; margin-bottom: 8px;">
+            <span style="font-size: 13px; font-weight: 700; color: #71717a;">05</span>
+            <span style="font-size: 12px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #8e94a0;">Provable Confidential Reserves</span>
+          </div>
+          <h3 style="font-size: 20px; font-weight: 700; color: #ffffff; margin: 0 0 8px 0; letter-spacing: -0.01em;">
+            Sovereign Vault &amp; Credit Infrastructure
+          </h3>
+          <p style="font-size: 13px; line-height: 1.6; color: #a1a1aa; margin: 0;">
+            On-chain cryptographic vaults backing over-collateralized private stablecoins (CollateralVault · xUSD), zero-leakage credit authorizers for autonomous AI agents, and frictionless gas abstraction.
+          </p>
+        </div>
+      </div>
  
       <div class="module-grid">
         <div class="module-card reveal">
@@ -1375,8 +1479,8 @@
             <li><b>Staking &amp; Governance</b> — Relayer bonding and ZK anonymous ballot voting</li>
             <li><b>Confidential Collateral</b> — Backing asset for minted private stablecoins and AI usage vouchers</li>
           </ul>
-          <div style="font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:700; text-transform:uppercase; margin-bottom:8px; color:var(--color-ink);">Transaction Tax Schedule:</div>
-          <table style="width:100%; border-collapse:collapse; font-size:12px; font-family:'JetBrains Mono',monospace;">
+          <div style="font-family:'IoskeleyMonoTerm', monospace; font-size:11px; font-weight:700; text-transform:uppercase; margin-bottom:8px; color:var(--color-ink);">Transaction Tax Schedule:</div>
+          <table style="width:100%; border-collapse:collapse; font-size:12px; font-family:'IoskeleyMonoTerm', monospace;">
             <tr style="border-bottom:var(--line-shadow);"><td style="padding:4px 0; color:var(--color-green); font-weight:700;">Shielding (shield)</td><td style="text-align:right; font-weight:700;">0.00% Tax</td></tr>
             <tr style="border-bottom:var(--line-shadow);"><td style="padding:4px 0; color:var(--color-green); font-weight:700;">Private Note Transfers</td><td style="text-align:right; font-weight:700;">0.00% Tax</td></tr>
             <tr style="border-bottom:var(--line-shadow);"><td style="padding:4px 0; color:var(--color-green); font-weight:700;">Unshielding (unshield)</td><td style="text-align:right; font-weight:700;">0.00% Tax</td></tr>
@@ -1442,7 +1546,7 @@
         </div>
       </div>
  
-      <div style="font-family:'JetBrains Mono',monospace; font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.02em; color:var(--color-magenta); box-shadow: var(--line-shadow); padding:16px 20px; margin-bottom:24px; background:var(--color-magenta-soft);">
+      <div style="font-family:'IoskeleyMonoTerm', monospace; font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.02em; color:var(--color-magenta); box-shadow: var(--line-shadow); padding:16px 20px; margin-bottom:24px; background:var(--color-magenta-soft);">
         No mainnet until two independent audits + formal verification of the core circuits are complete.
       </div>
       <div class="threat-grid reveal">
@@ -1597,7 +1701,7 @@
       <div class="priv-dock" style="margin-top:0; border-top:4px solid var(--color-ink); display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:24px;">
         <div style="max-width:680px;">
           <div class="meta" style="margin-bottom:6px;">PRODUCTION DOCUMENTATION PLATFORM</div>
-          <h3 style="font-family:'Space Grotesk',sans-serif; font-size:22px; font-weight:700; color:var(--color-ink);">docs.seraphprotocol.tech</h3>
+          <h3 style="font-family:'IoskeleyMonoTerm', monospace; font-size:22px; font-weight:700; color:var(--color-ink);">docs.seraphprotocol.tech</h3>
           <p style="color:var(--color-sub); font-size:14px; line-height:1.6; margin-top:6px;">All 22 chapters of the Seraph Protocol technical manual are unified in a single BookStack book with full-text search, LaTeX mathematical proofs, and one-click PDF export.</p>
         </div>
         <div style="display:flex; gap:12px; flex-wrap:wrap;">
@@ -1663,7 +1767,7 @@
       </div>
  
       <div style="display:flex; flex-wrap:wrap; gap:24px; align-items:center; justify-content:space-between; box-shadow: var(--card-shadow); padding:24px;">
-        <div style="font-family:'JetBrains Mono',monospace; font-size:12px; font-weight:500; text-transform:uppercase; letter-spacing:0.02em; color:var(--color-sub); line-height:2;">
+        <div style="font-family:'IoskeleyMonoTerm', monospace; font-size:12px; font-weight:500; text-transform:uppercase; letter-spacing:0.02em; color:var(--color-sub); line-height:2;">
           Strategic · $0.02 · 3.75M SER<br>
           Private · $0.03 · 11.25M SER<br>
           Public · $0.04 · 10M SER
@@ -1714,7 +1818,7 @@
         </div>
       </div>
  
-      <div style="font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.02em; color: var(--color-sub); margin: -24px 0 48px; max-width: 760px; line-height: 1.7;">
+      <div style="font-family: 'IoskeleyMonoTerm', monospace; font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.02em; color: var(--color-sub); margin: -24px 0 48px; max-width: 760px; line-height: 1.7;">
         This presale offers the 25M SER the whitepaper earmarks for Early Contributors (15M) and Public Sale + Initial Liquidity (10M). The remaining 75M — ecosystem 40M, team 20M, foundation 15M — is not for sale.
       </div>
       <div class="meta">Tiers</div>
@@ -1790,25 +1894,25 @@
       <div class="struct-line"></div>
       <div class="meta">Accepted currencies</div>
       <div style="display: flex; gap: 16px; flex-wrap: wrap;">
-        <div style="display: flex; align-items: center; gap: 8px; font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 500; color: var(--color-sub);">
+        <div style="display: flex; align-items: center; gap: 8px; font-family: 'IoskeleyMonoTerm', monospace; font-size: 12px; font-weight: 500; color: var(--color-sub);">
           <span class="metal-text">●</span> USDT (ERC-20, BEP-20, Solana)
         </div>
-        <div style="display: flex; align-items: center; gap: 8px; font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 500; color: var(--color-sub);">
+        <div style="display: flex; align-items: center; gap: 8px; font-family: 'IoskeleyMonoTerm', monospace; font-size: 12px; font-weight: 500; color: var(--color-sub);">
           <span class="metal-text">●</span> USDC (ERC-20, Polygon)
         </div>
-        <div style="display: flex; align-items: center; gap: 8px; font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 500; color: var(--color-sub);">
+        <div style="display: flex; align-items: center; gap: 8px; font-family: 'IoskeleyMonoTerm', monospace; font-size: 12px; font-weight: 500; color: var(--color-sub);">
           <span class="metal-text">●</span> ETH (Ethereum)
         </div>
-        <div style="display: flex; align-items: center; gap: 8px; font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 500; color: var(--color-sub);">
+        <div style="display: flex; align-items: center; gap: 8px; font-family: 'IoskeleyMonoTerm', monospace; font-size: 12px; font-weight: 500; color: var(--color-sub);">
           <span class="metal-text">●</span> XMR (Monero)
         </div>
       </div>
-      <div style="font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:500; text-transform:uppercase; letter-spacing:0.02em; color:var(--color-sub); margin-top:12px;">
+      <div style="font-family:'IoskeleyMonoTerm', monospace; font-size:11px; font-weight:500; text-transform:uppercase; letter-spacing:0.02em; color:var(--color-sub); margin-top:12px;">
         XMR acceptance requires additional infrastructure and is subject to launch readiness.
       </div>
  
       <div class="struct-line"></div>
-      <div style="display: flex; align-items: center; gap: 8px; font-family: 'JetBrains Mono', monospace; font-size: 10px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.02em; color: var(--color-sub);">
+      <div style="display: flex; align-items: center; gap: 8px; font-family: 'IoskeleyMonoTerm', monospace; font-size: 10px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.02em; color: var(--color-sub);">
         <span class="metal-text">●</span>
         <span>0.5% presale fee · 1% transfer tax post-TGE · 50% auto-burn · 50% to treasury</span>
       </div>
@@ -1916,13 +2020,13 @@
             <div class="meta" style="margin-bottom:4px;">LIVE ON-CHAIN MARKET · BASE</div>
             <div class="lp-h" id="lpTradeTitle" style="margin-bottom:0;">Select a token</div>
           </div>
-          <code id="lpTradeToken" style="font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--color-sub);">—</code>
+          <code id="lpTradeToken" style="font-family:'IoskeleyMonoTerm', monospace; font-size:11px; color:var(--color-sub);">—</code>
         </div>
         <div class="spec-row"><span class="k">Reserve / Graduation target</span><span class="v" id="lpTradeReserve">—</span></div>
         <div class="spec-row"><span class="k">Graduation progress</span><span class="v accent" id="lpTradeGrad">—</span></div>
         <div class="spec-row"><span class="k">Fee schedule (creator + 1% platform)</span><span class="v" id="lpTradeFees">—</span></div>
         <div style="display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin-top:16px;">
-          <input type="text" id="lpTradeAmt" value="0.01" inputmode="decimal" aria-label="Trade amount" style="width:130px; font-family:'JetBrains Mono',monospace; font-size:14px; padding:10px 12px; border:none; box-shadow:var(--line-shadow);">
+          <input type="text" id="lpTradeAmt" value="0.01" inputmode="decimal" aria-label="Trade amount" style="width:130px; font-family:'IoskeleyMonoTerm', monospace; font-size:14px; padding:10px 12px; border:none; box-shadow:var(--line-shadow);">
           <button type="button" class="wallet-btn" id="lpBuyBtn" style="padding:11px 18px;">BUY (ETH)</button>
           <button type="button" class="cta-secondary" id="lpSellBtn" style="padding:10px 18px; border:none; cursor:pointer;">SELL (TOKENS)</button>
           <button type="button" class="cta-secondary" id="lpClaimFeesBtn" style="padding:10px 16px; border:none; cursor:pointer;">CLAIM FEES (`claimFees()`)</button>
@@ -2036,7 +2140,7 @@
           <div class="lp-preview">
             <div class="lp-preview-img" id="lpPvImg"><span id="lpPvTick">TICK</span></div>
             <div class="lp-preview-body">
-              <div class="lp-pv-title"><span id="lpPvSym">$TICKER</span> <span class="connect-note" style="font-family:'Space Grotesk',sans-serif;font-size:14px;">Your token</span></div>
+              <div class="lp-pv-title"><span id="lpPvSym">$TICKER</span> <span class="connect-note" style="font-family:'IoskeleyMonoTerm', monospace;font-size:14px;">Your token</span></div>
               <div class="connect-note" id="lpPvName">Name</div>
               <div class="spec-row"><span class="k">Market cap</span><span class="v">—</span></div>
               <div class="spec-row"><span class="k">Network</span><span class="v" id="lpPvNet">Base</span></div>
@@ -2128,7 +2232,7 @@
         </ul>
       </div>
     </div>
-    <div style="font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:500; text-transform:uppercase; letter-spacing:0.02em; color:var(--color-sub); margin-top:24px; line-height:1.8;">
+    <div style="font-family:'IoskeleyMonoTerm', monospace; font-size:11px; font-weight:500; text-transform:uppercase; letter-spacing:0.02em; color:var(--color-sub); margin-top:24px; line-height:1.8;">
       This is a research project. Nothing is live on mainnet. Security contact: security@seraphprotocol.tech
     </div>
     <div class="copyright">
