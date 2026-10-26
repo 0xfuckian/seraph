@@ -10,6 +10,15 @@ interface IMintableBurnableERC20 is IERC20 {
     function receiveFromBridge(address to, uint256 amount) external;
 }
 
+interface IBridgeVerifier {
+    function verifyFraudProof(
+        bytes32 sourceChainId,
+        bytes32 stateRoot,
+        bytes calldata fraudProof,
+        bytes32[] calldata pubSignals
+    ) external view returns (bool);
+}
+
 /**
  * @title CrossEVMBridge
  * @notice Trust-minimized bridge connecting Seraph Base Layer, Seraph EVM, and XMR EVM.
@@ -32,6 +41,8 @@ contract CrossEVMBridge is ReentrancyGuard {
 
     address public immutable token;
     address public guardian;
+    address public pendingGuardian;
+    address public bridgeVerifier;
     bytes32 public immutable localChainId;
 
     mapping(address => uint256) public relayerBonds;
@@ -49,6 +60,9 @@ contract CrossEVMBridge is ReentrancyGuard {
         uint256 indexed batchId, bytes32 indexed sourceChainId, bytes32 stateRoot, address indexed relayer
     );
     event BatchChallenged(uint256 indexed batchId, address indexed challenger, address indexed slashedRelayer);
+    event BridgeVerifierUpdated(address indexed verifier);
+    event GuardianTransferStarted(address indexed previousGuardian, address indexed newGuardian);
+    event GuardianTransferred(address indexed previousGuardian, address indexed newGuardian);
     event TokensLocked(
         uint256 indexed nonce, address indexed sender, address indexed recipient, uint256 amount, bytes32 destChainId
     );
@@ -126,8 +140,30 @@ contract CrossEVMBridge is ReentrancyGuard {
         emit BatchSubmitted(batchId, sourceChainId, stateRoot, msg.sender);
     }
 
+    function setBridgeVerifier(address _verifier) external {
+        if (msg.sender != guardian) revert Unauthorized();
+        require(_verifier != address(0), "CrossEVMBridge: zero verifier");
+        bridgeVerifier = _verifier;
+        emit BridgeVerifierUpdated(_verifier);
+    }
+
+    function transferGuardian(address _newGuardian) external {
+        if (msg.sender != guardian) revert Unauthorized();
+        require(_newGuardian != address(0), "CrossEVMBridge: zero address");
+        pendingGuardian = _newGuardian;
+        emit GuardianTransferStarted(guardian, _newGuardian);
+    }
+
+    function acceptGuardian() external {
+        require(msg.sender == pendingGuardian, "CrossEVMBridge: not pending guardian");
+        address oldGuardian = guardian;
+        guardian = pendingGuardian;
+        pendingGuardian = address(0);
+        emit GuardianTransferred(oldGuardian, guardian);
+    }
+
     /**
-     * @notice Slashes a fraudulent batch and rewards the challenger.
+     * @notice Emergency slash executed by the protocol guardian.
      */
     function challengeBatch(uint256 batchId, address challenger) external nonReentrant {
         if (msg.sender != guardian) revert Unauthorized();
@@ -144,6 +180,68 @@ contract CrossEVMBridge is ReentrancyGuard {
             require(ok, "CrossEVMBridge: reward transfer failed");
         }
         emit BatchChallenged(batchId, challenger, b.relayer);
+    }
+
+    /**
+     * @notice Permissionlessly challenges a fraudulent batch using a cryptographic fraud proof.
+     * @dev Anyone can call this during CHALLENGE_WINDOW. Slashes relayer and rewards challenger.
+     */
+    function challengeBatchWithFraudProof(
+        uint256 batchId,
+        bytes calldata fraudProof,
+        bytes32[] calldata pubSignals
+    ) external nonReentrant whenNotPaused {
+        require(bridgeVerifier != address(0), "CrossEVMBridge: verifier not configured");
+        StateBatch storage b = batches[batchId];
+        if (b.stateRoot == bytes32(0) || b.challenged) revert InvalidBatch();
+        if (block.timestamp >= b.submittedAt + CHALLENGE_WINDOW) revert ChallengeWindowActive();
+
+        bool isValidFraud = IBridgeVerifier(bridgeVerifier).verifyFraudProof(
+            b.sourceChainId,
+            b.stateRoot,
+            fraudProof,
+            pubSignals
+        );
+        require(isValidFraud, "CrossEVMBridge: invalid fraud proof");
+
+        b.challenged = true;
+        uint256 slashed = relayerBonds[b.relayer];
+        relayerBonds[b.relayer] = 0;
+
+        if (slashed > 0) {
+            (bool ok,) = msg.sender.call{value: slashed}("");
+            require(ok, "CrossEVMBridge: reward transfer failed");
+        }
+        emit BatchChallenged(batchId, msg.sender, b.relayer);
+    }
+
+    /**
+     * @notice Permissionlessly challenges a batch that contains an already-spent nullifier.
+     */
+    function challengeDuplicateNullifier(
+        uint256 batchId,
+        bytes32 nullifier,
+        address recipient,
+        uint256 amount,
+        bytes32[] calldata merkleProof
+    ) external nonReentrant whenNotPaused {
+        StateBatch storage b = batches[batchId];
+        if (b.stateRoot == bytes32(0) || b.challenged) revert InvalidBatch();
+        if (block.timestamp >= b.submittedAt + CHALLENGE_WINDOW) revert ChallengeWindowActive();
+        require(processedNullifiers[nullifier], "CrossEVMBridge: nullifier not spent previously");
+
+        bytes32 leaf = keccak256(abi.encodePacked(nullifier, recipient, amount, localChainId));
+        if (!_verifyProof(merkleProof, b.stateRoot, leaf)) revert InvalidMerkleProof();
+
+        b.challenged = true;
+        uint256 slashed = relayerBonds[b.relayer];
+        relayerBonds[b.relayer] = 0;
+
+        if (slashed > 0) {
+            (bool ok,) = msg.sender.call{value: slashed}("");
+            require(ok, "CrossEVMBridge: reward transfer failed");
+        }
+        emit BatchChallenged(batchId, msg.sender, b.relayer);
     }
 
     /**

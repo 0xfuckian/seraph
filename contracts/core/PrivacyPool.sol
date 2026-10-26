@@ -148,12 +148,7 @@ contract PrivacyPool is ReentrancyGuard {
         require(commitments.length > 0, "PrivacyPool: no commitments");
         require(isKnownRoot(root), "PrivacyPool: unknown or expired root");
 
-        // Verify ZK spend proof if verifier is configured
-        if (spendVerifier != address(0)) {
-            require(_verifySpendProof(root, nullifiers, commitments, proof), "PrivacyPool: invalid proof");
-        }
-
-        // Nullify input notes (prevent double-spends)
+        // Fail-fast sanity checks on input nullifiers & commitments
         for (uint256 i = 0; i < nullifiers.length; i++) {
             bytes32 nullifier = nullifiers[i];
             require(nullifier != bytes32(0), "PrivacyPool: invalid nullifier");
@@ -161,9 +156,16 @@ contract PrivacyPool is ReentrancyGuard {
             nullified[nullifier] = true;
         }
 
-        // Insert new note commitments into Merkle tree
         for (uint256 i = 0; i < commitments.length; i++) {
             require(commitments[i] != bytes32(0), "PrivacyPool: invalid commitment");
+        }
+
+        // Mandatory ZK proof verification: spendVerifier cannot be bypassed
+        require(spendVerifier != address(0), "PrivacyPool: spend verifier not configured");
+        require(_verifySpendProof(root, nullifiers, commitments, proof), "PrivacyPool: invalid proof");
+
+        // Insert new note commitments into Merkle tree
+        for (uint256 i = 0; i < commitments.length; i++) {
             _insertCommitment(commitments[i]);
         }
 
@@ -193,9 +195,9 @@ contract PrivacyPool is ReentrancyGuard {
         require(!nullified[nullifier], "PrivacyPool: nullifier already spent");
         require(isKnownRoot(root), "PrivacyPool: unknown or expired root");
 
-        if (spendVerifier != address(0)) {
-            require(_verifyUnshieldProof(root, nullifier, amount, recipient, proof), "PrivacyPool: invalid proof");
-        }
+        // Mandatory ZK proof verification: spendVerifier cannot be bypassed
+        require(spendVerifier != address(0), "PrivacyPool: spend verifier not configured");
+        require(_verifyUnshieldProof(root, nullifier, amount, recipient, proof), "PrivacyPool: invalid proof");
 
         nullified[nullifier] = true;
 
@@ -300,12 +302,17 @@ contract PrivacyPool is ReentrancyGuard {
     }
 
     // ─── Admin ─────────────────────────────────────────────────────────
+    address public pendingTreasury;
+    event TreasuryTransferStarted(address indexed previousTreasury, address indexed newTreasury);
+
     function setSpendVerifier(address _verifier) external onlyTreasury {
+        require(_verifier != address(0), "PrivacyPool: zero verifier not allowed");
         spendVerifier = _verifier;
         emit VerifierUpdated(_verifier, true);
     }
 
     function setBridgeVerifier(address _verifier) external onlyTreasury {
+        require(_verifier != address(0), "PrivacyPool: zero verifier not allowed");
         bridgeVerifier = _verifier;
         emit VerifierUpdated(_verifier, false);
     }
@@ -314,5 +321,18 @@ contract PrivacyPool is ReentrancyGuard {
         require(_treasury != address(0), "PrivacyPool: zero address");
         treasury = _treasury;
         emit TreasuryUpdated(_treasury);
+    }
+
+    function transferTreasury(address _newTreasury) external onlyTreasury {
+        require(_newTreasury != address(0), "PrivacyPool: zero address");
+        pendingTreasury = _newTreasury;
+        emit TreasuryTransferStarted(treasury, _newTreasury);
+    }
+
+    function acceptTreasury() external {
+        require(msg.sender == pendingTreasury, "PrivacyPool: not pending treasury");
+        treasury = pendingTreasury;
+        pendingTreasury = address(0);
+        emit TreasuryUpdated(treasury);
     }
 }

@@ -196,4 +196,5 @@ The web application ([`website/index.html`](./website/index.html)) connects live
 
 - **License**: MIT
 - **Security Contact**: `security@seraphprotocol.tech`
-- **Notice**: All contracts currently deployed on Base Sepolia are for testing and audit validation. Mainnet launch is scheduled following completion of external formal verification.
+- **Threat Model**: Comprehensive threat vector analysis and mitigation specifications can be found in [THREAT_MODEL.md](docs/THREAT_MODEL.md).
+- **Notice**: All contracts currently deployed on Base Sepolia are for testing and audit validation. Mainnet launch is scheduled following completion of external formal verification and tier-1 audits.

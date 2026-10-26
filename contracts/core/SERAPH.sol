@@ -133,6 +133,29 @@ contract SeraphToken is ERC20, ERC20Burnable, ERC20Permit {
     }
 
     /* ------------------------------------------------------------------ */
+    /* 2-Step Governance Handover                                         */
+    /* ------------------------------------------------------------------ */
+
+    address public pendingTreasury;
+    event TreasuryTransferStarted(address indexed previousTreasury, address indexed newTreasury);
+    event TreasuryTransferred(address indexed previousTreasury, address indexed newTreasury);
+
+    function transferTreasury(address _newTreasury) external onlyTreasury {
+        require(_newTreasury != address(0), "SeraphToken: zero address");
+        pendingTreasury = _newTreasury;
+        emit TreasuryTransferStarted(treasury, _newTreasury);
+    }
+
+    function acceptTreasury() external {
+        require(msg.sender == pendingTreasury, "SeraphToken: not pending treasury");
+        address oldTreasury = treasury;
+        treasury = pendingTreasury;
+        pendingTreasury = address(0);
+        minters[treasury] = true;
+        emit TreasuryTransferred(oldTreasury, treasury);
+    }
+
+    /* ------------------------------------------------------------------ */
     /* Privacy hooks                                                      */
     /* ------------------------------------------------------------------ */
 

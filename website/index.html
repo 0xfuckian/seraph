@@ -1259,14 +1259,23 @@
 
         <!-- Encrypted Local Note Vault Table -->
         <div style="margin-top:32px; border-top:var(--line-shadow); padding-top:24px;">
+          <!-- Security Hardening Notice -->
+          <div style="background: rgba(245, 158, 11, 0.08); border: 1px solid rgba(245, 158, 11, 0.25); border-radius: 8px; padding: 12px 16px; margin-bottom: 16px; font-size: 12px; color: #f59e0b; line-height: 1.5;">
+            <span style="font-weight: 700;">⚠ CLIENT-SIDE VAULT NOTICE:</span> Private note secrets (blinding factors, spend keys, nullifiers) are processed locally in your browser. Malicious browser extensions or compromised devices can inspect unencrypted storage. Enable <b>Vault Encryption</b> with a passphrase to protect notes with AES-GCM-256 at rest, or wipe local storage after testing.
+          </div>
+
           <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:16px;">
             <div>
               <div class="meta" style="margin-bottom:4px;">CLIENT-SIDE ENCRYPTED STORAGE</div>
               <div class="lp-h" style="font-size:18px; margin-bottom:0;">Your Private Note Vault</div>
             </div>
-            <div style="display:flex; gap:8px;">
+            <div style="display:flex; flex-wrap:wrap; gap:8px;">
+              <button type="button" class="lp-chip" id="privLockVaultBtn">🔒 Encrypt Vault</button>
               <button type="button" class="lp-chip" id="privExportNotesBtn">Export Backup</button>
+              <button type="button" class="lp-chip" id="privImportNotesBtn">Import Backup</button>
               <button type="button" class="lp-chip" id="privClearSpentBtn">Clear Spent Notes</button>
+              <button type="button" class="lp-chip" id="privPurgeVaultBtn" style="color: #ef4444; border-color: rgba(239, 68, 68, 0.3);">Wipe Vault</button>
+              <input type="file" id="privImportNotesFile" accept=".json" style="display:none;">
             </div>
           </div>
 
@@ -3298,16 +3307,77 @@ if (!reduceMotion) {
       }).join('');
     }
 
+    // === Client-Side Note Vault Encryption (AES-GCM-256 / PBKDF2) ===
+    var vaultEncrypted = false;
+    var vaultPassphrase = '';
+
+    async function deriveVaultKey(passphrase, saltBytes) {
+      var enc = new TextEncoder();
+      var keyMaterial = await window.crypto.subtle.importKey(
+        'raw', enc.encode(passphrase), 'PBKDF2', false, ['deriveKey']
+      );
+      return window.crypto.subtle.deriveKey(
+        { name: 'PBKDF2', salt: saltBytes, iterations: 100000, hash: 'SHA-256' },
+        keyMaterial,
+        { name: 'AES-GCM', length: 256 },
+        false,
+        ['encrypt', 'decrypt']
+      );
+    }
+
+    async function encryptVaultData(passphrase, dataObj) {
+      var salt = window.crypto.getRandomValues(new Uint8Array(16));
+      var iv = window.crypto.getRandomValues(new Uint8Array(12));
+      var key = await deriveVaultKey(passphrase, salt);
+      var enc = new TextEncoder();
+      var encoded = enc.encode(JSON.stringify(dataObj));
+      var cipherBuffer = await window.crypto.subtle.encrypt({ name: 'AES-GCM', iv: iv }, key, encoded);
+      var cipherBytes = new Uint8Array(cipherBuffer);
+      var binaryStr = '';
+      for (var i = 0; i < cipherBytes.length; i++) binaryStr += String.fromCharCode(cipherBytes[i]);
+      return {
+        seraphVaultEnc: true,
+        version: 1,
+        salt: Array.from(salt).map(function (b) { return b.toString(16).padStart(2, '0'); }).join(''),
+        iv: Array.from(iv).map(function (b) { return b.toString(16).padStart(2, '0'); }).join(''),
+        ciphertext: btoa(binaryStr)
+      };
+    }
+
+    async function decryptVaultData(passphrase, encryptedObj) {
+      var saltBytes = new Uint8Array(encryptedObj.salt.match(/.{1,2}/g).map(function (byte) { return parseInt(byte, 16); }));
+      var ivBytes = new Uint8Array(encryptedObj.iv.match(/.{1,2}/g).map(function (byte) { return parseInt(byte, 16); }));
+      var key = await deriveVaultKey(passphrase, saltBytes);
+      var binaryStr = atob(encryptedObj.ciphertext);
+      var cipherBytes = new Uint8Array(binaryStr.length);
+      for (var i = 0; i < binaryStr.length; i++) cipherBytes[i] = binaryStr.charCodeAt(i);
+      var decryptedBuffer = await window.crypto.subtle.decrypt({ name: 'AES-GCM', iv: ivBytes }, key, cipherBytes);
+      var dec = new TextDecoder();
+      return JSON.parse(dec.decode(decryptedBuffer));
+    }
+
     function loadNotes() {
       try {
+        var encRaw = localStorage.getItem('seraph_privacy_notes_enc');
+        if (encRaw) {
+          vaultEncrypted = true;
+          PRIV.notes = [];
+          return;
+        }
         var raw = localStorage.getItem('seraph_privacy_notes');
         PRIV.notes = raw ? JSON.parse(raw) : [];
       } catch (e) { PRIV.notes = []; }
     }
 
-    function saveNotes() {
+    async function saveNotes() {
       try {
-        localStorage.setItem('seraph_privacy_notes', JSON.stringify(PRIV.notes));
+        if (vaultEncrypted && vaultPassphrase) {
+          var payload = await encryptVaultData(vaultPassphrase, PRIV.notes);
+          localStorage.setItem('seraph_privacy_notes_enc', JSON.stringify(payload));
+          localStorage.removeItem('seraph_privacy_notes');
+        } else {
+          localStorage.setItem('seraph_privacy_notes', JSON.stringify(PRIV.notes));
+        }
       } catch (e) {}
     }
 
@@ -3403,6 +3473,45 @@ if (!reduceMotion) {
 
       var totalPriv = 0;
       var activeOptions = '';
+
+      if (vaultEncrypted && !vaultPassphrase) {
+        rows.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:32px 16px; color:var(--color-sub);">' +
+          '<div style="font-size:26px; margin-bottom:8px;">🔒</div>' +
+          '<b style="color:var(--color-ink); font-size:15px;">Note Vault is Encrypted at Rest (AES-GCM-256)</b><br>' +
+          '<span style="font-size:12px; color:var(--color-sub); display:inline-block; margin-top:4px;">PBKDF2 SHA-256 (100k rounds) active. Enter your master passphrase to unlock note blinding factors.</span>' +
+          '<div style="margin-top:16px; display:flex; justify-content:center; gap:8px; align-items:center; flex-wrap:wrap;">' +
+          '  <input type="password" id="privVaultUnlockInput" placeholder="Enter vault passphrase..." class="field input" style="width:240px; padding:6px 12px; font-size:12px; border-radius:6px; border:1px solid rgba(255,255,255,0.15); background:#06080c; color:#ffffff;">' +
+          '  <button type="button" class="lp-chip" id="privVaultUnlockBtn" style="background:#ffffff; color:#06080c; font-weight:700;">Unlock Vault</button>' +
+          '</div>' +
+          '<div id="privUnlockError" style="color:#ef4444; font-size:11px; margin-top:8px;"></div>' +
+          '</td></tr>';
+        if (empty) empty.hidden = true;
+        if (selTransfer) selTransfer.innerHTML = '<option value="">Vault is locked</option>';
+        if (selUnshield) selUnshield.innerHTML = '<option value="">Vault is locked</option>';
+        var elPrivLocked = document.getElementById('privPrivBal');
+        if (elPrivLocked) elPrivLocked.textContent = '🔒 Locked';
+        var unlockBtn = document.getElementById('privVaultUnlockBtn');
+        if (unlockBtn) {
+          unlockBtn.onclick = async function () {
+            var inp = document.getElementById('privVaultUnlockInput');
+            var errEl = document.getElementById('privUnlockError');
+            if (!inp || !inp.value) return;
+            try {
+              var encRaw = localStorage.getItem('seraph_privacy_notes_enc');
+              var parsed = JSON.parse(encRaw);
+              var dec = await decryptVaultData(inp.value, parsed);
+              vaultPassphrase = inp.value;
+              PRIV.notes = dec || [];
+              var lockBtn = document.getElementById('privLockVaultBtn');
+              if (lockBtn) lockBtn.textContent = '🔓 Lock Vault';
+              renderVault();
+            } catch (err) {
+              if (errEl) errEl.textContent = 'Incorrect passphrase. Decryption failed.';
+            }
+          };
+        }
+        return;
+      }
 
       if (!PRIV.notes || PRIV.notes.length === 0) {
         rows.innerHTML = '';
@@ -4101,25 +4210,136 @@ if (!reduceMotion) {
       });
     }
 
-    // Vault export & clear
+    // Vault Encryption Lock / Unlock Button
+    var lockVaultBtn = document.getElementById('privLockVaultBtn');
+    if (lockVaultBtn) {
+      if (vaultEncrypted && !vaultPassphrase) {
+        lockVaultBtn.textContent = '🔒 Unlock Vault';
+      } else if (vaultEncrypted && vaultPassphrase) {
+        lockVaultBtn.textContent = '🔓 Lock Vault';
+      }
+      lockVaultBtn.addEventListener('click', async function () {
+        if (vaultEncrypted && vaultPassphrase) {
+          vaultPassphrase = '';
+          PRIV.notes = [];
+          lockVaultBtn.textContent = '🔒 Unlock Vault';
+          renderVault();
+          return;
+        }
+
+        var pass = prompt('Enter a master passphrase to encrypt your note vault with AES-GCM-256:');
+        if (!pass) return;
+        vaultPassphrase = pass;
+        vaultEncrypted = true;
+        await saveNotes();
+        lockVaultBtn.textContent = '🔓 Lock Vault';
+        renderVault();
+        alert('Vault successfully encrypted with AES-GCM-256! Unencrypted notes removed from storage.');
+      });
+    }
+
+    // Vault export (Encrypted or Plain)
     var exportBtn = document.getElementById('privExportNotesBtn');
     if (exportBtn) {
-      exportBtn.addEventListener('click', function () {
-        var blob = new Blob([JSON.stringify(PRIV.notes, null, 2)], { type: 'application/json' });
+      exportBtn.addEventListener('click', async function () {
+        if (vaultEncrypted && !vaultPassphrase) {
+          alert('Please unlock your vault before exporting.');
+          return;
+        }
+        var doEncrypt = confirm('Would you like to encrypt this backup with a password? (Click OK for password-encrypted backup, Cancel for plain JSON)');
+        var payloadStr = '';
+        var filename = 'seraph_private_notes_' + Date.now();
+        if (doEncrypt) {
+          var pass = prompt('Enter password to encrypt backup:');
+          if (!pass) return;
+          var encObj = await encryptVaultData(pass, PRIV.notes);
+          payloadStr = JSON.stringify(encObj, null, 2);
+          filename += '_encrypted.json';
+        } else {
+          payloadStr = JSON.stringify(PRIV.notes, null, 2);
+          filename += '.json';
+        }
+        var blob = new Blob([payloadStr], { type: 'application/json' });
         var url = URL.createObjectURL(blob);
         var a = document.createElement('a');
         a.href = url;
-        a.download = 'seraph_private_notes_' + Date.now() + '.json';
+        a.download = filename;
         a.click();
         URL.revokeObjectURL(url);
       });
     }
+
+    // Vault import (Encrypted or Plain)
+    var importBtn = document.getElementById('privImportNotesBtn');
+    var importFileInput = document.getElementById('privImportNotesFile');
+    if (importBtn && importFileInput) {
+      importBtn.addEventListener('click', function () {
+        importFileInput.click();
+      });
+      importFileInput.addEventListener('change', function (e) {
+        var file = e.target.files && e.target.files[0];
+        if (!file) return;
+        var reader = new FileReader();
+        reader.onload = async function (ev) {
+          try {
+            var data = JSON.parse(ev.target.result);
+            var importedNotes = [];
+            if (data && (data.seraphVaultEnc || data.ciphertext)) {
+              var pass = prompt('This backup is encrypted. Enter password to decrypt:');
+              if (!pass) return;
+              importedNotes = await decryptVaultData(pass, data);
+            } else if (Array.isArray(data)) {
+              importedNotes = data;
+            } else {
+              alert('Unrecognized backup format.');
+              return;
+            }
+            if (Array.isArray(importedNotes)) {
+              var existingIds = new Set(PRIV.notes.map(function (n) { return n.commitment || n.nullifier; }));
+              var added = 0;
+              importedNotes.forEach(function (n) {
+                var id = n.commitment || n.nullifier;
+                if (!existingIds.has(id)) {
+                  PRIV.notes.push(n);
+                  added++;
+                }
+              });
+              await saveNotes();
+              renderVault();
+              alert('Successfully imported ' + added + ' note(s) into your vault!');
+            }
+          } catch (err) {
+            alert('Failed to import backup: ' + (err.message || err));
+          }
+          importFileInput.value = '';
+        };
+        reader.readAsText(file);
+      });
+    }
+
+    // Clear spent notes
     var clearBtn = document.getElementById('privClearSpentBtn');
     if (clearBtn) {
-      clearBtn.addEventListener('click', function () {
+      clearBtn.addEventListener('click', async function () {
         PRIV.notes = PRIV.notes.filter(function (n) { return n.status === 'SHIELDED'; });
-        saveNotes();
+        await saveNotes();
         renderVault();
+      });
+    }
+
+    // Wipe vault completely
+    var purgeBtn = document.getElementById('privPurgeVaultBtn');
+    if (purgeBtn) {
+      purgeBtn.addEventListener('click', function () {
+        if (!confirm('Are you sure you want to permanently WIPE all stored notes, blinding factors, and secrets from your browser? This action cannot be undone.')) return;
+        localStorage.removeItem('seraph_privacy_notes');
+        localStorage.removeItem('seraph_privacy_notes_enc');
+        PRIV.notes = [];
+        vaultEncrypted = false;
+        vaultPassphrase = '';
+        if (lockVaultBtn) lockVaultBtn.textContent = '🔒 Encrypt Vault';
+        renderVault();
+        alert('Vault wiped clean. All local note data removed.');
       });
     }
 
